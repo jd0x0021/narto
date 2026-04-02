@@ -1,5 +1,6 @@
 import { useSearchStore } from '../store/useSearchStore';
-import MasonryGrid, { GridImage } from './MasonryGrid';
+import GridImage from './GridImage';
+import MasonryGrid from './MasonryGrid';
 
 export default function ImageGallery() {
 	const results = useSearchStore((s) => s.results);
