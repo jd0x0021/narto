@@ -1,5 +1,6 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react';
-import { useSearchStore, type NormalizedSearchResult } from '../store/useSearchStore';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+
+import { type NormalizedSearchResult, useSearchStore } from '../store/useSearchStore';
 import { copyImageFromUrl } from '../utils/clipboard';
 
 const MasonryGrid = React.memo(
@@ -46,7 +47,9 @@ const MasonryGrid = React.memo(
 			if (containerRef.current) {
 				ro.observe(containerRef.current);
 			}
-			return () => ro.disconnect();
+			return () => {
+				ro.disconnect();
+			};
 		}, [calculateLayout]);
 
 		// Handle updates manually as images load or items change
@@ -144,7 +147,9 @@ ${isSelected ? 'border-narto-accent shadow-[0_4px_15px_rgba(255,107,0,0.3)] z-10
 						// Maintain intrinsic aspect ratio for the height automatically via padding or pre-calculating the relative spacing
 					}
 				}
-				onClick={() => setSelectedIndex(index)}
+				onClick={() => {
+					setSelectedIndex(index);
+				}}
 				onKeyDown={handleEnter}
 				draggable
 				onDragStart={handleDragStart}
@@ -173,5 +178,7 @@ ${isSelected ? 'border-narto-accent shadow-[0_4px_15px_rgba(255,107,0,0.3)] z-10
 		);
 	},
 );
+
+MasonryGrid.displayName = 'MasonryGrid';
 
 export default MasonryGrid;

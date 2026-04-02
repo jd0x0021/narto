@@ -1,7 +1,8 @@
 import { create } from 'zustand';
-import { parseCommand, type CommandType } from '../utils/parseCommand';
-import { searchStaticMemes } from '../services/providers/memeSearchProvider';
+
 import { searchGifs } from '../services/providers/gifSearchProvider';
+import { searchStaticMemes } from '../services/providers/memeSearchProvider';
+import { type CommandType, parseCommand } from '../utils/parseCommand';
 
 export interface NormalizedSearchResult {
 	id: string;
@@ -74,7 +75,9 @@ export const useSearchStore = create<SearchState>((set, get) => ({
 		}
 	},
 
-	setSelectedIndex: (index) => set({ selectedIndex: index }),
+	setSelectedIndex: (index) => {
+		set({ selectedIndex: index });
+	},
 
 	moveSelection: (direction, columns) => {
 		const { results, selectedIndex } = get();

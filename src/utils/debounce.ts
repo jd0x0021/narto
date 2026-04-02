@@ -3,7 +3,9 @@ export function debounce<T extends (...args: unknown[]) => void>(fn: T, delay: n
 
 	const debounced = (...args: Parameters<T>) => {
 		window.clearTimeout(timeoutId);
-		timeoutId = window.setTimeout(() => fn(...args), delay);
+		timeoutId = window.setTimeout(() => {
+			fn(...args);
+		}, delay);
 	};
 
 	debounced.cancel = () => {
