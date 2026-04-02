@@ -1,7 +1,7 @@
-const KLIPY_BASE_URL = import.meta.env.VITE_KLIPY_API_KEY;
-const API_KEY = import.meta.env.VITE_KLIPY_BASE_URL;
+const KLIPY_BASE_URL = import.meta.env.VITE_KLIPY_BASE_URL;
+const API_KEY = import.meta.env.VITE_KLIPY_API_KEY;
 const RESULTS_PER_PAGE = import.meta.env.VITE_RESULTS_PER_PAGE;
-const CONTENT_FILTER = import.meta.env.VITE_KLIPY_BASE_URL;
+const CONTENT_FILTER = import.meta.env.VITE_CONTENT_FILTER;
 
 async function getOrCreateCustomerId(): Promise<string> {
   if (typeof chrome !== "undefined" && chrome.storage && chrome.storage.local) {
