@@ -1,11 +1,11 @@
 {
-  "manifest_version": 3,
-  "name": "narto",
-  "version": "1.0",
-  "description": "Keyboard-first meme discovery.",
-  "action": {
-    "default_popup": "index.html",
-    "default_title": "Search Memes & GIFs"
-  },
-  "permissions": ["storage", "clipboardWrite"]
+	"manifest_version": 3,
+	"name": "narto",
+	"version": "1.0",
+	"description": "Keyboard-first meme discovery.",
+	"action": {
+		"default_popup": "index.html",
+		"default_title": "Search Memes & GIFs"
+	},
+	"permissions": ["storage", "clipboardWrite"]
 }
