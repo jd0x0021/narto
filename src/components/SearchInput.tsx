@@ -20,16 +20,16 @@ export default function SearchInput() {
 	const debouncedSearch = useMemo(
 		() =>
 			debounce(() => {
-				useSearchStore.getState().runSearch();
+				void useSearchStore.getState().runSearch();
 			}, 200),
 		[],
 	);
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setInput(e.target.value);
+		const { query } = useSearchStore.getState();
 
-		const { query: currentQuery, resolvedCommand: currentCommand } = useSearchStore.getState();
-		if (currentQuery.length >= 1 && currentCommand) {
+		if (query.length >= 1) {
 			debouncedSearch();
 		} else {
 			debouncedSearch.cancel();

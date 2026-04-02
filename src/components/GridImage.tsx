@@ -28,10 +28,10 @@ const GridImage = memo(
 			}
 		}, [isSelected]);
 
-		const handleEnter = async (e: React.KeyboardEvent) => {
+		const handleEnter = (e: React.KeyboardEvent) => {
 			if (e.key === 'Enter') {
 				e.preventDefault();
-				await copyImageFromUrl(item.originalUrl, item.format);
+				void copyImageFromUrl(item.originalUrl, item.format);
 			}
 		};
 
@@ -60,6 +60,7 @@ ${isSelected ? 'border-narto-accent shadow-[0_4px_15px_rgba(255,107,0,0.3)] z-10
 				onKeyDown={handleEnter}
 				draggable
 				onDragStart={handleDragStart}
+				role='gridcell'
 			>
 				<div className='w-full relative' style={{ paddingBottom: `${intrinsicRatio * 100}%` }}>
 					{/* Blur preview */}
