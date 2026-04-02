@@ -26,7 +26,7 @@ export default function ImageGallery() {
 	if (results.length === 0 && status === 'success') {
 		return (
 			<div className='flex-1 flex flex-col items-center justify-center p-6 text-narto-muted/50 text-sm mt-10'>
-				No results found for "{query}"
+				No results found for &quot;{query}&quot;
 			</div>
 		);
 	}

@@ -1,4 +1,6 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
+
+import { useSearchStore } from '../store/useSearchStore';
 
 const MasonryGrid = React.memo(
 	({
@@ -11,7 +13,6 @@ const MasonryGrid = React.memo(
 		gap: number;
 	}) => {
 		const containerRef = useRef<HTMLDivElement>(null);
-		const [containerHeight, setContainerHeight] = useState(0);
 
 		const calculateLayout = useCallback(() => {
 			if (!containerRef.current) return;
@@ -20,7 +21,7 @@ const MasonryGrid = React.memo(
 			const containerWidth = container.clientWidth;
 			const columnWidth = (containerWidth - gap * (columnCount - 1)) / columnCount;
 
-			const columnHeights = new Array(columnCount).fill(0);
+			const columnHeights = new Array<number>(columnCount).fill(0);
 			const childrenNodes = Array.from(container.children) as HTMLElement[];
 
 			childrenNodes.forEach((child, index) => {
@@ -34,7 +35,7 @@ const MasonryGrid = React.memo(
 				columnHeights[col] += child.offsetHeight + gap;
 			});
 
-			setContainerHeight(Math.max(...columnHeights));
+			container.style.height = `${Math.max(...columnHeights)}px`;
 		}, [columnCount, gap]);
 
 		useEffect(() => {
@@ -82,9 +83,9 @@ const MasonryGrid = React.memo(
 			<div
 				ref={containerRef}
 				className='relative w-full outline-none'
-				style={{ height: containerHeight }}
 				tabIndex={-1}
 				onKeyDown={handleKeyDown}
+				role='grid'
 			>
 				{children}
 			</div>

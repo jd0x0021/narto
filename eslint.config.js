@@ -50,6 +50,12 @@ export default [
 			'unused-imports/no-unused-imports': 'error',
 			'simple-import-sort/imports': 'error',
 			'simple-import-sort/exports': 'error',
+			'@typescript-eslint/restrict-template-expressions': [
+				'error',
+				{
+					allowNumber: true,
+				},
+			],
 		},
 	},
 
