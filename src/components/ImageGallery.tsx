@@ -31,7 +31,7 @@ export default function ImageGallery() {
 	}
 
 	return (
-		<div className='flex-1 overflow-y-auto overflow-x-hidden relative mt-2 custom-scrollbar'>
+		<div className='flex-1 overflow-x-hidden scrollbar-hidden relative mt-2'>
 			<MasonryGrid columnCount={3} gap={12}>
 				{results.map((item, i) => (
 					<GridImage key={item.id} item={item} index={i} />

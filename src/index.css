@@ -7,3 +7,14 @@
 		@apply bg-narto-bg text-narto-text font-sans antialiased m-0 p-0 overflow-hidden;
 	}
 }
+
+@layer utilities {
+	.scrollbar-hidden {
+		-ms-overflow-style: none; /* IE + Edge */
+		scrollbar-width: none; /* Firefox */
+	}
+
+	.scrollbar-hidden::-webkit-scrollbar {
+		display: none;
+	}
+}
