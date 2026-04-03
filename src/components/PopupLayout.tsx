@@ -3,9 +3,9 @@ import React from 'react';
 import Footer from './Footer';
 import Header from './Header';
 
-interface PopupLayoutProps {
+type PopupLayoutProps = {
 	children: React.ReactNode;
-}
+};
 
 export default function PopupLayout({ children }: PopupLayoutProps) {
 	return (
