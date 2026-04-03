@@ -1,6 +1,7 @@
 import { memo, useEffect, useRef, useState } from 'react';
 
-import { type NormalizedSearchResult, useSearchStore } from '../store/useSearchStore';
+import { type NormalizedSearchResult } from '../services/providers/types';
+import { useSearchStore } from '../store/useSearchStore';
 import { copyImageFromUrl } from '../utils/clipboard';
 
 const GridImage = memo(

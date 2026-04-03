@@ -1,10 +1,10 @@
-export type CommandType = 'meme' | 'gif';
+import type { CommandType } from '../services/providers/types';
 
-export interface ParsedCommand {
+export type ParsedCommand = {
 	rawInput: string;
 	resolvedCommand: CommandType;
 	query: string;
-}
+};
 
 export function parseCommand(input: string): ParsedCommand {
 	const trimmed = input.trimStart();

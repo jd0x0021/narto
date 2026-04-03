@@ -1,36 +1,27 @@
 import { create } from 'zustand';
 
-import { searchGifs } from '../services/providers/gifSearchProvider';
-import { searchStaticMemes } from '../services/providers/memeSearchProvider';
-import { type CommandType, parseCommand } from '../utils/parseCommand';
+import { fetchKlipy } from '../services/providers/klipyClient';
+import type { CommandType, NormalizedSearchResult } from '../services/providers/types';
+import { parseCommand } from '../utils/parseCommand';
 
-export interface NormalizedSearchResult {
-	id: string;
-	type: CommandType;
-	width: number;
-	height: number;
-	previewUrl: string;
-	displayUrl: string;
-	originalUrl: string;
-	blurPreview: string;
-	format: 'png' | 'webp' | 'gif' | 'mp4';
-}
+type SearchStatus = 'idle' | 'loading' | 'success' | 'error';
+type GridNavigation = 'up' | 'down' | 'left' | 'right';
 
-interface SearchState {
+type SearchState = {
 	rawInput: string;
 	resolvedCommand: CommandType;
 	query: string;
 	results: NormalizedSearchResult[];
 	selectedIndex: number | null;
-	status: 'idle' | 'loading' | 'success' | 'error';
+	status: SearchStatus;
 	errorMessage?: string;
 	requestId: number;
 
 	setInput: (rawInput: string) => void;
 	runSearch: () => Promise<void>;
 	setSelectedIndex: (index: number | null) => void;
-	moveSelection: (direction: 'up' | 'down' | 'left' | 'right', columns: number) => void;
-}
+	moveSelection: (direction: GridNavigation, columns: number) => void;
+};
 
 export const useSearchStore = create<SearchState>((set, get) => ({
 	rawInput: '',
@@ -62,8 +53,7 @@ export const useSearchStore = create<SearchState>((set, get) => ({
 		set({ requestId: nextId, status: 'loading', selectedIndex: null });
 
 		try {
-			const data =
-				resolvedCommand === 'meme' ? await searchStaticMemes(query) : await searchGifs(query);
+			const data = await fetchKlipy(resolvedCommand, query);
 
 			if (get().requestId !== nextId) return;
 
@@ -91,27 +81,40 @@ export const useSearchStore = create<SearchState>((set, get) => ({
 		let nextIndex = selectedIndex;
 		const count = results.length;
 
-		if (direction === 'right') {
-			nextIndex = selectedIndex + 1;
-			if (nextIndex >= count) nextIndex = 0;
-		} else if (direction === 'left') {
-			nextIndex = selectedIndex - 1;
-			if (nextIndex < 0) nextIndex = count - 1;
-		} else if (direction === 'down') {
-			nextIndex = selectedIndex + columns;
-			if (nextIndex >= count) {
-				// wrap to top of next column if reached end of column visually
-				// but row-major order: index 0,1,2 / 3,4,5.
-				// Example: down from 5 (if 7 items), could be 5+3=8 >= 7. Next index should be next column?
-				// Wait, "wrap to next column correctly".
-				nextIndex = (selectedIndex % columns) + 1;
-				if (nextIndex >= columns) nextIndex = 0;
+		switch (direction) {
+			case 'right': {
+				nextIndex = selectedIndex + 1;
+				if (nextIndex >= count) nextIndex = 0;
+				break;
 			}
-		} else if (direction === 'up') {
-			nextIndex = selectedIndex - columns;
-			if (nextIndex < 0) {
-				// parent component unsets selected index
-				return;
+			case 'left': {
+				nextIndex = selectedIndex - 1;
+				if (nextIndex < 0) nextIndex = count - 1;
+				break;
+			}
+			case 'down': {
+				nextIndex = selectedIndex + columns;
+				if (nextIndex >= count) {
+					// wrap to top of next column if reached end of column visually
+					// but row-major order: index 0,1,2 / 3,4,5.
+					// Example: down from 5 (if 7 items), could be 5+3=8 >= 7. Next index should be next column?
+					// Wait, "wrap to next column correctly".
+					nextIndex = (selectedIndex % columns) + 1;
+					if (nextIndex >= columns) nextIndex = 0;
+				}
+				break;
+			}
+			case 'up': {
+				nextIndex = selectedIndex - columns;
+				if (nextIndex < 0) {
+					// parent component unsets selected index
+					return;
+				}
+				break;
+			}
+			default: {
+				const neverReachedDirection: never = direction;
+				throw new Error(`Unhandled direction: ${JSON.stringify(neverReachedDirection)}`);
 			}
 		}
 

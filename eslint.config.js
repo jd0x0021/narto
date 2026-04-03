@@ -15,12 +15,24 @@ export default [
 		ignores: ['dist', 'node_modules'],
 	},
 
+	{
+		settings: {
+			react: {
+				version: 'detect',
+			},
+		},
+	},
+
 	js.configs.recommended,
-	...tseslint.configs.strictTypeChecked,
 	react.configs.flat.recommended,
 	reactHooks.configs.flat.recommended,
 	reactRefresh.configs.vite,
 	jsxA11y.flatConfigs.recommended,
+
+	...tseslint.configs.strictTypeChecked.map((config) => ({
+		...config,
+		files: ['**/*.{ts,tsx}'],
+	})),
 
 	{
 		files: ['**/*.{ts,tsx}'],
@@ -36,11 +48,6 @@ export default [
 			prettier: prettierPlugin,
 			'simple-import-sort': simpleImportSort,
 			'unused-imports': unusedImports,
-		},
-		settings: {
-			react: {
-				version: 'detect',
-			},
 		},
 		rules: {
 			'react/react-in-jsx-scope': 'off',

@@ -182,7 +182,7 @@ Normalized objects must be used everywhere in UI/store.
 - `displayUrl: string` (grid display)
 - `originalUrl: string` (highest-quality for copy + drag)
 - `blurPreview: string`
-- `format: 'png' | 'webp' | 'gif' | 'mp4'` (whatever the chosen variant implies)
+- `format: 'png' | 'gif'` (whatever the chosen variant implies)
 
 Mapping rules:
 

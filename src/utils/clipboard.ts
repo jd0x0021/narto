@@ -20,7 +20,7 @@ export async function copyImageFromUrl(url: string, mimeType: string): Promise<v
 		await navigator.clipboard.writeText(url);
 	} catch (err) {
 		console.error('Copy failed, falling back to URL copy', err);
-		await navigator.clipboard.writeText(url).catch((e) => {
+		await navigator.clipboard.writeText(url).catch((e: unknown) => {
 			console.error('Fallback URL copy failed', e);
 		});
 	}
