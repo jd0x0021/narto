@@ -1,17 +1,10 @@
-import React, { useCallback, useEffect, useRef } from 'react';
+import type { KeyboardEvent, ReactNode } from 'react';
+import { memo, useCallback, useEffect, useRef } from 'react';
 
 import { useSearchStore } from '../store/useSearchStore';
 
-const MasonryGrid = React.memo(
-	({
-		children,
-		columnCount,
-		gap,
-	}: {
-		children: React.ReactNode;
-		columnCount: number;
-		gap: number;
-	}) => {
+const MasonryGrid = memo(
+	({ children, columnCount, gap }: { children: ReactNode; columnCount: number; gap: number }) => {
 		const containerRef = useRef<HTMLDivElement>(null);
 
 		const calculateLayout = useCallback(() => {
@@ -58,7 +51,7 @@ const MasonryGrid = React.memo(
 		const moveSelection = useSearchStore((s) => s.moveSelection);
 		const setSelectedIndex = useSearchStore((s) => s.setSelectedIndex);
 
-		const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+		const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
 			if (e.key === 'ArrowUp') {
 				e.preventDefault();
 				const sIndex = useSearchStore.getState().selectedIndex;

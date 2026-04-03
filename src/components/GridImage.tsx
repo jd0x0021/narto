@@ -1,6 +1,7 @@
+import type { DragEvent, KeyboardEvent } from 'react';
 import { memo, useEffect, useRef, useState } from 'react';
 
-import { type NormalizedSearchResult } from '../services/providers/types';
+import type { NormalizedSearchResult } from '../services/providers/types';
 import { useSearchStore } from '../store/useSearchStore';
 import { copyImageFromUrl } from '../utils/clipboard';
 
@@ -29,14 +30,14 @@ const GridImage = memo(
 			}
 		}, [isSelected]);
 
-		const handleEnter = (e: React.KeyboardEvent) => {
+		const handleEnter = (e: KeyboardEvent) => {
 			if (e.key === 'Enter') {
 				e.preventDefault();
 				void copyImageFromUrl(item.originalUrl, item.format);
 			}
 		};
 
-		const handleDragStart = (e: React.DragEvent) => {
+		const handleDragStart = (e: DragEvent) => {
 			e.dataTransfer.setData('text/uri-list', item.originalUrl);
 			e.dataTransfer.setData('text/plain', item.originalUrl);
 		};

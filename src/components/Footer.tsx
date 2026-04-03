@@ -1,6 +1,6 @@
-import React from 'react';
+import type { ReactNode } from 'react';
 
-function Keycap({ children }: { children: React.ReactNode }) {
+function Keycap({ children }: { children: ReactNode }) {
 	return (
 		<div className='min-w-[24px] h-[24px] px-1.5 flex items-center justify-center rounded border border-narto-border bg-transparent text-narto-muted text-xs mx-0.5'>
 			{children}

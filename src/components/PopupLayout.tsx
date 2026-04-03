@@ -1,10 +1,10 @@
-import React from 'react';
+import type { ReactNode } from 'react';
 
 import Footer from './Footer';
 import Header from './Header';
 
 type PopupLayoutProps = {
-	children: React.ReactNode;
+	children: ReactNode;
 };
 
 export default function PopupLayout({ children }: PopupLayoutProps) {

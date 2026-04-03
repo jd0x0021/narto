@@ -1,4 +1,5 @@
-import React, { useEffect, useMemo, useRef } from 'react';
+import type { ChangeEvent, KeyboardEvent } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 
 import { useSearchStore } from '../store/useSearchStore';
 import { debounce } from '../utils/debounce';
@@ -25,7 +26,7 @@ export default function SearchInput() {
 		[],
 	);
 
-	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
 		setInput(e.target.value);
 		const { query } = useSearchStore.getState();
 
@@ -41,7 +42,7 @@ export default function SearchInput() {
 		}
 	};
 
-	const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+	const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
 		if (e.key === 'Escape') {
 			e.preventDefault();
 			window.close();
