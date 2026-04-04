@@ -5,8 +5,8 @@ import type {
 	NormalizedSearchResult,
 	RawKlipyImageData,
 	RawKlipySearchResponse,
-} from './types';
-import { RawKlipySearchResponseSchema } from './types';
+} from '@/services/providers/types';
+import { RawKlipySearchResponseSchema } from '@/services/providers/types';
 
 const KLIPY_BASE_URL = import.meta.env.VITE_KLIPY_BASE_URL;
 const API_KEY = import.meta.env.VITE_KLIPY_API_KEY;

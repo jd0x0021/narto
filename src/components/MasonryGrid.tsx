@@ -1,7 +1,7 @@
 import type { KeyboardEvent, ReactNode } from 'react';
 import { memo, useCallback, useEffect, useRef } from 'react';
 
-import { useSearchStore } from '../store/useSearchStore';
+import { useSearchStore } from '@/store/useSearchStore';
 
 type MasonryGridProps = {
 	children: ReactNode;

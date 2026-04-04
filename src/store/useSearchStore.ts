@@ -1,8 +1,8 @@
 import { create } from 'zustand';
 
-import { fetchKlipy } from '../services/providers/klipyClient';
-import type { CommandType, NormalizedSearchResult } from '../services/providers/types';
-import { parseCommand } from '../utils/parseCommand';
+import { fetchKlipy } from '@/services/providers/klipyClient';
+import type { CommandType, NormalizedSearchResult } from '@/services/providers/types';
+import { parseCommand } from '@/utils/parseCommand';
 
 type SearchStatus = 'idle' | 'loading' | 'success' | 'error';
 type GridNavigation = 'up' | 'down' | 'left' | 'right';

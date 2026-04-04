@@ -1,9 +1,9 @@
 import type { DragEvent, KeyboardEvent } from 'react';
 import { memo, useEffect, useRef, useState } from 'react';
 
-import type { NormalizedSearchResult } from '../services/providers/types';
-import { useSearchStore } from '../store/useSearchStore';
-import { copyImageFromUrl } from '../utils/clipboard';
+import type { NormalizedSearchResult } from '@/services/providers/types';
+import { useSearchStore } from '@/store/useSearchStore';
+import { copyImageFromUrl } from '@/utils/clipboard';
 
 const GridImage = memo(
 	({

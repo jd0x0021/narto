@@ -1,4 +1,4 @@
-import type { CommandType } from '../services/providers/types';
+import type { CommandType } from '@/services/providers/types';
 
 export type ParsedCommand = {
 	rawInput: string;

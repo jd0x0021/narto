@@ -55,7 +55,19 @@ export default [
 			'react-hooks/exhaustive-deps': 'warn',
 			'prettier/prettier': 'error',
 			'unused-imports/no-unused-imports': 'error',
-			'simple-import-sort/imports': 'error',
+			'simple-import-sort/imports': [
+				'error', // ESLint will fail if imports are not sorted correctly
+				{
+					// defines import categories + order
+					groups: [
+						['^node:', '^@?\\w'], // node built-ins + external packages
+						['^@/'], // our own packages (absolute imports)
+						['^\\.\\.(?!/?$)', '^\\.\\./?$'], // parent directory imports
+						['^\\./(?=.*/)(?!/?$)', '^\\.(?!/?$)', '^\\./?$'], // same folder imports
+						['^.+\\.s?css$'], // css files
+					],
+				},
+			],
 			'simple-import-sort/exports': 'error',
 			'@typescript-eslint/restrict-template-expressions': [
 				'error',

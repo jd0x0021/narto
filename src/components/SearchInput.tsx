@@ -1,8 +1,8 @@
 import type { ChangeEvent, KeyboardEvent } from 'react';
 import { useEffect, useMemo, useRef } from 'react';
 
-import { useSearchStore } from '../store/useSearchStore';
-import { debounce } from '../utils/debounce';
+import { useSearchStore } from '@/store/useSearchStore';
+import { debounce } from '@/utils/debounce';
 
 export default function SearchInput() {
 	const rawInput = useSearchStore((s) => s.rawInput);
