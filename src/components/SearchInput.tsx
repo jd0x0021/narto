@@ -121,6 +121,7 @@ export default function SearchInput() {
 				transition-all duration-200 focus-within:border-narto-accent focus-within:ring-1 focus-within:ring-narto-accent overflow-hidden'
 			>
 				<div className='w-full relative flex items-center text-base py-[5px] mr-4'>
+					{/* Presentation Layer: Handles the visual rendering of the command chip and query string. It sits visually beneath the actual input element. */}
 					<div
 						ref={fakeLayerRef}
 						className='absolute inset-0 flex items-center pointer-events-none whitespace-pre overflow-hidden text-narto-text'
@@ -129,6 +130,7 @@ export default function SearchInput() {
 						{formattedContent}
 					</div>
 
+					{/* Interaction Layer: The transparent input field where text is typed. It sits exactly ON TOP of the presentation layer to capture user events. */}
 					<input
 						ref={inputRef}
 						type='text'
@@ -136,7 +138,12 @@ export default function SearchInput() {
 						onChange={handleChange}
 						onKeyDown={handleKeyDown}
 						onScroll={handleScroll}
-						className={`w-full bg-transparent outline-none p-0 m-0 border-none text-transparent caret-white z-10 selection:bg-narto-accent/40 selection:text-transparent ${hasValidCommand ? 'pl-2' : ''}`}
+						className={`w-full bg-transparent outline-none p-0 m-0 border-none text-transparent caret-white z-10 selection:bg-narto-accent/40 selection:text-transparent ${
+							// The command chip (from a valid command) uses a 'px-1' class (see formattedContent above).
+							// We add 'pl-2' here to account for that padding and the space character,
+							// ensuring the caret aligns perfectly with the underlying text.
+							hasValidCommand ? 'pl-2' : ''
+						}`}
 						autoComplete='off'
 						spellCheck='false'
 					/>
