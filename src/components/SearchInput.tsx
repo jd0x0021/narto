@@ -77,10 +77,10 @@ export default function SearchInput() {
 	return (
 		<div className='shrink-0'>
 			<div
-				className={`relative flex items-center bg-narto-input rounded-narto border px-4 py-3 
-        ${rawInput ? 'border-narto-accent shadow-[0_0_15px_rgba(255,107,0,0.1)]' : 'border-narto-border/60 hover:border-narto-border opacity-90'}`}
+				className='relative flex items-center bg-narto-input rounded-narto border border-white/10 px-4 py-3
+				transition-all duration-200 focus-within:border-narto-accent focus-within:ring-1 focus-within:ring-narto-accent'
 			>
-				<div className='w-full flex items-center text-base'>
+				<div className='w-full flex items-center text-base pr-4'>
 					{hasValidCommand && (
 						<div className='bg-narto-accent text-white px-2 py-0.5 rounded font-bold mr-2 text-sm leading-tight shrink-0'>
 							{displayCommand}
@@ -93,7 +93,12 @@ export default function SearchInput() {
 						value={rawInput}
 						onChange={handleChange}
 						onKeyDown={handleKeyDown}
-						className={`w-full bg-transparent outline-none placeholder-narto-muted/50 ${hasValidCommand ? 'text-transparent absolute inset-0 pl-[theme(spacing.24)] opacity-0 cursor-text z-10' : 'text-narto-text z-10 relative'}`}
+						className={`w-full bg-transparent outline-none placeholder-narto-muted/50 
+							${
+								hasValidCommand
+									? 'text-transparent absolute inset-0 pl-[theme(spacing.24)] opacity-0 cursor-text z-10'
+									: 'text-narto-text z-10 relative'
+							}`}
 						style={hasValidCommand ? { paddingLeft: '80px' } : {}}
 						autoComplete='off'
 						spellCheck='false'
@@ -114,13 +119,16 @@ export default function SearchInput() {
 					)}
 				</div>
 
-				<div className='pl-4 ml-auto border-l border-narto-border text-xs text-narto-muted font-bold tracking-wider whitespace-nowrap opacity-60 flex items-center shrink-0'>
+				<div className='w-[1px] h-5 bg-white/10'></div>
+
+				<div className='pl-4 ml-auto text-xs text-narto-muted font-bold tracking-wider whitespace-nowrap opacity-60 flex items-center shrink-0'>
 					POWERED BY{' '}
 					<span className='text-narto-accent ml-2 flex items-center gap-1'>⚡ CHCKN</span>
 				</div>
 			</div>
-			<div className='mt-4 text-sm text-narto-muted/50 font-medium px-1'>
-				Example: /meme cat, /gif oiia
+
+			<div className='mt-2.5 text-[12px] text-narto-muted/60 pl-1'>
+				Example: <span className='text-narto-muted/40'>/meme cat, /gif oiia</span>
 			</div>
 		</div>
 	);

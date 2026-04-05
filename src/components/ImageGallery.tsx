@@ -32,7 +32,7 @@ export default function ImageGallery() {
 	}
 
 	return (
-		<div className='flex-1 overflow-x-hidden scrollbar-hidden relative mt-2'>
+		<div className='flex-1 overflow-x-hidden scrollbar-hidden relative mt-2.5'>
 			<MasonryGrid columnCount={3} gap={12}>
 				{results.map((item, i) => (
 					<GridImage key={item.id} item={item} index={i} />
