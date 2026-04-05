@@ -2,34 +2,38 @@ import type { ReactNode } from 'react';
 
 function Keycap({ children }: { children: ReactNode }) {
 	return (
-		<div className='min-w-[24px] h-[24px] px-1.5 flex items-center justify-center rounded border border-narto-border bg-transparent text-narto-muted text-xs mx-0.5'>
+		<kbd className='inline-flex items-center h-5 px-1.5 text-[10px] font-mono text-narto-muted bg-white/5 rounded border border-white/10 shadow-sm'>
 			{children}
-		</div>
+		</kbd>
 	);
 }
 
 export default function Footer() {
 	return (
-		<footer className='flex items-center px-6 py-4 border-t border-narto-border/50 bg-[#0a0a0c] mt-auto'>
+		<footer className='flex items-center px-6 py-4 bg-narto-footer mt-auto'>
 			<div className='flex items-center space-x-6 text-xs text-narto-muted font-medium tracking-wide'>
-				<div className='flex items-center uppercase space-x-2'>
-					<div className='flex items-center'>
+				<div className='flex items-center space-x-2'>
+					<div className='flex items-center gap-1'>
 						<Keycap>↑</Keycap>
 						<Keycap>↓</Keycap>
 						<Keycap>←</Keycap>
 						<Keycap>→</Keycap>
 					</div>
-					<span>NAVIGATE</span>
+					<span className='text-narto-muted/60 text-[11px]'>NAVIGATE</span>
 				</div>
-				<div className='text-narto-border'>|</div>
-				<div className='flex items-center uppercase space-x-2'>
+
+				<div className='w-[1px] h-3 bg-white/10'></div>
+
+				<div className='flex items-center space-x-2'>
 					<Keycap>Enter</Keycap>
-					<span>SELECT</span>
+					<span className='text-narto-muted/60 text-[11px]'>SELECT</span>
 				</div>
-				<div className='text-narto-border'>|</div>
-				<div className='flex items-center uppercase space-x-2'>
+
+				<div className='w-[1px] h-3 bg-white/10'></div>
+
+				<div className='flex items-center space-x-2'>
 					<Keycap>Esc</Keycap>
-					<span>CLOSE</span>
+					<span className='text-narto-muted/60 text-[11px]'>CLOSE</span>
 				</div>
 			</div>
 		</footer>

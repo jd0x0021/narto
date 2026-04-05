@@ -4,7 +4,7 @@
 
 @layer base {
 	body {
-		@apply bg-narto-bg text-narto-text font-sans antialiased m-0 p-0 overflow-hidden;
+		@apply bg-narto-main text-narto-text font-sans antialiased m-0 p-0 overflow-hidden;
 	}
 }
 

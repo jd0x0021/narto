@@ -77,7 +77,7 @@ export default function SearchInput() {
 	return (
 		<div className='shrink-0'>
 			<div
-				className={`relative flex items-center bg-narto-input-bg rounded-narto border px-4 py-3 
+				className={`relative flex items-center bg-narto-input rounded-narto border px-4 py-3 
         ${rawInput ? 'border-narto-accent shadow-[0_0_15px_rgba(255,107,0,0.1)]' : 'border-narto-border/60 hover:border-narto-border opacity-90'}`}
 			>
 				<div className='w-full flex items-center text-base'>
