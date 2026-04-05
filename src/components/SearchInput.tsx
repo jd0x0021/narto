@@ -92,7 +92,9 @@ export default function SearchInput() {
 		formattedContent = (
 			<>
 				<span>{beforeCommand}</span>
-				<span className='text-narto-accent'>{commandText}</span>
+				<span className='bg-narto-accent text-white rounded-md px-1 pb-[1.5px]'>
+					{commandText}
+				</span>
 				{showPlaceholder ? (
 					<>
 						<span>{afterCommand}</span>
@@ -117,10 +119,10 @@ export default function SearchInput() {
 	return (
 		<div className='shrink-0'>
 			<div
-				className='relative flex items-center bg-narto-input rounded-narto border border-white/10 px-4 py-3
+				className='relative flex items-center bg-narto-input rounded-narto border border-white/10 px-4 py-2
 				transition-all duration-200 focus-within:border-narto-accent focus-within:ring-1 focus-within:ring-narto-accent overflow-hidden'
 			>
-				<div className='w-full relative flex items-center text-base pr-4'>
+				<div className='w-full relative flex items-center text-base py-[5px] pr-4'>
 					<div
 						ref={fakeLayerRef}
 						className='absolute inset-0 flex items-center pointer-events-none whitespace-pre overflow-hidden text-narto-text'
@@ -136,7 +138,7 @@ export default function SearchInput() {
 						onChange={handleChange}
 						onKeyDown={handleKeyDown}
 						onScroll={handleScroll}
-						className='w-full bg-transparent outline-none p-0 m-0 border-none text-transparent caret-white z-10 selection:bg-narto-accent/40 selection:text-transparent'
+						className={`w-full bg-transparent outline-none p-0 m-0 border-none text-transparent caret-white z-10 selection:bg-narto-accent/40 selection:text-transparent ${hasValidCommand ? 'pl-2' : ''}`}
 						autoComplete='off'
 						spellCheck='false'
 					/>
