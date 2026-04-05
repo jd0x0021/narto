@@ -1,4 +1,4 @@
-import type { ChangeEvent, KeyboardEvent } from 'react';
+import type { ChangeEvent, JSX, KeyboardEvent } from 'react';
 import { useEffect, useMemo, useRef } from 'react';
 
 import { useSearchStore } from '@/store/useSearchStore';
@@ -81,7 +81,8 @@ export default function SearchInput() {
 		? rawInput.trimStart().substring(displayCommand.length).trimStart()
 		: rawInput;
 
-	let formattedContent;
+	let formattedContent: JSX.Element | null;
+
 	if (hasValidCommand) {
 		const commandIndex = rawInput.indexOf(displayCommand);
 		const beforeCommand = rawInput.substring(0, commandIndex);
@@ -96,10 +97,7 @@ export default function SearchInput() {
 					{commandText}
 				</span>
 				{showPlaceholder ? (
-					<>
-						<span>{afterCommand}</span>
-						<span className='text-narto-muted/50'>Search {resolvedCommand}s...</span>
-					</>
+					<span className='text-narto-muted/50'>Search {resolvedCommand}s...</span>
 				) : (
 					<span>{afterCommand}</span>
 				)}
@@ -109,9 +107,9 @@ export default function SearchInput() {
 		formattedContent = (
 			<>
 				<span>{rawInput}</span>
-				{!rawInput && (
+				{!rawInput ? (
 					<span className='text-narto-muted/50'>Search memes, reactions, gifs...</span>
-				)}
+				) : null}
 			</>
 		);
 	}
@@ -119,10 +117,10 @@ export default function SearchInput() {
 	return (
 		<div className='shrink-0'>
 			<div
-				className='relative flex items-center bg-narto-input rounded-narto border border-white/10 px-4 py-2
+				className='relative flex items-center bg-narto-input rounded-narto border border-white/10 px-4 py-[0.375rem]
 				transition-all duration-200 focus-within:border-narto-accent focus-within:ring-1 focus-within:ring-narto-accent overflow-hidden'
 			>
-				<div className='w-full relative flex items-center text-base py-[5px] pr-4'>
+				<div className='w-full relative flex items-center text-base py-[5px] mr-4'>
 					<div
 						ref={fakeLayerRef}
 						className='absolute inset-0 flex items-center pointer-events-none whitespace-pre overflow-hidden text-narto-text'
