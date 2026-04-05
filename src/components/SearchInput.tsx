@@ -12,6 +12,13 @@ export default function SearchInput() {
 	const results = useSearchStore((s) => s.results);
 
 	const inputRef = useRef<HTMLInputElement>(null);
+	const fakeLayerRef = useRef<HTMLDivElement>(null);
+
+	const handleScroll = (e: React.UIEvent<HTMLInputElement>) => {
+		if (fakeLayerRef.current) {
+			fakeLayerRef.current.scrollLeft = e.currentTarget.scrollLeft;
+		}
+	};
 
 	// Focus effect
 	useEffect(() => {
@@ -74,18 +81,53 @@ export default function SearchInput() {
 		? rawInput.trimStart().substring(displayCommand.length).trimStart()
 		: rawInput;
 
+	let formattedContent;
+	if (hasValidCommand) {
+		const commandIndex = rawInput.indexOf(displayCommand);
+		const beforeCommand = rawInput.substring(0, commandIndex);
+		const commandText = displayCommand;
+		const afterCommand = rawInput.substring(commandIndex + commandText.length);
+		const showPlaceholder = displayQuery.length === 0;
+
+		formattedContent = (
+			<>
+				<span>{beforeCommand}</span>
+				<span className='text-narto-accent'>{commandText}</span>
+				{showPlaceholder ? (
+					<>
+						<span>{afterCommand}</span>
+						<span className='text-narto-muted/50'>Search {resolvedCommand}s...</span>
+					</>
+				) : (
+					<span>{afterCommand}</span>
+				)}
+			</>
+		);
+	} else {
+		formattedContent = (
+			<>
+				<span>{rawInput}</span>
+				{!rawInput && (
+					<span className='text-narto-muted/50'>Search memes, reactions, gifs...</span>
+				)}
+			</>
+		);
+	}
+
 	return (
 		<div className='shrink-0'>
 			<div
 				className='relative flex items-center bg-narto-input rounded-narto border border-white/10 px-4 py-3
-				transition-all duration-200 focus-within:border-narto-accent focus-within:ring-1 focus-within:ring-narto-accent'
+				transition-all duration-200 focus-within:border-narto-accent focus-within:ring-1 focus-within:ring-narto-accent overflow-hidden'
 			>
-				<div className='w-full flex items-center text-base pr-4'>
-					{hasValidCommand && (
-						<div className='bg-narto-accent text-white px-2 py-0.5 rounded font-bold mr-2 text-sm leading-tight shrink-0'>
-							{displayCommand}
-						</div>
-					)}
+				<div className='w-full relative flex items-center text-base pr-4'>
+					<div
+						ref={fakeLayerRef}
+						className='absolute inset-0 flex items-center pointer-events-none whitespace-pre overflow-hidden text-narto-text'
+						aria-hidden='true'
+					>
+						{formattedContent}
+					</div>
 
 					<input
 						ref={inputRef}
@@ -93,30 +135,11 @@ export default function SearchInput() {
 						value={rawInput}
 						onChange={handleChange}
 						onKeyDown={handleKeyDown}
-						className={`w-full bg-transparent outline-none placeholder-narto-muted/50 
-							${
-								hasValidCommand
-									? 'text-transparent absolute inset-0 pl-[theme(spacing.24)] opacity-0 cursor-text z-10'
-									: 'text-narto-text z-10 relative'
-							}`}
-						style={hasValidCommand ? { paddingLeft: '80px' } : {}}
+						onScroll={handleScroll}
+						className='w-full bg-transparent outline-none p-0 m-0 border-none text-transparent caret-white z-10 selection:bg-narto-accent/40 selection:text-transparent'
 						autoComplete='off'
 						spellCheck='false'
 					/>
-
-					{hasValidCommand && (
-						<div className='flex-1 whitespace-pre pointer-events-none text-narto-text'>
-							{displayQuery || (
-								<span className='text-narto-muted/50'>Search {resolvedCommand}s...</span>
-							)}
-						</div>
-					)}
-
-					{!hasValidCommand && !rawInput && (
-						<div className='absolute inset-0 px-4 py-3 pointer-events-none text-narto-muted/50'>
-							Search memes, reactions, gifs...
-						</div>
-					)}
 				</div>
 
 				<div className='w-[1px] h-5 bg-white/10'></div>
