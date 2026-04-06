@@ -54,7 +54,9 @@ export type RawKlipySearchResponse = z.infer<typeof RawKlipySearchResponseSchema
 
 export type ImageVariant = z.infer<typeof ImageVariantSchema>;
 
-export type CommandType = 'meme' | 'gif';
+export const VALID_COMMANDS = { MEME: 'meme', GIF: 'gif' } as const;
+
+export type CommandType = (typeof VALID_COMMANDS)[keyof typeof VALID_COMMANDS];
 
 export type FileFormatType = 'png' | 'gif';
 

@@ -3,6 +3,7 @@ import { useEffect, useMemo, useRef } from 'react';
 
 import { useSearchStore } from '@/store/useSearchStore';
 import { debounce } from '@/utils/debounce';
+import { isValidCommand } from '@/utils/parseCommand';
 
 export default function SearchInput() {
 	const rawInput = useSearchStore((s) => s.rawInput);
@@ -74,8 +75,7 @@ export default function SearchInput() {
 		});
 	}, []);
 
-	const hasValidCommand =
-		rawInput.trimStart().startsWith('/meme ') || rawInput.trimStart().startsWith('/gif ');
+	const hasValidCommand = isValidCommand(rawInput);
 	const displayCommand = hasValidCommand ? rawInput.trimStart().split(' ')[0] : '';
 	const displayQuery = hasValidCommand
 		? rawInput.trimStart().substring(displayCommand.length).trimStart()
