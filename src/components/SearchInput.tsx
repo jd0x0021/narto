@@ -8,6 +8,7 @@ import { isValidCommand } from '@/utils/parseCommand';
 export default function SearchInput() {
 	const rawInput = useSearchStore((s) => s.rawInput);
 	const resolvedCommand = useSearchStore((s) => s.resolvedCommand);
+	const query: string = useSearchStore((s) => s.query);
 	const setInput = useSearchStore((s) => s.setInput);
 	const setSelectedIndex = useSearchStore((s) => s.setSelectedIndex);
 	const results = useSearchStore((s) => s.results);
@@ -76,30 +77,20 @@ export default function SearchInput() {
 	}, []);
 
 	const hasValidCommand = isValidCommand(rawInput);
-	const displayCommand = hasValidCommand ? rawInput.trimStart().split(' ')[0] : '';
-	const displayQuery = hasValidCommand
-		? rawInput.trimStart().substring(displayCommand.length).trimStart()
-		: rawInput;
-
 	let formattedContent: JSX.Element | null;
 
 	if (hasValidCommand) {
-		const commandIndex = rawInput.indexOf(displayCommand);
-		const beforeCommand = rawInput.substring(0, commandIndex);
-		const commandText = displayCommand;
-		const afterCommand = rawInput.substring(commandIndex + commandText.length);
-		const showPlaceholder = displayQuery.length === 0;
+		const showPlaceholder: boolean = query.length === 0;
 
 		formattedContent = (
 			<>
-				<span>{beforeCommand}</span>
 				<span className='bg-narto-accent text-white rounded-md px-1 pb-[1.5px]'>
-					{commandText}
+					{`/${resolvedCommand}`}
 				</span>
 				{showPlaceholder ? (
 					<span className='text-narto-muted/50'> Search {resolvedCommand}s...</span>
 				) : (
-					<span>{afterCommand}</span>
+					<span>{` ${query}`}</span>
 				)}
 			</>
 		);
