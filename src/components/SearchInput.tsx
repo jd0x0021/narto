@@ -97,7 +97,7 @@ export default function SearchInput() {
 					{commandText}
 				</span>
 				{showPlaceholder ? (
-					<span className='text-narto-muted/50'>Search {resolvedCommand}s...</span>
+					<span className='text-narto-muted/50'> Search {resolvedCommand}s...</span>
 				) : (
 					<span>{afterCommand}</span>
 				)}
