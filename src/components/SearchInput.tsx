@@ -102,7 +102,7 @@ export default function SearchInput() {
 						onKeyDown={handleKeyDown}
 						onScroll={handleScroll}
 						className={`w-full bg-transparent outline-none p-0 m-0 border-none text-transparent caret-white z-10 selection:bg-narto-accent/40 selection:text-transparent ${
-							// The command chip (from a valid command) uses a 'px-1' class (see formattedContent above).
+							// The command chip (from a valid command) uses a 'px-1' class (see FormattedInputValue component).
 							// We add 'pl-2' here to account for that padding and the space character,
 							// ensuring the caret aligns perfectly with the underlying text.
 							hasValidCommand ? 'pl-2' : ''
