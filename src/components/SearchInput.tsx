@@ -1,20 +1,21 @@
-import type { ChangeEvent, JSX, KeyboardEvent } from 'react';
+import type { ChangeEvent, KeyboardEvent } from 'react';
 import { useEffect, useMemo, useRef } from 'react';
 
+import FormattedInputValue from '@/components/FormattedInputValue';
 import { useSearchStore } from '@/store/useSearchStore';
 import { debounce } from '@/utils/debounce';
 import { isValidCommand } from '@/utils/parseCommand';
 
 export default function SearchInput() {
 	const rawInput = useSearchStore((s) => s.rawInput);
-	const resolvedCommand = useSearchStore((s) => s.resolvedCommand);
-	const query: string = useSearchStore((s) => s.query);
 	const setInput = useSearchStore((s) => s.setInput);
 	const setSelectedIndex = useSearchStore((s) => s.setSelectedIndex);
 	const results = useSearchStore((s) => s.results);
 
 	const inputRef = useRef<HTMLInputElement>(null);
 	const fakeLayerRef = useRef<HTMLDivElement>(null);
+
+	const hasValidCommand: boolean = isValidCommand(rawInput);
 
 	const handleScroll = (e: React.UIEvent<HTMLInputElement>) => {
 		if (fakeLayerRef.current) {
@@ -76,35 +77,6 @@ export default function SearchInput() {
 		});
 	}, []);
 
-	const hasValidCommand = isValidCommand(rawInput);
-	let formattedContent: JSX.Element | null;
-
-	if (hasValidCommand) {
-		const showPlaceholder: boolean = query.length === 0;
-
-		formattedContent = (
-			<>
-				<span className='bg-narto-accent text-white rounded-md px-1 pb-[1.5px]'>
-					{`/${resolvedCommand}`}
-				</span>
-				{showPlaceholder ? (
-					<span className='text-narto-muted/50'> Search {resolvedCommand}s...</span>
-				) : (
-					<span>{` ${query}`}</span>
-				)}
-			</>
-		);
-	} else {
-		formattedContent = (
-			<>
-				<span>{rawInput}</span>
-				{!rawInput ? (
-					<span className='text-narto-muted/50'>Search memes, reactions, gifs...</span>
-				) : null}
-			</>
-		);
-	}
-
 	return (
 		<div className='shrink-0'>
 			<div
@@ -118,7 +90,7 @@ export default function SearchInput() {
 						className='absolute inset-0 flex items-center pointer-events-none whitespace-pre overflow-hidden text-narto-text'
 						aria-hidden='true'
 					>
-						{formattedContent}
+						<FormattedInputValue rawInput={rawInput} />
 					</div>
 
 					{/* Interaction Layer: The transparent input field where text is typed. It sits exactly ON TOP of the presentation layer to capture user events. */}
