@@ -84,7 +84,8 @@ export default function SearchInput() {
 				transition-all duration-200 focus-within:border-narto-accent focus-within:ring-1 focus-within:ring-narto-accent overflow-hidden'
 			>
 				<div className='w-full relative flex items-center text-base py-[5px] mr-4'>
-					{/* Presentation Layer: Handles the visual rendering of the command chip and query string. It sits visually beneath the actual input element. */}
+					{/* Presentation Layer: This is what the user actually sees. It sits under the invisible
+						input field and handles all the visual styling, like the command chip and text formatting. */}
 					<div
 						ref={fakeLayerRef}
 						className='absolute inset-0 flex items-center pointer-events-none whitespace-pre overflow-hidden text-narto-text'
@@ -93,7 +94,9 @@ export default function SearchInput() {
 						<FormattedInputValue rawInput={rawInput} />
 					</div>
 
-					{/* Interaction Layer: The transparent input field where text is typed. It sits exactly ON TOP of the presentation layer to capture user events. */}
+					{/* Interaction Layer: This is where the user actually types. It's a completely transparent input
+						field that sits directly on top of the presentation layer to catch all keystrokes, creating the
+						illusion that they are typing into the styled text (that is rendered by the presentation layer). */}
 					<input
 						ref={inputRef}
 						type='text'

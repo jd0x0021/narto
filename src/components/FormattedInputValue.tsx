@@ -5,6 +5,14 @@ type FormattedInputValueProps = {
 	rawInput: string;
 };
 
+/**
+ * Renders the formatted version of the user's search input. This component is
+ * responsible to conditionally format valid commands (e.g., "/meme") as styled
+ * chips alongside the remaining query text or a contextual placeholder.
+ *
+ * @param rawInput - The raw, unparsed string currently entered in the search bar (SearchInput.tsx).
+ * @returns A JSX Fragment containing the formatted input UI elements.
+ */
 export default function FormattedInputValue({ rawInput }: FormattedInputValueProps) {
 	const hasValidCommand: boolean = isValidCommand(rawInput);
 	const query: string = useSearchStore((s) => s.query);
