@@ -13,13 +13,13 @@ export default function SearchInput() {
 	const results = useSearchStore((s) => s.results);
 
 	const inputRef = useRef<HTMLInputElement>(null);
-	const fakeLayerRef = useRef<HTMLDivElement>(null);
+	const presentationLayerRef = useRef<HTMLDivElement>(null);
 
 	const hasValidCommand: boolean = isValidCommand(rawInput);
 
 	const handleScroll = (e: React.UIEvent<HTMLInputElement>) => {
-		if (fakeLayerRef.current) {
-			fakeLayerRef.current.scrollLeft = e.currentTarget.scrollLeft;
+		if (presentationLayerRef.current) {
+			presentationLayerRef.current.scrollLeft = e.currentTarget.scrollLeft;
 		}
 	};
 
@@ -87,7 +87,7 @@ export default function SearchInput() {
 					{/* Presentation Layer: This is what the user actually sees. It sits under the invisible
 						input field and handles all the visual styling, like the command chip and text formatting. */}
 					<div
-						ref={fakeLayerRef}
+						ref={presentationLayerRef}
 						className='absolute inset-0 flex items-center pointer-events-none whitespace-pre overflow-hidden text-narto-text'
 						aria-hidden='true'
 					>
@@ -105,9 +105,9 @@ export default function SearchInput() {
 						onKeyDown={handleKeyDown}
 						onScroll={handleScroll}
 						className={`w-full bg-transparent outline-none p-0 m-0 border-none text-transparent caret-white z-10 selection:bg-narto-accent/40 selection:text-transparent ${
-							// The command chip (from a valid command) uses a 'px-1' class (see FormattedInputValue component).
-							// We add 'pl-2' here to account for that padding and the space character,
-							// ensuring the caret aligns perfectly with the underlying text.
+							// The command chip element (from a valid command) uses a 'px-1' class (handled by the FormattedInputValue
+							// component). We add 'pl-2' here to account for that padding and the space character, ensuring that
+							// this input element's caret aligns perfectly with the UI elements rendered from the presentation layer.
 							hasValidCommand ? 'pl-2' : ''
 						}`}
 						autoComplete='off'
