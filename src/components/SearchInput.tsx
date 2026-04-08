@@ -1,17 +1,27 @@
 import type { ChangeEvent, KeyboardEvent } from 'react';
 import { useEffect, useMemo, useRef } from 'react';
 
+import FormattedInputValue from '@/components/FormattedInputValue';
 import { useSearchStore } from '@/store/useSearchStore';
 import { debounce } from '@/utils/debounce';
+import { isValidCommand } from '@/utils/parseCommand';
 
 export default function SearchInput() {
 	const rawInput = useSearchStore((s) => s.rawInput);
-	const resolvedCommand = useSearchStore((s) => s.resolvedCommand);
 	const setInput = useSearchStore((s) => s.setInput);
 	const setSelectedIndex = useSearchStore((s) => s.setSelectedIndex);
 	const results = useSearchStore((s) => s.results);
 
 	const inputRef = useRef<HTMLInputElement>(null);
+	const presentationLayerRef = useRef<HTMLDivElement>(null);
+
+	const hasValidCommand: boolean = isValidCommand(rawInput);
+
+	const handleScroll = (e: React.UIEvent<HTMLInputElement>) => {
+		if (presentationLayerRef.current) {
+			presentationLayerRef.current.scrollLeft = e.currentTarget.scrollLeft;
+		}
+	};
 
 	// Focus effect
 	useEffect(() => {
@@ -67,56 +77,42 @@ export default function SearchInput() {
 		});
 	}, []);
 
-	const hasValidCommand =
-		rawInput.trimStart().startsWith('/meme ') || rawInput.trimStart().startsWith('/gif ');
-	const displayCommand = hasValidCommand ? rawInput.trimStart().split(' ')[0] : '';
-	const displayQuery = hasValidCommand
-		? rawInput.trimStart().substring(displayCommand.length).trimStart()
-		: rawInput;
-
 	return (
 		<div className='shrink-0'>
 			<div
-				className='relative flex items-center bg-narto-input rounded-narto border border-white/10 px-4 py-3
-				transition-all duration-200 focus-within:border-narto-accent focus-within:ring-1 focus-within:ring-narto-accent'
+				className='relative flex items-center bg-narto-input rounded-narto border border-white/10 px-4 py-[0.375rem]
+				transition-all duration-200 focus-within:border-narto-accent focus-within:ring-1 focus-within:ring-narto-accent overflow-hidden'
 			>
-				<div className='w-full flex items-center text-base pr-4'>
-					{hasValidCommand && (
-						<div className='bg-narto-accent text-white px-2 py-0.5 rounded font-bold mr-2 text-sm leading-tight shrink-0'>
-							{displayCommand}
-						</div>
-					)}
+				<div className='w-full relative flex items-center text-base py-[5px] mr-4'>
+					{/* Presentation Layer: This is what the user actually sees. It sits under the invisible
+						input field and handles all the visual styling, like the command chip and text formatting. */}
+					<div
+						ref={presentationLayerRef}
+						className='absolute inset-0 flex items-center pointer-events-none whitespace-pre overflow-hidden text-narto-text'
+						aria-hidden='true'
+					>
+						<FormattedInputValue rawInput={rawInput} />
+					</div>
 
+					{/* Interaction Layer: This is where the user actually types. It's a completely transparent input
+						field that sits directly on top of the presentation layer to catch all keystrokes, creating the
+						illusion that they are typing into the styled text (that is rendered by the presentation layer). */}
 					<input
 						ref={inputRef}
 						type='text'
 						value={rawInput}
 						onChange={handleChange}
 						onKeyDown={handleKeyDown}
-						className={`w-full bg-transparent outline-none placeholder-narto-muted/50 
-							${
-								hasValidCommand
-									? 'text-transparent absolute inset-0 pl-[theme(spacing.24)] opacity-0 cursor-text z-10'
-									: 'text-narto-text z-10 relative'
-							}`}
-						style={hasValidCommand ? { paddingLeft: '80px' } : {}}
+						onScroll={handleScroll}
+						className={`w-full bg-transparent outline-none p-0 m-0 border-none text-transparent caret-white z-10 selection:bg-narto-accent/40 selection:text-transparent ${
+							// The command chip element (from a valid command) uses a 'px-1' class (handled by the FormattedInputValue
+							// component). We add 'pl-2' here to account for that padding and the space character, ensuring that
+							// this input element's caret aligns perfectly with the UI elements rendered from the presentation layer.
+							hasValidCommand ? 'pl-2' : ''
+						}`}
 						autoComplete='off'
 						spellCheck='false'
 					/>
-
-					{hasValidCommand && (
-						<div className='flex-1 whitespace-pre pointer-events-none text-narto-text'>
-							{displayQuery || (
-								<span className='text-narto-muted/50'>Search {resolvedCommand}s...</span>
-							)}
-						</div>
-					)}
-
-					{!hasValidCommand && !rawInput && (
-						<div className='absolute inset-0 px-4 py-3 pointer-events-none text-narto-muted/50'>
-							Search memes, reactions, gifs...
-						</div>
-					)}
 				</div>
 
 				<div className='w-[1px] h-5 bg-white/10'></div>
