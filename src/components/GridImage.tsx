@@ -66,7 +66,7 @@ const GridImage = memo(
 		return (
 			<div
 				ref={ref}
-				tabIndex={-1}
+				tabIndex={0}
 				className={`absolute top-0 left-0 transition-shadow outline-none cursor-pointer overflow-hidden leading-none select-none rounded-narto-sm border-2
 					${
 						isSelected
@@ -74,6 +74,9 @@ const GridImage = memo(
 							: 'border-transparent hover:border-narto-border opacity-90 hover:opacity-100 z-0'
 					}`}
 				onClick={() => {
+					setSelectedIndex(index);
+				}}
+				onFocus={() => {
 					setSelectedIndex(index);
 				}}
 				onKeyDown={handleCopyOnEnter}

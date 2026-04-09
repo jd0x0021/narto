@@ -104,6 +104,9 @@ export default function SearchInput() {
 						onChange={handleChange}
 						onKeyDown={handleKeyDown}
 						onScroll={handleScroll}
+						onFocus={() => {
+							setSelectedIndex(null);
+						}}
 						className={`w-full bg-transparent outline-none p-0 m-0 border-none text-transparent caret-white z-10 selection:bg-narto-accent/40 selection:text-transparent ${
 							// The command chip element (from a valid command) uses a 'px-1' class (handled by the FormattedInputValue
 							// component). We add 'pl-2' here to account for that padding and the space character, ensuring that
