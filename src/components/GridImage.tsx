@@ -19,6 +19,8 @@ const GridImage = memo(
 		const isSelected = selectedIndex === index;
 
 		const [displayLoaded, setDisplayLoaded] = useState(false);
+		const [isCopied, setIsCopied] = useState(false);
+		const [copyErrored, setCopyErrored] = useState(false);
 		const ref = useRef<HTMLDivElement>(null);
 
 		// Focus tracking
@@ -30,14 +32,31 @@ const GridImage = memo(
 			}
 		}, [isSelected]);
 
-		const handleEnter = (e: KeyboardEvent) => {
-			if (e.key === 'Enter') {
-				e.preventDefault();
-				void copyImageFromUrl(item.originalUrl, item.format);
+		const handleCopy = async (): Promise<void> => {
+			try {
+				await copyImageFromUrl(item.originalUrl, item.format);
+			} catch (error: unknown) {
+				console.error('Copy failed', error);
+				setCopyErrored(true);
+				setTimeout(() => {
+					setCopyErrored(false);
+				}, 2000);
 			}
 		};
 
-		const handleDragStart = (e: DragEvent) => {
+		const handleCopyOnEnter = (e: KeyboardEvent): void => {
+			if (e.key === 'Enter') {
+				e.preventDefault();
+				setCopyErrored(false);
+				setIsCopied(true);
+				setTimeout(() => {
+					setIsCopied(false);
+				}, 2000);
+				void handleCopy();
+			}
+		};
+
+		const handleDragStart = (e: DragEvent): void => {
 			e.dataTransfer.setData('text/uri-list', item.originalUrl);
 			e.dataTransfer.setData('text/plain', item.originalUrl);
 		};
@@ -49,17 +68,15 @@ const GridImage = memo(
 				ref={ref}
 				tabIndex={-1}
 				className={`absolute top-0 left-0 transition-shadow outline-none cursor-pointer overflow-hidden leading-none select-none rounded-narto-sm border-2
-${isSelected ? 'border-narto-accent shadow-[0_4px_15px_rgba(255,107,0,0.3)] z-10' : 'border-transparent hover:border-narto-border opacity-90 hover:opacity-100 z-0'}
-`}
-				style={
-					{
-						// Maintain intrinsic aspect ratio for the height automatically via padding or pre-calculating the relative spacing
-					}
-				}
+					${
+						isSelected
+							? 'border-narto-accent shadow-[0_4px_15px_rgba(255,107,0,0.3)] z-10'
+							: 'border-transparent hover:border-narto-border opacity-90 hover:opacity-100 z-0'
+					}`}
 				onClick={() => {
 					setSelectedIndex(index);
 				}}
-				onKeyDown={handleEnter}
+				onKeyDown={handleCopyOnEnter}
 				draggable
 				onDragStart={handleDragStart}
 				role='gridcell'
@@ -73,6 +90,7 @@ ${isSelected ? 'border-narto-accent shadow-[0_4px_15px_rgba(255,107,0,0.3)] z-10
 							opacity: displayLoaded ? 0 : 1,
 						}}
 					/>
+
 					{/* Main image */}
 					<img
 						src={item.displayUrl}
@@ -83,6 +101,23 @@ ${isSelected ? 'border-narto-accent shadow-[0_4px_15px_rgba(255,107,0,0.3)] z-10
 						alt=''
 						loading='lazy'
 					/>
+
+					{/* Status overlay (Copied / Error) */}
+					<div
+						className={`absolute inset-0 flex items-center justify-center bg-black/40 z-20 pointer-events-none transition-all duration-300 ease-out ${
+							isCopied || copyErrored ? 'opacity-100 scale-100' : 'opacity-0'
+						}`}
+					>
+						{isCopied ? (
+							<span className='bg-green-500 text-white rounded-md px-2 py-1 text-sm mx-2 text-center max-w-[90%] shadow-sm'>
+								Copied 😼
+							</span>
+						) : copyErrored ? (
+							<span className='bg-red-600 text-white rounded-md px-2 py-1 text-sm mx-2 text-center max-w-[90%] shadow-sm'>
+								Copy failed 💀
+							</span>
+						) : null}
+					</div>
 				</div>
 			</div>
 		);
