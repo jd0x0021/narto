@@ -31,7 +31,7 @@ const BaseImageSchema = z.looseObject({
 });
 
 const StaticMemeSchema = BaseImageSchema.extend({
-	type: z.literal('static-meme'),
+	type: z.literal('static_meme'),
 	file: PngResolutionSchema,
 });
 
