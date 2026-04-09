@@ -14,9 +14,8 @@ const GridImage = memo(
 		index: number;
 		calculateLayout?: () => void;
 	}) => {
-		const selectedIndex = useSearchStore((s) => s.selectedIndex);
+		const isSelected = useSearchStore((s) => s.selectedIndex === index);
 		const setSelectedIndex = useSearchStore((s) => s.setSelectedIndex);
-		const isSelected = selectedIndex === index;
 
 		const [displayLoaded, setDisplayLoaded] = useState(false);
 		const [isCopied, setIsCopied] = useState(false);
