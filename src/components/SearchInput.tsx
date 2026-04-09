@@ -62,6 +62,12 @@ export default function SearchInput() {
 				setSelectedIndex(0);
 				inputRef.current?.blur(); // drop focus from input
 			}
+		} else if (e.key === 'ArrowUp') {
+			e.preventDefault();
+			if (results.length > 0) {
+				setSelectedIndex(results.length - 1);
+				inputRef.current?.blur(); // drop focus from input
+			}
 		} else if (e.key === 'Enter') {
 			e.preventDefault();
 			// Enter never fetches
