@@ -2,6 +2,7 @@ import type { ChangeEvent, KeyboardEvent } from 'react';
 import { useEffect, useMemo, useRef } from 'react';
 
 import FormattedInputValue from '@/components/FormattedInputValue';
+import { useSearchInputFocusHotkeys } from '@/hooks/useSearchInputFocusHotkeys';
 import { useSearchStore } from '@/store/useSearchStore';
 import { debounce } from '@/utils/debounce';
 import { isValidCommand } from '@/utils/parseCommand';
@@ -14,6 +15,8 @@ export default function SearchInput() {
 
 	const inputRef = useRef<HTMLInputElement>(null);
 	const presentationLayerRef = useRef<HTMLDivElement>(null);
+
+	useSearchInputFocusHotkeys(inputRef);
 
 	const hasValidCommand: boolean = isValidCommand(rawInput);
 

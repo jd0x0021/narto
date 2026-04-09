@@ -56,10 +56,7 @@ const MasonryGrid = memo(({ children, columnCount, gap }: MasonryGridProps) => {
 	const setSelectedIndex = useSearchStore((s) => s.setSelectedIndex);
 
 	const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
-		if (e.key === '`' || e.key === '/' || (e.key === 'k' && (e.ctrlKey || e.metaKey))) {
-			e.preventDefault();
-			setSelectedIndex(null);
-		} else if (e.key === 'ArrowUp') {
+		if (e.key === 'ArrowUp') {
 			e.preventDefault();
 			const sIndex = useSearchStore.getState().selectedIndex;
 			if (sIndex !== null && sIndex < columnCount) {
