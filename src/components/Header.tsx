@@ -6,7 +6,7 @@ export default function Header() {
 				<h1 className='text-lg font-bold tracking-[0.1em] text-narto-text'>NARTO</h1>
 			</div>
 
-			<div className='h-4 w-[1px] bg-white/10 mx-1'></div>
+			<div className='h-4 w-[0.063rem] bg-white/10 mx-1'></div>
 
 			<div className='flex items-center gap-1.5'>
 				<span className='w-2 h-2 rounded-full bg-orange-800/80'></span>

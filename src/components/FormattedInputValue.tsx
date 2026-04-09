@@ -23,7 +23,7 @@ export default function FormattedInputValue({ rawInput }: FormattedInputValuePro
 
 		return (
 			<>
-				<span className='bg-narto-accent text-white rounded-md px-1 pb-[1.5px]'>
+				<span className='bg-narto-accent text-white rounded-md px-1 pb-[0.094rem]'>
 					{`/${resolvedCommand}`}
 				</span>
 				{showPlaceholder ? (

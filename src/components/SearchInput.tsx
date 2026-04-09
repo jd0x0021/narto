@@ -92,7 +92,7 @@ export default function SearchInput() {
 				className='relative flex items-center bg-narto-input rounded-narto border border-white/10 px-4 py-[0.375rem]
 				transition-all duration-200 focus-within:border-narto-accent focus-within:ring-1 focus-within:ring-narto-accent overflow-hidden'
 			>
-				<div className='w-full relative flex items-center text-base py-[5px] mr-4'>
+				<div className='w-full relative flex items-center text-base py-[0.313rem] mr-4'>
 					{/* Presentation Layer: This is what the user actually sees. It sits under the invisible
 						input field and handles all the visual styling, like the command chip and text formatting. */}
 					<div
@@ -127,7 +127,7 @@ export default function SearchInput() {
 					/>
 				</div>
 
-				<div className='w-[1px] h-5 bg-white/10'></div>
+				<div className='w-[0.063rem] h-5 bg-white/10'></div>
 
 				<div className='pl-4 ml-auto text-xs text-narto-muted font-bold tracking-wider whitespace-nowrap opacity-60 flex items-center shrink-0'>
 					POWERED BY{' '}
@@ -135,7 +135,7 @@ export default function SearchInput() {
 				</div>
 			</div>
 
-			<div className='mt-2.5 text-[12px] text-narto-muted/60 pl-1'>
+			<div className='mt-2.5 text-[0.75rem] text-narto-muted/60 pl-1'>
 				Example: <span className='text-narto-muted/40'>/meme cat, /gif oiia</span>
 			</div>
 		</div>

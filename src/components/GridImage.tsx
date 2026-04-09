@@ -66,7 +66,7 @@ const GridImage = memo(
 			<div
 				ref={ref}
 				tabIndex={0}
-				className={`absolute top-0 left-0 transition-shadow outline-none cursor-pointer overflow-hidden leading-none select-none rounded-narto-sm border-[3px]
+				className={`absolute top-0 left-0 transition-shadow outline-none cursor-pointer overflow-hidden leading-none select-none rounded-narto-sm border-[0.188rem]
 					${
 						isSelected
 							? 'border-narto-accent shadow-[0_4px_15px_rgba(255,107,0,0.3)] z-10'
@@ -86,7 +86,7 @@ const GridImage = memo(
 				<div className='w-full relative' style={{ paddingBottom: `${intrinsicRatio * 100}%` }}>
 					{/* Blur preview */}
 					<div
-						className='absolute inset-0 bg-cover bg-center bg-no-repeat blur-[2px] transition-opacity duration-300'
+						className='absolute inset-0 bg-cover bg-center bg-no-repeat blur-[0.125rem] transition-opacity duration-300'
 						style={{
 							backgroundImage: `url(${item.blurPreview})`,
 							opacity: displayLoaded ? 0 : 1,
