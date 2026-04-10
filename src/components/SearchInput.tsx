@@ -124,6 +124,7 @@ export default function SearchInput() {
 						}`}
 						autoComplete='off'
 						spellCheck='false'
+						maxLength={67}
 					/>
 				</div>
 			</div>
