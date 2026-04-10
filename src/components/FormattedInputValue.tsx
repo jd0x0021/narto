@@ -38,9 +38,7 @@ export default function FormattedInputValue({ rawInput }: FormattedInputValuePro
 	return (
 		<>
 			<span>{rawInput}</span>
-			{!rawInput ? (
-				<span className='text-narto-muted/50'>Search memes, reactions, gifs...</span>
-			) : null}
+			{!rawInput ? <span className='text-narto-muted/50'>Search KLIPY</span> : null}
 		</>
 	);
 }

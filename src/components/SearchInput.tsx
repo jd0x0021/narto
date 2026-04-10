@@ -126,13 +126,6 @@ export default function SearchInput() {
 						spellCheck='false'
 					/>
 				</div>
-
-				<div className='w-[0.063rem] h-5 bg-white/10'></div>
-
-				<div className='pl-4 ml-auto text-xs text-narto-muted font-bold tracking-wider whitespace-nowrap opacity-60 flex items-center shrink-0'>
-					POWERED BY{' '}
-					<span className='text-narto-accent ml-2 flex items-center gap-1'>⚡ CHCKN</span>
-				</div>
 			</div>
 
 			<div className='mt-2.5 text-[0.75rem] text-narto-muted/60 pl-1'>
