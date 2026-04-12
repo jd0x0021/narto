@@ -53,21 +53,3 @@ export type RawKlipyImageData = z.infer<typeof RawKlipyImageDataSchema>;
 export type RawKlipySearchResponse = z.infer<typeof RawKlipySearchResponseSchema>;
 
 export type ImageVariant = z.infer<typeof ImageVariantSchema>;
-
-export const VALID_COMMANDS = { MEME: 'meme', GIF: 'gif' } as const;
-
-export type CommandType = (typeof VALID_COMMANDS)[keyof typeof VALID_COMMANDS];
-
-export type FileFormatType = 'png' | 'gif';
-
-export type NormalizedSearchResult = {
-	id: number;
-	type: CommandType;
-	width: number;
-	height: number;
-	previewUrl: string;
-	displayUrl: string;
-	originalUrl: string;
-	blurPreview: string;
-	format: FileFormatType;
-};

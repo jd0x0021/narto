@@ -1,7 +1,7 @@
 import type { DragEvent, KeyboardEvent, MouseEvent } from 'react';
 import { memo, useEffect, useRef, useState } from 'react';
 
-import type { NormalizedSearchResult } from '@/services/providers/types';
+import type { NormalizedSearchResult } from '@/services/providers/searchProvider.types';
 import { useSearchStore } from '@/store/useSearchStore';
 import { copyImageFromUrl } from '@/utils/clipboard';
 
