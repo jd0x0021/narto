@@ -1,7 +1,11 @@
 import { create } from 'zustand';
 
-import { fetchKlipy } from '@/services/providers/klipyClient';
-import type { CommandType, NormalizedSearchResult } from '@/services/providers/types';
+import { searchProvider } from '@/services/providers/searchProvider';
+import type {
+	AppCommandType,
+	NormalizedSearchResult,
+} from '@/services/providers/searchProvider.types';
+import { AppCommand } from '@/services/providers/searchProvider.types';
 import { parseCommand } from '@/utils/parseCommand';
 
 type SearchStatus = 'idle' | 'loading' | 'success' | 'error';
@@ -9,7 +13,7 @@ type GridNavigation = 'up' | 'down' | 'left' | 'right';
 
 type SearchState = {
 	rawInput: string;
-	resolvedCommand: CommandType;
+	resolvedCommand: AppCommandType;
 	query: string;
 	results: NormalizedSearchResult[];
 	selectedIndex: number | null;
@@ -25,7 +29,7 @@ type SearchState = {
 
 export const useSearchStore = create<SearchState>((set, get) => ({
 	rawInput: '',
-	resolvedCommand: 'meme',
+	resolvedCommand: AppCommand.Meme,
 	query: '',
 	results: [],
 	selectedIndex: null,
@@ -53,7 +57,7 @@ export const useSearchStore = create<SearchState>((set, get) => ({
 		set({ requestId: nextId, status: 'loading', selectedIndex: null });
 
 		try {
-			const data = await fetchKlipy(resolvedCommand, query);
+			const data: NormalizedSearchResult[] = await searchProvider.search(resolvedCommand, query);
 
 			if (get().requestId !== nextId) return;
 
