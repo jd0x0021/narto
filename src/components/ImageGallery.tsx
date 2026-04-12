@@ -1,6 +1,7 @@
 import GridImage from '@/components/GridImage';
 import MasonryGrid from '@/components/MasonryGrid';
-import { useSearchStore } from '@/store/useSearchStore';
+import ResultsFallbackState from '@/components/ResultsFallbackState';
+import { UNKNOWN_ERROR_MESSAGE, useSearchStore } from '@/store/useSearchStore';
 
 export default function ImageGallery() {
 	const results = useSearchStore((s) => s.results);
@@ -8,27 +9,22 @@ export default function ImageGallery() {
 	const status = useSearchStore((s) => s.status);
 
 	if (!query && results.length === 0) {
-		{
-			/* Intentionally left blank or some subtle visual empty state per design constraint */
-		}
 		return <div></div>;
 	}
 
 	if (status === 'error') {
 		const errorMessage = useSearchStore.getState().errorMessage;
 		return (
-			<div className='flex-1 flex flex-col items-center justify-center p-6 text-red-500 text-sm'>
-				Error loading results: {errorMessage}
-			</div>
+			<ResultsFallbackState
+				fallbackState='error'
+				message={errorMessage ?? UNKNOWN_ERROR_MESSAGE}
+				addColoredMask
+			/>
 		);
 	}
 
 	if (results.length === 0 && status === 'success') {
-		return (
-			<div className='flex-1 flex flex-col items-center justify-center p-6 text-narto-muted/50 text-sm mt-10'>
-				No results found for &quot;{query}&quot;
-			</div>
-		);
+		return <ResultsFallbackState fallbackState='empty' message={query} />;
 	}
 
 	return (

@@ -4,6 +4,8 @@ import { fetchKlipy } from '@/services/providers/klipyClient';
 import type { CommandType, NormalizedSearchResult } from '@/services/providers/types';
 import { parseCommand } from '@/utils/parseCommand';
 
+export const UNKNOWN_ERROR_MESSAGE = 'An unknown error occurred while fetching results.';
+
 type SearchStatus = 'idle' | 'loading' | 'success' | 'error';
 type GridNavigation = 'up' | 'down' | 'left' | 'right';
 
@@ -60,7 +62,7 @@ export const useSearchStore = create<SearchState>((set, get) => ({
 			set({ results: data, status: 'success' });
 		} catch (err: unknown) {
 			if (get().requestId !== nextId) return;
-			const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+			const errorMessage = err instanceof Error ? err.message : UNKNOWN_ERROR_MESSAGE;
 			set({ status: 'error', errorMessage, results: [] });
 		}
 	},
