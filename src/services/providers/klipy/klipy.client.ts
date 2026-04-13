@@ -4,6 +4,12 @@ import type {
 	RawKlipySearchResponse,
 } from '@/services/providers/klipy/klipy.types';
 import { RawKlipySearchResponseSchema } from '@/services/providers/klipy/klipy.types';
+import {
+	SearchProviderError,
+	SearchProviderHttpError,
+	SearchProviderNetworkError,
+	SearchProviderSchemaError,
+} from '@/services/providers/searchProvider.errors';
 import type {
 	AppCommandType,
 	FileFormatType,
@@ -46,21 +52,36 @@ export const klipyClient: SearchProvider = {
 		url.searchParams.set('locale', locale);
 		url.searchParams.set('content_filter', CONTENT_FILTER);
 
-		console.log('Klipy API Request URL:', url.toString());
+		try {
+			const res = await fetch(url.toString());
 
-		const res = await fetch(url.toString());
+			if (!res.ok) {
+				throw new SearchProviderHttpError(
+					res.status,
+					`HTTP ${res.status}: Klipy request failed.`,
+				);
+			}
 
-		if (!res.ok) {
-			throw new Error('Klipy network error');
+			const parsedKlipyResponse = RawKlipySearchResponseSchema.safeParse(await res.json());
+
+			if (!parsedKlipyResponse.success) {
+				throw new SearchProviderSchemaError(
+					res.status,
+					`HTTP ${res.status}: Klipy returned an invalid response format.`,
+				);
+			}
+
+			return normalizeKlipyResponse(parsedKlipyResponse.data);
+		} catch (error) {
+			if (error instanceof SearchProviderError) {
+				throw error;
+			}
+
+			// native fetch failures (e.g. network issues) will be caught here
+			throw new SearchProviderNetworkError(
+				`Network error while fetching ${resolvedCommand}s from Klipy. Try again shortly.`,
+			);
 		}
-
-		const parsedKlipyResponse = RawKlipySearchResponseSchema.safeParse(await res.json());
-
-		if (!parsedKlipyResponse.success) {
-			throw new Error('Klipy response validation error', parsedKlipyResponse.error);
-		}
-
-		return normalizeKlipyResponse(parsedKlipyResponse.data);
 	},
 };
 
