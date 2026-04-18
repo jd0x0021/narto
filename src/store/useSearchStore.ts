@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 
 import { searchProvider } from '@/services/providers/searchProvider';
+import { SearchProviderError } from '@/services/providers/searchProvider.errors';
 import type {
 	AppCommandType,
 	NormalizedSearchResult,
@@ -20,7 +21,7 @@ type SearchState = {
 	results: NormalizedSearchResult[];
 	selectedIndex: number | null;
 	status: SearchStatus;
-	errorMessage?: string;
+	error?: SearchProviderError;
 	requestId: number;
 
 	setInput: (rawInput: string) => void;
@@ -66,8 +67,13 @@ export const useSearchStore = create<SearchState>((set, get) => ({
 			set({ results: data, status: 'success' });
 		} catch (err: unknown) {
 			if (get().requestId !== nextId) return;
-			const errorMessage = err instanceof Error ? err.message : UNKNOWN_ERROR_MESSAGE;
-			set({ status: 'error', errorMessage, results: [] });
+
+			const error =
+				err instanceof SearchProviderError
+					? err
+					: new SearchProviderError('unknown', UNKNOWN_ERROR_MESSAGE);
+
+			set({ status: 'error', error, results: [] });
 		}
 	},
 

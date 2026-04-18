@@ -1,25 +1,23 @@
 import GridImage from '@/components/GridImage';
 import MasonryGrid from '@/components/MasonryGrid';
 import ResultsFallbackState from '@/components/ResultsFallbackState';
-import { UNKNOWN_ERROR_MESSAGE, useSearchStore } from '@/store/useSearchStore';
+import { useSearchStore } from '@/store/useSearchStore';
 
 export default function ImageGallery() {
 	const results = useSearchStore((s) => s.results);
 	const query = useSearchStore((s) => s.query);
 	const status = useSearchStore((s) => s.status);
+	const searchError = useSearchStore((s) =>
+		s.status === 'error' && s.error ? s.error : undefined,
+	);
 
 	if (!query && results.length === 0) {
 		return <div></div>;
 	}
 
-	if (status === 'error') {
-		const errorMessage = useSearchStore.getState().errorMessage;
+	if (searchError) {
 		return (
-			<ResultsFallbackState
-				fallbackState='error'
-				message={errorMessage ?? UNKNOWN_ERROR_MESSAGE}
-				addColoredMask
-			/>
+			<ResultsFallbackState fallbackState='error' message={searchError.message} addColoredMask />
 		);
 	}
 
