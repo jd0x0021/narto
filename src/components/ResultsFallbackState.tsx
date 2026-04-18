@@ -30,9 +30,10 @@ export default function ResultsFallbackState({
 				<div className='relative border border-white/10 rounded-xl pt-2 pr-2'>
 					<img src={naruto} alt='No results' className='w-full h-auto object-contain' />
 
+					{/* Colored Image Mask Overlay */}
 					{/* This mt-2 mr-2 is to align the overlay on the image's pt-2 pr-2 paddings */}
 					<div
-						className={`absolute inset-0 ${fallbackState === 'empty' ? 'bg-narto-accent' : ''} ${addColoredMask ? 'opacity-40' : 'opacity-0'} mt-2 mr-2
+						className={`absolute inset-0 ${fallbackState === 'empty' ? 'bg-narto-accent' : 'bg-red-500'} ${addColoredMask ? 'opacity-40' : 'opacity-0'} mt-2 mr-2
 								[mask-size:contain] [-webkit-mask-size:contain]
 								[mask-repeat:no-repeat] [-webkit-mask-repeat:no-repeat]
 								[mask-position:center] [-webkit-mask-position:center]
