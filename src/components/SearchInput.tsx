@@ -1,6 +1,7 @@
 import type { ChangeEvent, KeyboardEvent } from 'react';
 import { useEffect, useMemo, useRef } from 'react';
 
+import CommandMenu from '@/components/CommandMenu';
 import FormattedInputValue from '@/components/FormattedInputValue';
 import { useSearchInputFocusHotkeys } from '@/hooks/useSearchInputFocusHotkeys';
 import { useSearchStore } from '@/store/useSearchStore';
@@ -18,6 +19,7 @@ export default function SearchInput() {
 
 	useSearchInputFocusHotkeys(inputRef);
 
+	const showCommandMenu: boolean = rawInput === '/';
 	const hasValidCommand: boolean = isValidCommand(rawInput);
 
 	const handleScroll = (e: React.UIEvent<HTMLInputElement>) => {
@@ -128,6 +130,12 @@ export default function SearchInput() {
 					/>
 				</div>
 			</div>
+
+			{showCommandMenu ? (
+				<div className='mt-2'>
+					<CommandMenu />
+				</div>
+			) : null}
 		</div>
 	);
 }
