@@ -110,6 +110,11 @@ const GridImage = memo(
 						loading='lazy'
 					/>
 
+					{/* Loading overlay */}
+					{!displayLoaded && (
+						<div className='absolute inset-0 bg-narto-muted/40 animate-pulse pointer-events-none' />
+					)}
+
 					{/* Copy button shown on hover */}
 					<button
 						type='button'
