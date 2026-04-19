@@ -1,3 +1,5 @@
+/// <reference types="vite-plugin-svgr/client" />
+
 interface ImportMetaEnv {
 	readonly VITE_KLIPY_BASE_URL: string;
 	readonly VITE_KLIPY_API_KEY: string;
