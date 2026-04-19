@@ -92,7 +92,7 @@ export default function SearchInput() {
 				className='relative flex items-center bg-narto-input rounded-narto border border-white/10 px-4 py-[0.375rem]
 				transition-all duration-200 focus-within:border-narto-accent focus-within:ring-1 focus-within:ring-narto-accent overflow-hidden'
 			>
-				<div className='w-full relative flex items-center text-base py-[0.313rem] mr-4'>
+				<div className='w-full relative flex items-center text-base py-[0.313rem]'>
 					{/* Presentation Layer: This is what the user actually sees. It sits under the invisible
 						input field and handles all the visual styling, like the command chip and text formatting. */}
 					<div
