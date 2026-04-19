@@ -99,7 +99,7 @@ export default function SearchInput() {
 						input field and handles all the visual styling, like the command chip and text formatting. */}
 					<div
 						ref={presentationLayerRef}
-						className='absolute inset-0 flex items-center pointer-events-none whitespace-pre overflow-hidden text-narto-text'
+						className='absolute inset-0 flex items-center pointer-events-none overflow-hidden text-narto-text'
 						aria-hidden='true'
 					>
 						<FormattedInputValue rawInput={rawInput} />

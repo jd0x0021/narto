@@ -1,3 +1,5 @@
+import CommandChip from '@/components/CommandChip';
+import type { AppCommandType } from '@/services/providers/searchProvider.types';
 import { useSearchStore } from '@/store/useSearchStore';
 import { isValidCommand } from '@/utils/parseCommand';
 
@@ -16,21 +18,22 @@ type FormattedInputValueProps = {
 export default function FormattedInputValue({ rawInput }: FormattedInputValueProps) {
 	const hasValidCommand: boolean = isValidCommand(rawInput);
 	const query: string = useSearchStore((s) => s.query);
-	const resolvedCommand: string = useSearchStore((s) => s.resolvedCommand);
+	const resolvedCommand: AppCommandType = useSearchStore((s) => s.resolvedCommand);
 
 	if (hasValidCommand) {
 		const showPlaceholder: boolean = query.length === 0;
 
 		return (
 			<>
-				<span className='bg-narto-accent text-white rounded-md px-1 pb-[0.094rem]'>
-					{`/${resolvedCommand}`}
+				<span className='text-base leading-6 flex items-baseline whitespace-pre'>
+					<CommandChip command={resolvedCommand} />
+
+					{showPlaceholder ? (
+						<span className='text-narto-muted/50'> Search {resolvedCommand}s...</span>
+					) : (
+						<span className='text-narto-text'>{` ${query}`}</span>
+					)}
 				</span>
-				{showPlaceholder ? (
-					<span className='text-narto-muted/50'> Search {resolvedCommand}s...</span>
-				) : (
-					<span>{` ${query}`}</span>
-				)}
 			</>
 		);
 	}

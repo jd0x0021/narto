@@ -1,3 +1,4 @@
+import CommandChip from '@/components/CommandChip';
 import type { AppCommandType } from '@/services/providers/searchProvider.types';
 import { AppCommand } from '@/services/providers/searchProvider.types';
 
@@ -10,7 +11,7 @@ const validCommands: readonly AppCommandType[] = Object.values(AppCommand);
 
 export default function CommandMenu() {
 	return (
-		<div className='w-full rounded-narto border border-white/10 bg-narto-panel text-sm font-sans text-narto-text'>
+		<div className='w-full rounded-narto border border-white/10 bg-narto-panel text-sm font-sans'>
 			{validCommands.map((command, index) => (
 				<div
 					key={command}
@@ -18,9 +19,9 @@ export default function CommandMenu() {
 						index < validCommands.length - 1 ? 'border-b border-white/10' : ''
 					}`}
 				>
-					<span className='text-base leading-6'>
-						<span className='font-semibold text-narto-accent'>/{command}</span>
-						<span className='text-narto-muted'> + your search input:</span>
+					<span className='text-base leading-6 flex items-baseline whitespace-pre'>
+						<CommandChip command={command} />
+						<span className='text-narto-muted/50'> + your search input:</span>
 					</span>
 					<span className='text-base leading-6 text-narto-text'>
 						{commandDescriptions[command]}
