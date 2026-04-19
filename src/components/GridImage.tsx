@@ -116,8 +116,8 @@ const GridImage = memo(
 						tabIndex={-1}
 						aria-label='Copy image'
 						className={`flex items-center gap-1 pointer-events-auto absolute right-2 bottom-2 rounded-md  
-								bg-narto-accent/90 px-2 py-1 text-xs text-white transition-opacity duration-200 ease-out focus:opacity-100 focus-visible:opacity-100
-								${isCopied ? 'opacity-0 pointer-events-none' : 'opacity-0 group-hover:opacity-100 hover:bg-narto-accent'}`}
+								bg-narto-accent/90 px-2 py-1 text-xs text-white transition-opacity duration-200 ease-out
+								${copying ? 'opacity-0 pointer-events-none' : 'opacity-0 group-hover:opacity-100 hover:bg-narto-accent'}`}
 						onClick={handleCopyOnEvent}
 					>
 						<svg
