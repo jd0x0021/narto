@@ -128,10 +128,6 @@ export default function SearchInput() {
 					/>
 				</div>
 			</div>
-
-			<div className='mt-2.5 text-[0.75rem] text-narto-muted/60 pl-1'>
-				Example: <span className='text-narto-muted/40'>/meme cat, /gif oiia</span>
-			</div>
 		</div>
 	);
 }
