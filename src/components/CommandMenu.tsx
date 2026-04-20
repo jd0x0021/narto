@@ -11,7 +11,7 @@ const validCommands: readonly AppCommandType[] = Object.values(AppCommand);
 
 export default function CommandMenu() {
 	return (
-		<div className='w-full rounded-narto border border-white/10 bg-narto-panel text-sm font-sans'>
+		<div className='w-full rounded-narto border border-white/10 bg-narto-panel text-sm font-sans overflow-hidden'>
 			{validCommands.map((command, index) => (
 				<div
 					key={command}
