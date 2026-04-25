@@ -20,8 +20,12 @@ export default function SearchInput() {
 
 	useSearchInputFocusHotkeys(inputRef);
 
-	const { selectedCommandIndex, setSelectedCommandIndex, handleMenuKeyDown, chooseCommand } =
-		useCommandMenuNavigation();
+	const {
+		selectedCommandIndex,
+		setSelectedCommandIndex,
+		handleCommandMenuKeyDown,
+		chooseCommand,
+	} = useCommandMenuNavigation();
 
 	const showCommandMenu: boolean = rawInput === '/';
 	const hasValidCommand: boolean = isValidCommand(rawInput);
@@ -63,7 +67,7 @@ export default function SearchInput() {
 
 	const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
 		if (showCommandMenu) {
-			handleMenuKeyDown(e);
+			handleCommandMenuKeyDown(e);
 			return;
 		}
 
@@ -145,7 +149,7 @@ export default function SearchInput() {
 					<CommandMenu
 						selectedCommandIndex={selectedCommandIndex}
 						setSelectedCommandIndex={setSelectedCommandIndex}
-						handleKeyDown={handleMenuKeyDown}
+						handleKeyDown={handleCommandMenuKeyDown}
 						chooseCommand={chooseCommand}
 					/>
 				</div>

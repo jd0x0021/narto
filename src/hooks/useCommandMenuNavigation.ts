@@ -21,7 +21,7 @@ export function useCommandMenuNavigation() {
 		setInput(commandValue);
 	};
 
-	const handleMenuKeyDown = (e: KeyboardEvent, currentIndex?: number) => {
+	const handleCommandMenuKeyDown = (e: KeyboardEvent, currentIndex?: number) => {
 		if (e.key === 'Escape') {
 			e.preventDefault();
 			closeCommandMenu();
@@ -52,5 +52,10 @@ export function useCommandMenuNavigation() {
 		}
 	};
 
-	return { selectedCommandIndex, setSelectedCommandIndex, handleMenuKeyDown, chooseCommand };
+	return {
+		selectedCommandIndex,
+		setSelectedCommandIndex,
+		handleCommandMenuKeyDown,
+		chooseCommand,
+	};
 }
