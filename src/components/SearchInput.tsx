@@ -1,10 +1,10 @@
 import type { ChangeEvent, KeyboardEvent } from 'react';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 
 import CommandMenu from '@/components/CommandMenu';
 import FormattedInputValue from '@/components/FormattedInputValue';
+import { useCommandMenuNavigation } from '@/hooks/useCommandMenuNavigation';
 import { useSearchInputFocusHotkeys } from '@/hooks/useSearchInputFocusHotkeys';
-import { AppCommand } from '@/services/providers/searchProvider.types';
 import { useSearchStore } from '@/store/useSearchStore';
 import { debounce } from '@/utils/debounce';
 import { isValidCommand } from '@/utils/parseCommand';
@@ -17,11 +17,12 @@ export default function SearchInput() {
 
 	const inputRef = useRef<HTMLInputElement>(null);
 	const presentationLayerRef = useRef<HTMLDivElement>(null);
-	const [selectedCommandIndex, setSelectedCommandIndex] = useState<number | null>(null);
 
 	useSearchInputFocusHotkeys(inputRef);
 
-	const commandOptions = Object.values(AppCommand);
+	const { selectedCommandIndex, setSelectedCommandIndex, handleMenuKeyDown, chooseCommand } =
+		useCommandMenuNavigation();
+
 	const showCommandMenu: boolean = rawInput === '/';
 	const hasValidCommand: boolean = isValidCommand(rawInput);
 
@@ -45,9 +46,7 @@ export default function SearchInput() {
 	);
 
 	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-		const value = e.target.value;
-		setInput(value);
-		setSelectedCommandIndex(value === '/' ? 0 : null);
+		setInput(e.target.value);
 		const { query } = useSearchStore.getState();
 
 		if (query.length >= 1) {
@@ -62,57 +61,10 @@ export default function SearchInput() {
 		}
 	};
 
-	const chooseCommand = (command: string) => {
-		const commandValue = `/${command} `;
-		setInput(commandValue);
-		setSelectedCommandIndex(null);
-		requestAnimationFrame(() => {
-			inputRef.current?.focus();
-			const length = inputRef.current?.value.length ?? 0;
-			inputRef.current?.setSelectionRange(length, length);
-		});
-	};
-
-	const closeCommandMenu = () => {
-		setInput('');
-		setSelectedCommandIndex(null);
-	};
-
 	const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
 		if (showCommandMenu) {
-			if (e.key === 'Escape') {
-				e.preventDefault();
-				closeCommandMenu();
-				return;
-			}
-
-			if (e.key === 'ArrowDown') {
-				e.preventDefault();
-				setSelectedCommandIndex((current) => {
-					if (current === null) return 0;
-					const next = current + 1;
-					return next >= commandOptions.length ? 0 : next;
-				});
-				return;
-			}
-
-			if (e.key === 'ArrowUp') {
-				e.preventDefault();
-				setSelectedCommandIndex((current) => {
-					if (current === null) return commandOptions.length - 1;
-					const next = current - 1;
-					return next < 0 ? commandOptions.length - 1 : next;
-				});
-				return;
-			}
-
-			if (e.key === 'Enter') {
-				e.preventDefault();
-				if (selectedCommandIndex !== null) {
-					chooseCommand(commandOptions[selectedCommandIndex]);
-				}
-				return;
-			}
+			handleMenuKeyDown(e);
+			return;
 		}
 
 		if (e.key === 'Escape') {
@@ -191,9 +143,10 @@ export default function SearchInput() {
 			{showCommandMenu ? (
 				<div className='mt-2'>
 					<CommandMenu
-						selectedIndex={selectedCommandIndex}
-						onSelectIndex={setSelectedCommandIndex}
-						onChooseCommand={chooseCommand}
+						selectedCommandIndex={selectedCommandIndex}
+						setSelectedCommandIndex={setSelectedCommandIndex}
+						handleKeyDown={handleMenuKeyDown}
+						chooseCommand={chooseCommand}
 					/>
 				</div>
 			) : null}

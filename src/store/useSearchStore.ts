@@ -26,6 +26,7 @@ type SearchState = {
 
 	setInput: (rawInput: string) => void;
 	runSearch: () => Promise<void>;
+	// this is the currently selected GridImage in the MasonryGrid. It can be null if no GridImage is selected.
 	setSelectedIndex: (index: number | null) => void;
 	moveSelection: (direction: GridNavigation, columns: number) => void;
 };

@@ -1,3 +1,5 @@
+import type { KeyboardEvent } from 'react';
+
 import CommandChip from '@/components/CommandChip';
 import type { AppCommandType } from '@/services/providers/searchProvider.types';
 import { AppCommand } from '@/services/providers/searchProvider.types';
@@ -10,15 +12,17 @@ const commandDescriptions = {
 const validCommands: readonly AppCommandType[] = Object.values(AppCommand);
 
 type CommandMenuProps = {
-	selectedIndex: number | null;
-	onSelectIndex: (index: number) => void;
-	onChooseCommand: (command: AppCommandType) => void;
+	selectedCommandIndex: number;
+	setSelectedCommandIndex: (index: number) => void;
+	handleKeyDown: (e: KeyboardEvent, index?: number) => void;
+	chooseCommand: (command: AppCommandType) => void;
 };
 
 export default function CommandMenu({
-	selectedIndex,
-	onSelectIndex,
-	onChooseCommand,
+	selectedCommandIndex,
+	setSelectedCommandIndex,
+	handleKeyDown,
+	chooseCommand,
 }: CommandMenuProps) {
 	return (
 		<div
@@ -26,41 +30,25 @@ export default function CommandMenu({
 			role='listbox'
 		>
 			{validCommands.map((command, index) => {
-				const isSelected = selectedIndex === index;
+				const isSelected = selectedCommandIndex === index;
 				return (
 					<div
 						key={command}
 						id={`command-menu-item-${command}`}
 						role='option'
-						aria-selected={selectedIndex === index}
+						aria-selected={selectedCommandIndex === index}
 						tabIndex={0}
 						onClick={() => {
-							onChooseCommand(command);
+							chooseCommand(command);
 						}}
 						onMouseDown={(e) => {
 							e.preventDefault();
 						}}
 						onMouseEnter={() => {
-							onSelectIndex(index);
+							setSelectedCommandIndex(index);
 						}}
 						onKeyDown={(e) => {
-							if (e.key === 'Enter' || e.key === ' ') {
-								e.preventDefault();
-								onChooseCommand(command);
-								return;
-							}
-
-							if (e.key === 'ArrowDown') {
-								e.preventDefault();
-								onSelectIndex((index + 1) % validCommands.length);
-								return;
-							}
-
-							if (e.key === 'ArrowUp') {
-								e.preventDefault();
-								onSelectIndex((index - 1 + validCommands.length) % validCommands.length);
-								return;
-							}
+							handleKeyDown(e, index);
 						}}
 						className={`flex items-center justify-between gap-4 px-4 py-3 transition-colors duration-150 ${
 							isSelected ? 'bg-white/5' : 'hover:bg-white/5'
