@@ -1,4 +1,4 @@
-import type { ChangeEvent, KeyboardEvent } from 'react';
+import type { ChangeEvent } from 'react';
 import { useEffect, useMemo, useRef } from 'react';
 
 import CommandMenu from '@/components/CommandMenu';
@@ -13,22 +13,17 @@ export default function SearchInput() {
 	const rawInput = useSearchStore((s) => s.rawInput);
 	const setInput = useSearchStore((s) => s.setInput);
 	const setSelectedIndex = useSearchStore((s) => s.setSelectedIndex);
-	const results = useSearchStore((s) => s.results);
 
 	const inputRef = useRef<HTMLInputElement>(null);
 	const presentationLayerRef = useRef<HTMLDivElement>(null);
 
-	useSearchInputFocusHotkeys(inputRef);
-
-	const {
-		selectedCommandIndex,
-		setSelectedCommandIndex,
-		handleCommandMenuKeyDown,
-		chooseCommand,
-	} = useCommandMenuNavigation();
-
 	const showCommandMenu: boolean = rawInput === '/';
 	const hasValidCommand: boolean = isValidCommand(rawInput);
+
+	useSearchInputFocusHotkeys(inputRef);
+
+	const { selectedCommandIndex, setSelectedCommandIndex, chooseCommand, handleKeyDown } =
+		useCommandMenuNavigation({ showCommandMenu });
 
 	const handleScroll = (e: React.UIEvent<HTMLInputElement>) => {
 		if (presentationLayerRef.current) {
@@ -62,33 +57,6 @@ export default function SearchInput() {
 				status: 'idle',
 				selectedIndex: null,
 			});
-		}
-	};
-
-	const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-		if (showCommandMenu) {
-			handleCommandMenuKeyDown(e);
-			return;
-		}
-
-		if (e.key === 'Escape') {
-			e.preventDefault();
-			window.close();
-		} else if (e.key === 'ArrowDown') {
-			e.preventDefault();
-			if (results.length > 0) {
-				setSelectedIndex(0);
-				inputRef.current?.blur(); // drop focus from input
-			}
-		} else if (e.key === 'ArrowUp') {
-			e.preventDefault();
-			if (results.length > 0) {
-				setSelectedIndex(results.length - 1);
-				inputRef.current?.blur(); // drop focus from input
-			}
-		} else if (e.key === 'Enter') {
-			e.preventDefault();
-			// Enter never fetches
 		}
 	};
 
@@ -149,7 +117,7 @@ export default function SearchInput() {
 					<CommandMenu
 						selectedCommandIndex={selectedCommandIndex}
 						setSelectedCommandIndex={setSelectedCommandIndex}
-						handleKeyDown={handleCommandMenuKeyDown}
+						handleKeyDown={handleKeyDown}
 						chooseCommand={chooseCommand}
 					/>
 				</div>

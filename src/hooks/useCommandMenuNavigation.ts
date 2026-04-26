@@ -7,8 +7,14 @@ import { useSearchStore } from '@/store/useSearchStore';
 
 const commandOptions: readonly AppCommandType[] = Object.values(AppCommand);
 
-export function useCommandMenuNavigation() {
+type UseCommandMenuNavigationProps = {
+	showCommandMenu: boolean;
+};
+
+export function useCommandMenuNavigation({ showCommandMenu }: UseCommandMenuNavigationProps) {
 	const setInput = useSearchStore((s) => s.setInput);
+	const results = useSearchStore((s) => s.results);
+	const setSelectedIndex = useSearchStore((s) => s.setSelectedIndex);
 
 	const [selectedCommandIndex, setSelectedCommandIndex] = useState<number>(0);
 
@@ -52,10 +58,39 @@ export function useCommandMenuNavigation() {
 		}
 	};
 
+	const handleInputKeyDown = (e: KeyboardEvent) => {
+		if (e.key === 'Escape') {
+			e.preventDefault();
+			window.close();
+		} else if (e.key === 'ArrowDown') {
+			e.preventDefault();
+			if (results.length > 0) {
+				setSelectedIndex(0);
+			}
+		} else if (e.key === 'ArrowUp') {
+			e.preventDefault();
+			if (results.length > 0) {
+				setSelectedIndex(results.length - 1);
+			}
+		} else if (e.key === 'Enter') {
+			e.preventDefault();
+			// Enter never fetches
+		}
+	};
+
+	const handleKeyDown = (e: KeyboardEvent) => {
+		if (showCommandMenu) {
+			handleCommandMenuKeyDown(e);
+			return;
+		}
+
+		handleInputKeyDown(e);
+	};
+
 	return {
 		selectedCommandIndex,
 		setSelectedCommandIndex,
-		handleCommandMenuKeyDown,
+		handleKeyDown,
 		chooseCommand,
 	};
 }
