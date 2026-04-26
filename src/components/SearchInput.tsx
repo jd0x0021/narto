@@ -4,15 +4,15 @@ import { useEffect, useMemo, useRef } from 'react';
 import CommandMenu from '@/components/CommandMenu';
 import FormattedInputValue from '@/components/FormattedInputValue';
 import { useSearchInputFocusHotkeys } from '@/hooks/useSearchInputFocusHotkeys';
-import { useSearchStore } from '@/store/useSearchStore';
+import { useAppStore } from '@/store/useAppStore';
 import { debounce } from '@/utils/debounce';
 import { isValidCommand } from '@/utils/parseCommand';
 
 export default function SearchInput() {
-	const rawInput = useSearchStore((s) => s.rawInput);
-	const setInput = useSearchStore((s) => s.setInput);
-	const setSelectedIndex = useSearchStore((s) => s.setSelectedIndex);
-	const handleKeyDown = useSearchStore((s) => s.handleKeyDown);
+	const rawInput = useAppStore((s) => s.rawInput);
+	const setInput = useAppStore((s) => s.setInput);
+	const setSelectedIndex = useAppStore((s) => s.setSelectedIndex);
+	const handleKeyDown = useAppStore((s) => s.handleKeyDown);
 
 	const inputRef = useRef<HTMLInputElement>(null);
 	const presentationLayerRef = useRef<HTMLDivElement>(null);
@@ -36,20 +36,20 @@ export default function SearchInput() {
 	const debouncedSearch = useMemo(
 		() =>
 			debounce(() => {
-				void useSearchStore.getState().runSearch();
+				void useAppStore.getState().runSearch();
 			}, 200),
 		[],
 	);
 
 	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
 		setInput(e.target.value);
-		const { query } = useSearchStore.getState();
+		const { query } = useAppStore.getState();
 
 		if (query.length >= 1) {
 			debouncedSearch();
 		} else {
 			debouncedSearch.cancel();
-			useSearchStore.setState({
+			useAppStore.setState({
 				results: [],
 				status: 'idle',
 				selectedIndex: null,
@@ -58,7 +58,7 @@ export default function SearchInput() {
 	};
 
 	useEffect(() => {
-		return useSearchStore.subscribe((state, prevState) => {
+		return useAppStore.subscribe((state, prevState) => {
 			// Return focus to input if selectedIndex goes to null from grid
 			if (prevState.selectedIndex !== null && state.selectedIndex === null) {
 				inputRef.current?.focus();

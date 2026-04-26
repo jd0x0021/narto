@@ -2,7 +2,7 @@ import type { DragEvent, KeyboardEvent, MouseEvent } from 'react';
 import { memo, useEffect, useRef, useState } from 'react';
 
 import type { NormalizedSearchResult } from '@/services/providers/searchProvider.types';
-import { useSearchStore } from '@/store/useSearchStore';
+import { useAppStore } from '@/store/useAppStore';
 import { copyImageFromUrl } from '@/utils/clipboard';
 
 const GridImage = memo(
@@ -14,8 +14,8 @@ const GridImage = memo(
 		index: number;
 		calculateLayout?: () => void;
 	}) => {
-		const isSelected = useSearchStore((s) => s.selectedIndex === index);
-		const setSelectedIndex = useSearchStore((s) => s.setSelectedIndex);
+		const isSelected = useAppStore((s) => s.selectedIndex === index);
+		const setSelectedIndex = useAppStore((s) => s.setSelectedIndex);
 
 		const [displayLoaded, setDisplayLoaded] = useState(false);
 		const [copying, setCopying] = useState(false);

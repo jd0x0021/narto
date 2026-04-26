@@ -1,7 +1,7 @@
 import type { KeyboardEvent, ReactNode } from 'react';
 import { memo, useCallback, useEffect, useRef } from 'react';
 
-import { useSearchStore } from '@/store/useSearchStore';
+import { useAppStore } from '@/store/useAppStore';
 
 type MasonryGridProps = {
 	children: ReactNode;
@@ -52,13 +52,13 @@ const MasonryGrid = memo(({ children, columnCount, gap }: MasonryGridProps) => {
 		calculateLayout();
 	}, [children, calculateLayout]);
 
-	const moveSelection = useSearchStore((s) => s.moveSelection);
-	const setSelectedIndex = useSearchStore((s) => s.setSelectedIndex);
+	const moveSelection = useAppStore((s) => s.moveSelection);
+	const setSelectedIndex = useAppStore((s) => s.setSelectedIndex);
 
 	const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
 		if (e.key === 'ArrowUp') {
 			e.preventDefault();
-			const sIndex = useSearchStore.getState().selectedIndex;
+			const sIndex = useAppStore.getState().selectedIndex;
 			if (sIndex !== null && sIndex < columnCount) {
 				setSelectedIndex(null); // Return to input
 			} else {

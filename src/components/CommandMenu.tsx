@@ -1,7 +1,7 @@
 import CommandChip from '@/components/CommandChip';
 import type { AppCommandType } from '@/services/providers/searchProvider.types';
 import { AppCommand } from '@/services/providers/searchProvider.types';
-import { useSearchStore } from '@/store/useSearchStore';
+import { useAppStore } from '@/store/useAppStore';
 
 const commandDescriptions = {
 	meme: 'get static meme images',
@@ -11,10 +11,10 @@ const commandDescriptions = {
 const validCommands: readonly AppCommandType[] = Object.values(AppCommand);
 
 export default function CommandMenu() {
-	const selectedCommandIndex = useSearchStore((s) => s.selectedCommandIndex);
-	const setSelectedCommandIndex = useSearchStore((s) => s.setSelectedCommandIndex);
-	const chooseCommand = useSearchStore((s) => s.chooseCommand);
-	const handleCommandMenuKeyDown = useSearchStore((s) => s.handleCommandMenuKeyDown);
+	const selectedCommandIndex = useAppStore((s) => s.selectedCommandIndex);
+	const setSelectedCommandIndex = useAppStore((s) => s.setSelectedCommandIndex);
+	const chooseCommand = useAppStore((s) => s.chooseCommand);
+	const handleCommandMenuKeyDown = useAppStore((s) => s.handleCommandMenuKeyDown);
 
 	return (
 		<div

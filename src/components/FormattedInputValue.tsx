@@ -1,6 +1,6 @@
 import CommandChip from '@/components/CommandChip';
 import type { AppCommandType } from '@/services/providers/searchProvider.types';
-import { useSearchStore } from '@/store/useSearchStore';
+import { useAppStore } from '@/store/useAppStore';
 import { isValidCommand } from '@/utils/parseCommand';
 
 type FormattedInputValueProps = {
@@ -17,8 +17,8 @@ type FormattedInputValueProps = {
  */
 export default function FormattedInputValue({ rawInput }: FormattedInputValueProps) {
 	const hasValidCommand: boolean = isValidCommand(rawInput);
-	const query: string = useSearchStore((s) => s.query);
-	const resolvedCommand: AppCommandType = useSearchStore((s) => s.resolvedCommand);
+	const query: string = useAppStore((s) => s.query);
+	const resolvedCommand: AppCommandType = useAppStore((s) => s.resolvedCommand);
 
 	if (hasValidCommand) {
 		const showPlaceholder: boolean = query.length === 0;

@@ -1,7 +1,7 @@
 import type { RefObject } from 'react';
 import { useEffect } from 'react';
 
-import { useSearchStore } from '@/store/useSearchStore';
+import { useAppStore } from '@/store/useAppStore';
 
 /**
  * Attaches a global keyboard event listener that listens for specific hotkeys
@@ -13,7 +13,7 @@ import { useSearchStore } from '@/store/useSearchStore';
  * @param inputRef - A React ref object pointing to the target HTMLInputElement.
  */
 export function useSearchInputFocusHotkeys(inputRef: RefObject<HTMLInputElement | null>): void {
-	const setSelectedIndex = useSearchStore((s) => s.setSelectedIndex);
+	const setSelectedIndex = useAppStore((s) => s.setSelectedIndex);
 
 	useEffect(() => {
 		const handleGlobalKeyDown = (e: globalThis.KeyboardEvent) => {
