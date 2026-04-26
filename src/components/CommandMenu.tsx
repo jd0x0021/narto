@@ -1,8 +1,7 @@
-import type { KeyboardEvent } from 'react';
-
 import CommandChip from '@/components/CommandChip';
 import type { AppCommandType } from '@/services/providers/searchProvider.types';
 import { AppCommand } from '@/services/providers/searchProvider.types';
+import { useSearchStore } from '@/store/useSearchStore';
 
 const commandDescriptions = {
 	meme: 'get static meme images',
@@ -11,19 +10,12 @@ const commandDescriptions = {
 
 const validCommands: readonly AppCommandType[] = Object.values(AppCommand);
 
-type CommandMenuProps = {
-	selectedCommandIndex: number;
-	setSelectedCommandIndex: (index: number) => void;
-	handleKeyDown: (e: KeyboardEvent, index?: number) => void;
-	chooseCommand: (command: AppCommandType) => void;
-};
+export default function CommandMenu() {
+	const selectedCommandIndex = useSearchStore((s) => s.selectedCommandIndex);
+	const setSelectedCommandIndex = useSearchStore((s) => s.setSelectedCommandIndex);
+	const chooseCommand = useSearchStore((s) => s.chooseCommand);
+	const handleCommandMenuKeyDown = useSearchStore((s) => s.handleCommandMenuKeyDown);
 
-export default function CommandMenu({
-	selectedCommandIndex,
-	setSelectedCommandIndex,
-	handleKeyDown,
-	chooseCommand,
-}: CommandMenuProps) {
 	return (
 		<div
 			className='w-full rounded-narto border border-white/10 bg-narto-panel text-sm font-sans overflow-hidden'
@@ -48,7 +40,7 @@ export default function CommandMenu({
 							setSelectedCommandIndex(index);
 						}}
 						onKeyDown={(e) => {
-							handleKeyDown(e, index);
+							handleCommandMenuKeyDown(e, index);
 						}}
 						className={`flex items-center justify-between gap-4 px-4 py-3 transition-colors duration-150 ${
 							isSelected ? 'bg-white/5' : 'hover:bg-white/5'

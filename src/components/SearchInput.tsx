@@ -3,7 +3,6 @@ import { useEffect, useMemo, useRef } from 'react';
 
 import CommandMenu from '@/components/CommandMenu';
 import FormattedInputValue from '@/components/FormattedInputValue';
-import { useCommandMenuNavigation } from '@/hooks/useCommandMenuNavigation';
 import { useSearchInputFocusHotkeys } from '@/hooks/useSearchInputFocusHotkeys';
 import { useSearchStore } from '@/store/useSearchStore';
 import { debounce } from '@/utils/debounce';
@@ -13,6 +12,7 @@ export default function SearchInput() {
 	const rawInput = useSearchStore((s) => s.rawInput);
 	const setInput = useSearchStore((s) => s.setInput);
 	const setSelectedIndex = useSearchStore((s) => s.setSelectedIndex);
+	const handleKeyDown = useSearchStore((s) => s.handleKeyDown);
 
 	const inputRef = useRef<HTMLInputElement>(null);
 	const presentationLayerRef = useRef<HTMLDivElement>(null);
@@ -21,9 +21,6 @@ export default function SearchInput() {
 	const hasValidCommand: boolean = isValidCommand(rawInput);
 
 	useSearchInputFocusHotkeys(inputRef);
-
-	const { selectedCommandIndex, setSelectedCommandIndex, chooseCommand, handleKeyDown } =
-		useCommandMenuNavigation({ showCommandMenu });
 
 	const handleScroll = (e: React.UIEvent<HTMLInputElement>) => {
 		if (presentationLayerRef.current) {
@@ -114,12 +111,7 @@ export default function SearchInput() {
 
 			{showCommandMenu ? (
 				<div className='mt-2'>
-					<CommandMenu
-						selectedCommandIndex={selectedCommandIndex}
-						setSelectedCommandIndex={setSelectedCommandIndex}
-						handleKeyDown={handleKeyDown}
-						chooseCommand={chooseCommand}
-					/>
+					<CommandMenu />
 				</div>
 			) : null}
 		</div>
