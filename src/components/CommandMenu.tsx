@@ -42,7 +42,7 @@ export default function CommandMenu() {
 						onKeyDown={(e) => {
 							handleCommandMenuKeyDown(e, index);
 						}}
-						className={`flex items-center justify-between gap-4 px-4 py-3 transition-colors duration-150 ${
+						className={`flex items-center justify-between gap-4 px-4 py-3 transition-colors duration-150 focus:outline-none ${
 							isSelected ? 'bg-white/5' : 'hover:bg-white/5'
 						} ${index < validCommands.length - 1 ? 'border-b border-white/10' : ''}`}
 					>

@@ -5,7 +5,7 @@ import type { AppState, AppStateCreator } from '@/store/appStore.types';
 import type { CommandMenuSlice } from '@/store/slices/commandMenuSlice/commandMenuSlice.types';
 
 const SPACE = ' ' as const;
-const commandKeyboardKeys = ['Escape', 'ArrowDown', 'ArrowUp', 'Enter', SPACE] as const;
+const commandKeyboardKeys = ['Escape', 'ArrowDown', 'ArrowUp', 'Enter', SPACE, 'Tab'] as const;
 const searchInputKeys = ['Escape', 'ArrowDown', 'ArrowUp'] as const;
 const commandOptions: readonly AppCommandType[] = Object.values(AppCommand);
 
@@ -78,6 +78,14 @@ export const createCommandMenuSlice: AppStateCreator<CommandMenuSlice> = (set, g
 						state.selectedCommandIndex > 0
 							? state.selectedCommandIndex - 1
 							: commandOptions.length - 1,
+				}));
+			},
+			Tab: () => {
+				set((state: AppState) => ({
+					selectedCommandIndex:
+						state.selectedCommandIndex < commandOptions.length - 1
+							? state.selectedCommandIndex + 1
+							: 0,
 				}));
 			},
 			Enter: () => {
