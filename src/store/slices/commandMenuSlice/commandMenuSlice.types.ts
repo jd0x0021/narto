@@ -6,7 +6,7 @@ export type CommandMenuSlice = {
 	selectedCommandIndex: number;
 	setSelectedCommandIndex: (index: number) => void;
 	chooseCommand: (command: AppCommandType) => void;
-	handleKeyDown: (e: KeyboardEvent<HTMLInputElement>) => void;
-	handleSearchInputKeyDown: (e: KeyboardEvent<HTMLInputElement>) => void;
-	handleCommandMenuKeyDown: (e: KeyboardEvent<HTMLInputElement>, index?: number) => void;
+	handleKeyDown: (e: KeyboardEvent<HTMLElement>) => void;
+	handleSearchInputKeyDown: (e: KeyboardEvent<HTMLElement>) => void;
+	handleCommandMenuKeyDown: (e: KeyboardEvent<HTMLElement>, index?: number) => void;
 };

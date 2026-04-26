@@ -24,7 +24,7 @@ export const createCommandMenuSlice: AppStateCreator<CommandMenuSlice> = (set, g
 		get().setInput(commandValue);
 	},
 
-	handleKeyDown: (e: KeyboardEvent<HTMLInputElement>) => {
+	handleKeyDown: (e: KeyboardEvent<HTMLElement>) => {
 		const showCommandMenu = get().rawInput === '/';
 
 		if (showCommandMenu) {
@@ -34,7 +34,7 @@ export const createCommandMenuSlice: AppStateCreator<CommandMenuSlice> = (set, g
 		}
 	},
 
-	handleSearchInputKeyDown: (e: KeyboardEvent<HTMLInputElement>) => {
+	handleSearchInputKeyDown: (e: KeyboardEvent<HTMLElement>) => {
 		if (!searchInputKeys.includes(e.key as SearchInputKey)) return;
 
 		const keyEventHandlers: Record<SearchInputKey, () => void> = {
@@ -57,7 +57,7 @@ export const createCommandMenuSlice: AppStateCreator<CommandMenuSlice> = (set, g
 		keyEventHandlers[e.key as SearchInputKey]();
 	},
 
-	handleCommandMenuKeyDown: (e: KeyboardEvent<HTMLInputElement>, index?: number) => {
+	handleCommandMenuKeyDown: (e: KeyboardEvent<HTMLElement>, index?: number) => {
 		if (!commandKeyboardKeys.includes(e.key as CommandKeyboardKey)) return;
 
 		const keyEventHandlers: Record<CommandKeyboardKey, () => void> = {
