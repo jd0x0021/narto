@@ -12,6 +12,28 @@ const commandOptions: readonly AppCommandType[] = Object.values(AppCommand);
 type CommandKeyboardKey = (typeof commandKeyboardKeys)[number];
 type SearchInputKey = (typeof searchInputKeys)[number];
 
+/**
+ * Narrow the runtime key string to command menu keys.
+ *
+ * Returns `true` when the pressed key is one of the supported command menu
+ * navigation or selection keys, allowing the caller to safely treat `key`
+ * as a `CommandKeyboardKey`.
+ */
+const isCommandKeyboardKey = (key: string): key is CommandKeyboardKey => {
+	return commandKeyboardKeys.some((k) => k === key);
+};
+
+/**
+ * Narrow the runtime key string to search input keys.
+ *
+ * Returns `true` when the pressed key is one of the supported search input
+ * navigation keys, allowing the caller to safely treat `key` as a
+ * `SearchInputKey`.
+ */
+const isSearchInputKeyboardKey = (key: string): key is SearchInputKey => {
+	return searchInputKeys.some((k) => k === key);
+};
+
 export const createCommandMenuSlice: AppStateCreator<CommandMenuSlice> = (set, get) => ({
 	selectedCommandIndex: 0,
 
@@ -35,7 +57,7 @@ export const createCommandMenuSlice: AppStateCreator<CommandMenuSlice> = (set, g
 	},
 
 	handleSearchInputKeyDown: (e: KeyboardEvent<HTMLElement>) => {
-		if (!searchInputKeys.includes(e.key as SearchInputKey)) return;
+		if (!isSearchInputKeyboardKey(e.key)) return;
 
 		const keyEventHandlers: Record<SearchInputKey, () => void> = {
 			Escape: () => {
@@ -54,11 +76,11 @@ export const createCommandMenuSlice: AppStateCreator<CommandMenuSlice> = (set, g
 		};
 
 		e.preventDefault();
-		keyEventHandlers[e.key as SearchInputKey]();
+		keyEventHandlers[e.key]();
 	},
 
 	handleCommandMenuKeyDown: (e: KeyboardEvent<HTMLElement>, index?: number) => {
-		if (!commandKeyboardKeys.includes(e.key as CommandKeyboardKey)) return;
+		if (!isCommandKeyboardKey(e.key)) return;
 
 		const keyEventHandlers: Record<CommandKeyboardKey, () => void> = {
 			Escape: () => {
@@ -99,6 +121,6 @@ export const createCommandMenuSlice: AppStateCreator<CommandMenuSlice> = (set, g
 		};
 
 		e.preventDefault();
-		keyEventHandlers[e.key as CommandKeyboardKey]();
+		keyEventHandlers[e.key]();
 	},
 });
