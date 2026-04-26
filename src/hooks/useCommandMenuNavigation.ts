@@ -6,17 +6,24 @@ import { AppCommand } from '@/services/providers/searchProvider.types';
 import { useSearchStore } from '@/store/useSearchStore';
 
 const SPACE = ' ' as const;
-const keyboardKeys = ['Escape', 'ArrowDown', 'ArrowUp', 'Enter', SPACE] as const;
+const commandKeyboardKeys = ['Escape', 'ArrowDown', 'ArrowUp', 'Enter', SPACE] as const;
+const searchInputKeys = ['Escape', 'ArrowDown', 'ArrowUp'] as const;
 const commandOptions: readonly AppCommandType[] = Object.values(AppCommand);
 
-type KeyboardKey = (typeof keyboardKeys)[number];
-type KeyboardKeyEventHandler = Record<KeyboardKey, () => void>;
+type CommandKeyboardKey = (typeof commandKeyboardKeys)[number];
+type CommandKeyboardKeyEventHandler = Record<CommandKeyboardKey, () => void>;
+type SearchInputKey = (typeof searchInputKeys)[number];
+type SearchInputKeyEventHandler = Record<SearchInputKey, () => void>;
 type UseCommandMenuNavigationProps = {
 	showCommandMenu: boolean;
 };
 
-const isSupportedKeyboardKey = (key: string): key is KeyboardKey => {
-	return keyboardKeys.some((k) => k === key);
+const isCommandKeyboardKey = (key: string): key is CommandKeyboardKey => {
+	return commandKeyboardKeys.some((k) => k === key);
+};
+
+const isSearchInputKeyboardKey = (key: string): key is SearchInputKey => {
+	return searchInputKeys.some((k) => k === key);
 };
 
 export function useCommandMenuNavigation({ showCommandMenu }: UseCommandMenuNavigationProps) {
@@ -36,9 +43,9 @@ export function useCommandMenuNavigation({ showCommandMenu }: UseCommandMenuNavi
 	};
 
 	const handleCommandMenuKeyDown = (e: KeyboardEvent, currentIndex?: number) => {
-		if (!isSupportedKeyboardKey(e.key)) return;
+		if (!isCommandKeyboardKey(e.key)) return;
 
-		const keyEventHandlers: KeyboardKeyEventHandler = {
+		const keyEventHandlers: CommandKeyboardKeyEventHandler = {
 			Escape: () => {
 				closeCommandMenu();
 			},
@@ -66,24 +73,27 @@ export function useCommandMenuNavigation({ showCommandMenu }: UseCommandMenuNavi
 		keyEventHandlers[e.key]();
 	};
 
-	const handleInputKeyDown = (e: KeyboardEvent) => {
-		if (e.key === 'Escape') {
-			e.preventDefault();
-			window.close();
-		} else if (e.key === 'ArrowDown') {
-			e.preventDefault();
-			if (results.length > 0) {
-				setSelectedIndex(0);
-			}
-		} else if (e.key === 'ArrowUp') {
-			e.preventDefault();
-			if (results.length > 0) {
-				setSelectedIndex(results.length - 1);
-			}
-		} else if (e.key === 'Enter') {
-			e.preventDefault();
-			// Enter never fetches
-		}
+	const handleSearchInputKeyDown = (e: KeyboardEvent) => {
+		if (!isSearchInputKeyboardKey(e.key)) return;
+
+		const keyEventHandlers: SearchInputKeyEventHandler = {
+			Escape: () => {
+				window.close();
+			},
+			ArrowDown: () => {
+				if (results.length > 0) {
+					setSelectedIndex(0);
+				}
+			},
+			ArrowUp: () => {
+				if (results.length > 0) {
+					setSelectedIndex(results.length - 1);
+				}
+			},
+		};
+
+		e.preventDefault();
+		keyEventHandlers[e.key]();
 	};
 
 	const handleKeyDown = (e: KeyboardEvent) => {
@@ -92,7 +102,7 @@ export function useCommandMenuNavigation({ showCommandMenu }: UseCommandMenuNavi
 			return;
 		}
 
-		handleInputKeyDown(e);
+		handleSearchInputKeyDown(e);
 	};
 
 	return {
