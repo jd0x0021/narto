@@ -11,6 +11,12 @@ type UseCommandMenuNavigationProps = {
 	showCommandMenu: boolean;
 };
 
+const SPACE = ' ' as const;
+
+type KeyboardKey = 'Escape' | 'ArrowDown' | 'ArrowUp' | 'Enter' | typeof SPACE;
+
+type KeyboardKeyEventHandler = Record<KeyboardKey, () => void>;
+
 export function useCommandMenuNavigation({ showCommandMenu }: UseCommandMenuNavigationProps) {
 	const setInput = useSearchStore((s) => s.setInput);
 	const results = useSearchStore((s) => s.results);
@@ -28,33 +34,33 @@ export function useCommandMenuNavigation({ showCommandMenu }: UseCommandMenuNavi
 	};
 
 	const handleCommandMenuKeyDown = (e: KeyboardEvent, currentIndex?: number) => {
-		if (e.key === 'Escape') {
-			e.preventDefault();
-			closeCommandMenu();
-			return;
-		}
+		const keyEventHandlers: KeyboardKeyEventHandler = {
+			Escape: () => {
+				closeCommandMenu();
+			},
+			ArrowDown: () => {
+				setSelectedCommandIndex((current) =>
+					current < commandOptions.length - 1 ? current + 1 : 0,
+				);
+			},
+			ArrowUp: () => {
+				setSelectedCommandIndex((current) =>
+					current > 0 ? current - 1 : commandOptions.length - 1,
+				);
+			},
+			Enter: () => {
+				const index = currentIndex ?? selectedCommandIndex;
+				chooseCommand(commandOptions[index]);
+			},
+			[SPACE]: () => {
+				const index = currentIndex ?? selectedCommandIndex;
+				chooseCommand(commandOptions[index]);
+			},
+		};
 
-		if (e.key === 'ArrowDown') {
+		if (e.key in keyEventHandlers) {
 			e.preventDefault();
-			setSelectedCommandIndex((current) =>
-				current < commandOptions.length - 1 ? current + 1 : 0,
-			);
-			return;
-		}
-
-		if (e.key === 'ArrowUp') {
-			e.preventDefault();
-			setSelectedCommandIndex((current) =>
-				current > 0 ? current - 1 : commandOptions.length - 1,
-			);
-			return;
-		}
-
-		if (e.key === 'Enter' || e.key === ' ') {
-			e.preventDefault();
-			const index = currentIndex ?? selectedCommandIndex;
-			chooseCommand(commandOptions[index]);
-			return;
+			keyEventHandlers[e.key as KeyboardKey]();
 		}
 	};
 
