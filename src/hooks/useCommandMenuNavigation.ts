@@ -5,17 +5,19 @@ import type { AppCommandType } from '@/services/providers/searchProvider.types';
 import { AppCommand } from '@/services/providers/searchProvider.types';
 import { useSearchStore } from '@/store/useSearchStore';
 
+const SPACE = ' ' as const;
+const keyboardKeys = ['Escape', 'ArrowDown', 'ArrowUp', 'Enter', SPACE] as const;
 const commandOptions: readonly AppCommandType[] = Object.values(AppCommand);
 
+type KeyboardKey = (typeof keyboardKeys)[number];
+type KeyboardKeyEventHandler = Record<KeyboardKey, () => void>;
 type UseCommandMenuNavigationProps = {
 	showCommandMenu: boolean;
 };
 
-const SPACE = ' ' as const;
-
-type KeyboardKey = 'Escape' | 'ArrowDown' | 'ArrowUp' | 'Enter' | typeof SPACE;
-
-type KeyboardKeyEventHandler = Record<KeyboardKey, () => void>;
+const isSupportedKeyboardKey = (key: string): key is KeyboardKey => {
+	return keyboardKeys.some((k) => k === key);
+};
 
 export function useCommandMenuNavigation({ showCommandMenu }: UseCommandMenuNavigationProps) {
 	const setInput = useSearchStore((s) => s.setInput);
@@ -34,6 +36,8 @@ export function useCommandMenuNavigation({ showCommandMenu }: UseCommandMenuNavi
 	};
 
 	const handleCommandMenuKeyDown = (e: KeyboardEvent, currentIndex?: number) => {
+		if (!isSupportedKeyboardKey(e.key)) return;
+
 		const keyEventHandlers: KeyboardKeyEventHandler = {
 			Escape: () => {
 				closeCommandMenu();
@@ -58,10 +62,8 @@ export function useCommandMenuNavigation({ showCommandMenu }: UseCommandMenuNavi
 			},
 		};
 
-		if (e.key in keyEventHandlers) {
-			e.preventDefault();
-			keyEventHandlers[e.key as KeyboardKey]();
-		}
+		e.preventDefault();
+		keyEventHandlers[e.key]();
 	};
 
 	const handleInputKeyDown = (e: KeyboardEvent) => {
