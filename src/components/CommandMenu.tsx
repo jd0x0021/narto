@@ -12,7 +12,6 @@ const validCommands: readonly AppCommandType[] = Object.values(AppCommand);
 
 export default function CommandMenu() {
 	const selectedCommandIndex = useAppStore((s) => s.selectedCommandIndex);
-	const setSelectedCommandIndex = useAppStore((s) => s.setSelectedCommandIndex);
 	const chooseCommand = useAppStore((s) => s.chooseCommand);
 	const handleCommandMenuKeyDown = useAppStore((s) => s.handleCommandMenuKeyDown);
 
@@ -36,14 +35,11 @@ export default function CommandMenu() {
 						onMouseDown={(e) => {
 							e.preventDefault();
 						}}
-						onMouseEnter={() => {
-							setSelectedCommandIndex(index);
-						}}
 						onKeyDown={(e) => {
 							handleCommandMenuKeyDown(e, index);
 						}}
 						className={`flex items-center justify-between gap-4 px-4 py-3 transition-colors duration-150 focus:outline-none ${
-							isSelected ? 'bg-white/5' : 'hover:bg-white/5'
+							isSelected ? 'bg-white/10' : 'hover:bg-white/5'
 						} ${index < validCommands.length - 1 ? 'border-b border-white/10' : ''}`}
 					>
 						<span className='text-base leading-6 flex items-baseline whitespace-pre'>

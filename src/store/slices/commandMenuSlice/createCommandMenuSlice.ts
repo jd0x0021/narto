@@ -44,6 +44,7 @@ export const createCommandMenuSlice: AppStateCreator<CommandMenuSlice> = (set, g
 	chooseCommand: (command: AppCommandType) => {
 		const commandValue = `/${command} `;
 		get().setInput(commandValue);
+		set({ selectedCommandIndex: 0 });
 	},
 
 	handleKeyDown: (e: KeyboardEvent<HTMLElement>) => {
@@ -85,6 +86,7 @@ export const createCommandMenuSlice: AppStateCreator<CommandMenuSlice> = (set, g
 		const keyEventHandlers: Record<CommandKeyboardKey, () => void> = {
 			Escape: () => {
 				get().setInput('');
+				set({ selectedCommandIndex: 0 });
 			},
 			ArrowDown: () => {
 				set((state: AppState) => ({
