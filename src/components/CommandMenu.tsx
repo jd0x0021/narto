@@ -1,4 +1,4 @@
-import CommandChip from '@/components/CommandChip';
+import FormattedInputValue from '@/components/FormattedInputValue';
 import type { AppCommandType } from '@/services/providers/searchProvider.types';
 import { AppCommand } from '@/services/providers/searchProvider.types';
 import { useAppStore } from '@/store/useAppStore';
@@ -42,10 +42,7 @@ export default function CommandMenu() {
 							isSelected ? 'bg-white/10' : 'hover:bg-white/5'
 						} ${index < validCommands.length - 1 ? 'border-b border-white/10' : ''}`}
 					>
-						<span className='text-base leading-6 flex items-baseline whitespace-pre'>
-							<CommandChip command={command} />
-							<span className='text-narto-muted/50'> + your search input:</span>
-						</span>
+						<FormattedInputValue command={command} text=' + your search input:' isTextMuted />
 						<span className='text-base leading-6 text-narto-text'>
 							{commandDescriptions[command]}
 						</span>

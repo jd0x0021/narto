@@ -4,12 +4,15 @@ import { useEffect, useMemo, useRef } from 'react';
 import CommandMenu from '@/components/CommandMenu';
 import FormattedInputValue from '@/components/FormattedInputValue';
 import { useSearchInputFocusHotkeys } from '@/hooks/useSearchInputFocusHotkeys';
+import type { AppCommandType } from '@/services/providers/searchProvider.types';
 import { useAppStore } from '@/store/useAppStore';
 import { debounce } from '@/utils/debounce';
 import { isValidCommand } from '@/utils/parseCommand';
 
 export default function SearchInput() {
 	const rawInput = useAppStore((s) => s.rawInput);
+	const query: string = useAppStore((s) => s.query);
+	const resolvedCommand: AppCommandType = useAppStore((s) => s.resolvedCommand);
 	const setInput = useAppStore((s) => s.setInput);
 	const setSelectedIndex = useAppStore((s) => s.setSelectedIndex);
 	const handleKeyDown = useAppStore((s) => s.handleKeyDown);
@@ -80,7 +83,18 @@ export default function SearchInput() {
 						className='absolute inset-0 flex items-center pointer-events-none overflow-hidden text-narto-text'
 						aria-hidden='true'
 					>
-						<FormattedInputValue rawInput={rawInput} />
+						{hasValidCommand ? (
+							<FormattedInputValue
+								command={resolvedCommand}
+								text={query.length === 0 ? ` Search ${resolvedCommand}s...` : ` ${query}`}
+								isTextMuted={query.length === 0}
+							/>
+						) : !rawInput ? (
+							// show placeholder text
+							<span className='text-narto-muted/50'>Search KLIPY</span>
+						) : (
+							<span>{rawInput}</span>
+						)}
 					</div>
 
 					{/* Interaction Layer: This is where the user actually types. It's a completely transparent input
