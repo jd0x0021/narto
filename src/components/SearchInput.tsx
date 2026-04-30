@@ -7,7 +7,8 @@ import { useSearchInputFocusHotkeys } from '@/hooks/useSearchInputFocusHotkeys';
 import type { AppCommandType } from '@/services/providers/searchProvider.types';
 import { useAppStore } from '@/store/useAppStore';
 import { debounce } from '@/utils/debounce';
-import { isValidCommand } from '@/utils/parseCommand';
+import type { ParsedCommand } from '@/utils/parseCommand';
+import { isValidCommand, parseCommand } from '@/utils/parseCommand';
 
 export default function SearchInput() {
 	const rawInput = useAppStore((s) => s.rawInput);
@@ -36,6 +37,10 @@ export default function SearchInput() {
 		inputRef.current?.focus();
 	}, []);
 
+	/**
+	 * Schedules the search function to run after 200ms is elapsed since the last
+	 * invocation. If the user types again before the 200ms is up, the timer resets.
+	 */
 	const debouncedSearch = useMemo(
 		() =>
 			debounce(() => {
@@ -45,18 +50,27 @@ export default function SearchInput() {
 	);
 
 	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-		setInput(e.target.value);
-		const { query } = useAppStore.getState();
+		const rawUserInput = e.target.value;
+		setInput(rawUserInput);
+		const parsed: ParsedCommand = parseCommand(rawUserInput);
 
-		if (query.length >= 1) {
-			debouncedSearch();
-		} else {
+		// Don't fetch if command menu is shown or if query is empty
+		if (rawUserInput === '/' || parsed.query.length < 1) {
 			debouncedSearch.cancel();
+
+			const { requestId } = useAppStore.getState();
 			useAppStore.setState({
+				// Increment the global requestId to invalidate any in-flight search requests.
+				// This is crucial for canceling searches that may have already started executing.
+				// When runSearch's captured nextId no longer matches the updated requestId in the store, the
+				// stale fetch result will be rejected, preventing old data from overwriting cleared results.
+				requestId: requestId + 1,
 				results: [],
 				status: 'idle',
 				selectedIndex: null,
 			});
+		} else {
+			debouncedSearch();
 		}
 	};
 

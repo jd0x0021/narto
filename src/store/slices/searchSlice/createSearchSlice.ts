@@ -31,12 +31,19 @@ export const createSearchSlice: AppStateCreator<SearchSlice> = (set, get) => ({
 			return;
 		}
 
+		// Capture a unique ID for this specific search request and freeze it in this function's closure.
+		// Each async runSearch call gets its own independent nextId snapshot that persists through the
+		// entire fetch lifecycle, even as the global requestId in the store changes due to new searches.
 		const nextId = requestId + 1;
 		set({ requestId: nextId, status: 'loading', selectedIndex: null });
 
 		try {
 			const data: NormalizedSearchResult[] = await searchProvider.search(resolvedCommand, query);
 
+			// Validate that this request is still the latest by comparing the captured snapshot (nextId)
+			// against the current store value (get().requestId). If they don't match, a newer search
+			// has already been initiated and this stale response should be discarded.
+			// This allows newer requests to invalidate older in-flight requests.
 			if (get().requestId !== nextId) return;
 
 			set({ results: data, status: 'success' });
