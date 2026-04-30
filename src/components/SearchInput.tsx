@@ -7,8 +7,8 @@ import { useSearchInputFocusHotkeys } from '@/hooks/useSearchInputFocusHotkeys';
 import type { AppCommandType } from '@/services/providers/searchProvider.types';
 import { useAppStore } from '@/store/useAppStore';
 import { debounce } from '@/utils/debounce';
-import type { ParsedSearchInput } from '@/utils/parseCommand';
-import { isValidCommand, parseSearchInput } from '@/utils/parseCommand';
+import type { ParsedSearchInput } from '@/utils/parseSearchInput';
+import { isValidCommand, parseSearchInput } from '@/utils/parseSearchInput';
 
 export default function SearchInput() {
 	const rawInput = useAppStore((s) => s.rawInput);
