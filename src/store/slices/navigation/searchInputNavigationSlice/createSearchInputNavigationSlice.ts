@@ -52,7 +52,7 @@ export const createSearchInputNavigationSlice: AppStateCreator<SearchInputNaviga
 				}
 
 				if (get().results.length > 0) {
-					get().setSelectedGridIndex(0);
+					get().setSelectedGridCell(0);
 				}
 			},
 			ArrowUp: () => {
@@ -67,7 +67,7 @@ export const createSearchInputNavigationSlice: AppStateCreator<SearchInputNaviga
 				}
 
 				if (get().results.length > 0) {
-					get().setSelectedGridIndex(get().results.length - 1);
+					get().setSelectedGridCell(get().results.length - 1);
 				}
 			},
 			Tab: () => {

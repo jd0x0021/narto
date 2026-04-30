@@ -28,7 +28,7 @@ export const createSearchSlice: AppStateCreator<SearchSlice> = (set, get) => ({
 		const { query, resolvedCommand, requestId } = get();
 
 		if (!query) {
-			set({ results: [], status: 'idle', selectedGridIndex: null });
+			set({ results: [], status: 'idle', selectedGridCell: null });
 			return;
 		}
 
@@ -36,7 +36,7 @@ export const createSearchSlice: AppStateCreator<SearchSlice> = (set, get) => ({
 		// Each async runSearch call gets its own independent nextId snapshot that persists through the
 		// entire fetch lifecycle, even as the global requestId in the store changes due to new searches.
 		const nextId = requestId + 1;
-		set({ requestId: nextId, status: 'loading', selectedGridIndex: null });
+		set({ requestId: nextId, status: 'loading', selectedGridCell: null });
 
 		try {
 			const data: NormalizedSearchResult[] = await searchProvider.search(resolvedCommand, query);

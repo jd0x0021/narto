@@ -53,14 +53,14 @@ const MasonryGrid = memo(({ children, columnCount, gap }: MasonryGridProps) => {
 	}, [children, calculateLayout]);
 
 	const moveGridSelection = useAppStore((s) => s.moveGridSelection);
-	const setSelectedGridIndex = useAppStore((s) => s.setSelectedGridIndex);
+	const setSelectedGridCell = useAppStore((s) => s.setSelectedGridCell);
 
 	const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
 		if (e.key === 'ArrowUp') {
 			e.preventDefault();
-			const sIndex = useAppStore.getState().selectedGridIndex;
-			if (sIndex !== null && sIndex < columnCount) {
-				setSelectedGridIndex(null); // Return to input
+			const selectedGridCellIndex = useAppStore.getState().selectedGridCell;
+			if (selectedGridCellIndex !== null && selectedGridCellIndex < columnCount) {
+				setSelectedGridCell(null); // Return to input
 			} else {
 				moveGridSelection('up', columnCount);
 			}

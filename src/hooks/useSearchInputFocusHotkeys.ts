@@ -13,7 +13,7 @@ import { useAppStore } from '@/store/useAppStore';
  * @param inputRef - A React ref object pointing to the target HTMLInputElement.
  */
 export function useSearchInputFocusHotkeys(inputRef: RefObject<HTMLInputElement | null>): void {
-	const setSelectedGridIndex = useAppStore((s) => s.setSelectedGridIndex);
+	const setSelectedGridCell = useAppStore((s) => s.setSelectedGridCell);
 
 	useEffect(() => {
 		const handleGlobalKeyDown = (e: globalThis.KeyboardEvent) => {
@@ -29,7 +29,7 @@ export function useSearchInputFocusHotkeys(inputRef: RefObject<HTMLInputElement 
 
 			// pressing ctrl + k is the only way to focus the input when it's already focused
 			e.preventDefault();
-			setSelectedGridIndex(null);
+			setSelectedGridCell(null);
 			inputRef.current?.focus();
 		};
 
@@ -37,5 +37,5 @@ export function useSearchInputFocusHotkeys(inputRef: RefObject<HTMLInputElement 
 		return () => {
 			window.removeEventListener('keydown', handleGlobalKeyDown);
 		};
-	}, [inputRef, setSelectedGridIndex]);
+	}, [inputRef, setSelectedGridCell]);
 }

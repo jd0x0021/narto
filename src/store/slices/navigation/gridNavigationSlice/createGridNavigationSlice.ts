@@ -5,50 +5,50 @@ import type {
 } from '@/store/slices/navigation/gridNavigationSlice/gridNavigationSlice.types';
 
 export const createGridNavigationSlice: AppStateCreator<GridNavigationSlice> = (set, get) => ({
-	selectedGridIndex: null,
+	selectedGridCell: null,
 
-	setSelectedGridIndex: (index: number | null) => {
-		set({ selectedGridIndex: index });
+	setSelectedGridCell: (index: number | null) => {
+		set({ selectedGridCell: index });
 	},
 
 	moveGridSelection: (direction: GridDirection, columns: number) => {
-		const { results, selectedGridIndex } = get();
+		const { results, selectedGridCell } = get();
 		if (results.length === 0) return;
 
-		if (selectedGridIndex === null) {
-			set({ selectedGridIndex: 0 });
+		if (selectedGridCell === null) {
+			set({ selectedGridCell: 0 });
 			return;
 		}
 
-		let nextIndex = selectedGridIndex;
+		let nextGridCellIndex = selectedGridCell;
 		const count = results.length;
 
 		switch (direction) {
 			case 'right': {
-				nextIndex = selectedGridIndex + 1;
-				if (nextIndex >= count) nextIndex = 0;
+				nextGridCellIndex = selectedGridCell + 1;
+				if (nextGridCellIndex >= count) nextGridCellIndex = 0;
 				break;
 			}
 			case 'left': {
-				nextIndex = selectedGridIndex - 1;
-				if (nextIndex < 0) nextIndex = count - 1;
+				nextGridCellIndex = selectedGridCell - 1;
+				if (nextGridCellIndex < 0) nextGridCellIndex = count - 1;
 				break;
 			}
 			case 'down': {
-				nextIndex = selectedGridIndex + columns;
-				if (nextIndex >= count) {
+				nextGridCellIndex = selectedGridCell + columns;
+				if (nextGridCellIndex >= count) {
 					// wrap to top of next column if reached end of column visually
 					// but row-major order: index 0,1,2 / 3,4,5.
 					// Example: down from 5 (if 7 items), could be 5+3=8 >= 7. Next index should be next column?
 					// Wait, "wrap to next column correctly".
-					nextIndex = (selectedGridIndex % columns) + 1;
-					if (nextIndex >= columns) nextIndex = 0;
+					nextGridCellIndex = (selectedGridCell % columns) + 1;
+					if (nextGridCellIndex >= columns) nextGridCellIndex = 0;
 				}
 				break;
 			}
 			case 'up': {
-				nextIndex = selectedGridIndex - columns;
-				if (nextIndex < 0) {
+				nextGridCellIndex = selectedGridCell - columns;
+				if (nextGridCellIndex < 0) {
 					// parent component unsets selected index
 					return;
 				}
@@ -60,8 +60,8 @@ export const createGridNavigationSlice: AppStateCreator<GridNavigationSlice> = (
 			}
 		}
 
-		if (nextIndex >= 0 && nextIndex < count) {
-			set({ selectedGridIndex: nextIndex });
+		if (nextGridCellIndex >= 0 && nextGridCellIndex < count) {
+			set({ selectedGridCell: nextGridCellIndex });
 		}
 	},
 });

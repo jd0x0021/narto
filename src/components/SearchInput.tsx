@@ -15,7 +15,7 @@ export default function SearchInput() {
 	const query: string = useAppStore((s) => s.query);
 	const resolvedCommand: AppCommandType = useAppStore((s) => s.resolvedCommand);
 	const setInput = useAppStore((s) => s.setInput);
-	const setSelectedGridIndex = useAppStore((s) => s.setSelectedGridIndex);
+	const setSelectedGridCell = useAppStore((s) => s.setSelectedGridCell);
 	const handleSearchInputKeyDown = useAppStore((s) => s.handleSearchInputKeyDown);
 
 	const inputRef = useRef<HTMLInputElement>(null);
@@ -67,7 +67,7 @@ export default function SearchInput() {
 				requestId: requestId + 1,
 				results: [],
 				status: 'idle',
-				selectedGridIndex: null,
+				selectedGridCell: null,
 			});
 		} else {
 			debouncedSearch();
@@ -77,7 +77,7 @@ export default function SearchInput() {
 	useEffect(() => {
 		return useAppStore.subscribe((state, prevState) => {
 			// Return focus to input if selectedIndex goes to null from grid
-			if (prevState.selectedGridIndex !== null && state.selectedGridIndex === null) {
+			if (prevState.selectedGridCell !== null && state.selectedGridCell === null) {
 				inputRef.current?.focus();
 			}
 		});
@@ -122,7 +122,7 @@ export default function SearchInput() {
 						onKeyDown={handleSearchInputKeyDown}
 						onScroll={handleScroll}
 						onFocus={() => {
-							setSelectedGridIndex(null);
+							setSelectedGridCell(null);
 						}}
 						className={`w-full bg-transparent outline-none p-0 m-0 border-none text-transparent caret-white z-10 selection:bg-narto-accent/40 selection:text-transparent ${
 							// The command chip element (from a valid command) uses a 'px-1' class (handled by the FormattedInputValue
