@@ -52,27 +52,27 @@ const MasonryGrid = memo(({ children, columnCount, gap }: MasonryGridProps) => {
 		calculateLayout();
 	}, [children, calculateLayout]);
 
-	const moveSelection = useAppStore((s) => s.moveSelection);
-	const setSelectedIndex = useAppStore((s) => s.setSelectedIndex);
+	const moveGridSelection = useAppStore((s) => s.moveGridSelection);
+	const setSelectedGridIndex = useAppStore((s) => s.setSelectedGridIndex);
 
 	const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
 		if (e.key === 'ArrowUp') {
 			e.preventDefault();
-			const sIndex = useAppStore.getState().selectedIndex;
+			const sIndex = useAppStore.getState().selectedGridIndex;
 			if (sIndex !== null && sIndex < columnCount) {
-				setSelectedIndex(null); // Return to input
+				setSelectedGridIndex(null); // Return to input
 			} else {
-				moveSelection('up', columnCount);
+				moveGridSelection('up', columnCount);
 			}
 		} else if (e.key === 'ArrowDown') {
 			e.preventDefault();
-			moveSelection('down', columnCount);
+			moveGridSelection('down', columnCount);
 		} else if (e.key === 'ArrowLeft') {
 			e.preventDefault();
-			moveSelection('left', columnCount);
+			moveGridSelection('left', columnCount);
 		} else if (e.key === 'ArrowRight') {
 			e.preventDefault();
-			moveSelection('right', columnCount);
+			moveGridSelection('right', columnCount);
 		}
 	};
 

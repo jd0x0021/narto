@@ -14,8 +14,8 @@ const GridImage = memo(
 		index: number;
 		calculateLayout?: () => void;
 	}) => {
-		const isSelected = useAppStore((s) => s.selectedIndex === index);
-		const setSelectedIndex = useAppStore((s) => s.setSelectedIndex);
+		const isSelected = useAppStore((s) => s.selectedGridIndex === index);
+		const setSelectedGridIndex = useAppStore((s) => s.setSelectedGridIndex);
 
 		const [displayLoaded, setDisplayLoaded] = useState(false);
 		const [copying, setCopying] = useState(false);
@@ -75,10 +75,10 @@ const GridImage = memo(
 							: 'border-transparent hover:border-narto-accent/40 opacity-90 hover:opacity-100 z-0'
 					}`}
 				onClick={() => {
-					setSelectedIndex(index);
+					setSelectedGridIndex(index);
 				}}
 				onFocus={() => {
-					setSelectedIndex(index);
+					setSelectedGridIndex(index);
 				}}
 				onKeyDown={(e) => {
 					if (e.key === 'Enter') {

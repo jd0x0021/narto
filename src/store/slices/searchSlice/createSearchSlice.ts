@@ -28,7 +28,7 @@ export const createSearchSlice: AppStateCreator<SearchSlice> = (set, get) => ({
 		const { query, resolvedCommand, requestId } = get();
 
 		if (!query) {
-			set({ results: [], status: 'idle', selectedIndex: null });
+			set({ results: [], status: 'idle', selectedGridIndex: null });
 			return;
 		}
 
@@ -36,7 +36,7 @@ export const createSearchSlice: AppStateCreator<SearchSlice> = (set, get) => ({
 		// Each async runSearch call gets its own independent nextId snapshot that persists through the
 		// entire fetch lifecycle, even as the global requestId in the store changes due to new searches.
 		const nextId = requestId + 1;
-		set({ requestId: nextId, status: 'loading', selectedIndex: null });
+		set({ requestId: nextId, status: 'loading', selectedGridIndex: null });
 
 		try {
 			const data: NormalizedSearchResult[] = await searchProvider.search(resolvedCommand, query);
@@ -60,64 +60,6 @@ export const createSearchSlice: AppStateCreator<SearchSlice> = (set, get) => ({
 						);
 
 			set({ status: 'error', error, results: [] });
-		}
-	},
-
-	setSelectedIndex: (index) => {
-		set({ selectedIndex: index });
-	},
-
-	moveSelection: (direction, columns) => {
-		const { results, selectedIndex } = get();
-		if (results.length === 0) return;
-
-		if (selectedIndex === null) {
-			set({ selectedIndex: 0 });
-			return;
-		}
-
-		let nextIndex = selectedIndex;
-		const count = results.length;
-
-		switch (direction) {
-			case 'right': {
-				nextIndex = selectedIndex + 1;
-				if (nextIndex >= count) nextIndex = 0;
-				break;
-			}
-			case 'left': {
-				nextIndex = selectedIndex - 1;
-				if (nextIndex < 0) nextIndex = count - 1;
-				break;
-			}
-			case 'down': {
-				nextIndex = selectedIndex + columns;
-				if (nextIndex >= count) {
-					// wrap to top of next column if reached end of column visually
-					// but row-major order: index 0,1,2 / 3,4,5.
-					// Example: down from 5 (if 7 items), could be 5+3=8 >= 7. Next index should be next column?
-					// Wait, "wrap to next column correctly".
-					nextIndex = (selectedIndex % columns) + 1;
-					if (nextIndex >= columns) nextIndex = 0;
-				}
-				break;
-			}
-			case 'up': {
-				nextIndex = selectedIndex - columns;
-				if (nextIndex < 0) {
-					// parent component unsets selected index
-					return;
-				}
-				break;
-			}
-			default: {
-				const neverReachedDirection: never = direction;
-				throw new Error(`Unhandled direction: ${JSON.stringify(neverReachedDirection)}`);
-			}
-		}
-
-		if (nextIndex >= 0 && nextIndex < count) {
-			set({ selectedIndex: nextIndex });
 		}
 	},
 });
