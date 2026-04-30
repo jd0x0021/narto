@@ -1,7 +1,7 @@
 import type { KeyboardEvent } from 'react';
 
 import { AppCommand, type AppCommandType } from '@/services/providers/searchProvider.types';
-import type { AppState, AppStateCreator } from '@/store/appStore.types';
+import type { AppStateCreator } from '@/store/appStore.types';
 import type { SearchInputNavigationSlice } from '@/store/slices/navigation/searchInputNavigationSlice/searchInputNavigationSlice.types';
 
 const SPACE = ' ' as const;
@@ -42,12 +42,13 @@ export const createSearchInputNavigationSlice: AppStateCreator<SearchInputNaviga
 			},
 			ArrowDown: () => {
 				if (showCommandMenu) {
-					set((state: AppState) => ({
+					const selectedCommandIndex = get().selectedCommandIndex;
+					set({
 						selectedCommandIndex:
-							state.selectedCommandIndex < commandOptions.length - 1
-								? state.selectedCommandIndex + 1
+							selectedCommandIndex < commandOptions.length - 1
+								? selectedCommandIndex + 1
 								: 0,
-					}));
+					});
 					return;
 				}
 
@@ -57,12 +58,13 @@ export const createSearchInputNavigationSlice: AppStateCreator<SearchInputNaviga
 			},
 			ArrowUp: () => {
 				if (showCommandMenu) {
-					set((state: AppState) => ({
+					const selectedCommandIndex = get().selectedCommandIndex;
+					set({
 						selectedCommandIndex:
-							state.selectedCommandIndex > 0
-								? state.selectedCommandIndex - 1
+							selectedCommandIndex > 0
+								? selectedCommandIndex - 1
 								: commandOptions.length - 1,
-					}));
+					});
 					return;
 				}
 
@@ -72,12 +74,13 @@ export const createSearchInputNavigationSlice: AppStateCreator<SearchInputNaviga
 			},
 			Tab: () => {
 				if (showCommandMenu) {
-					set((state: AppState) => ({
+					const selectedCommandIndex = get().selectedCommandIndex;
+					set({
 						selectedCommandIndex:
-							state.selectedCommandIndex < commandOptions.length - 1
-								? state.selectedCommandIndex + 1
+							selectedCommandIndex < commandOptions.length - 1
+								? selectedCommandIndex + 1
 								: 0,
-					}));
+					});
 				}
 			},
 			Enter: () => {

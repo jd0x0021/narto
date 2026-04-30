@@ -9,4 +9,5 @@ export type AppState = CommandMenuSlice &
 	GridNavigationSlice &
 	SearchInputNavigationSlice &
 	SearchSlice;
+
 export type AppStateCreator<T> = StateCreator<AppState, [], [], T>;
