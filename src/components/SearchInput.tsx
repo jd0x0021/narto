@@ -7,8 +7,8 @@ import { useSearchInputFocusHotkeys } from '@/hooks/useSearchInputFocusHotkeys';
 import type { AppCommandType } from '@/services/providers/searchProvider.types';
 import { useAppStore } from '@/store/useAppStore';
 import { debounce } from '@/utils/debounce';
-import type { ParsedCommand } from '@/utils/parseCommand';
-import { isValidCommand, parseCommand } from '@/utils/parseCommand';
+import type { ParsedSearchInput } from '@/utils/parseCommand';
+import { isValidCommand, parseSearchInput } from '@/utils/parseCommand';
 
 export default function SearchInput() {
 	const rawInput = useAppStore((s) => s.rawInput);
@@ -52,7 +52,7 @@ export default function SearchInput() {
 	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
 		const rawUserInput = e.target.value;
 		setInput(rawUserInput);
-		const parsed: ParsedCommand = parseCommand(rawUserInput);
+		const parsed: ParsedSearchInput = parseSearchInput(rawUserInput);
 
 		// Don't fetch if command menu is shown or if query is empty
 		if (rawUserInput === '/' || parsed.query.length < 1) {

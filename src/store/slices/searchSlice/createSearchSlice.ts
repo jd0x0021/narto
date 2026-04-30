@@ -3,7 +3,8 @@ import { SearchProviderError } from '@/services/providers/searchProvider.errors'
 import { AppCommand, type NormalizedSearchResult } from '@/services/providers/searchProvider.types';
 import type { AppStateCreator } from '@/store/appStore.types';
 import type { SearchSlice } from '@/store/slices/searchSlice/searchSlice.types';
-import { parseCommand } from '@/utils/parseCommand';
+import type { ParsedSearchInput } from '@/utils/parseCommand';
+import { parseSearchInput } from '@/utils/parseCommand';
 
 export const createSearchSlice: AppStateCreator<SearchSlice> = (set, get) => ({
 	rawInput: '',
@@ -15,7 +16,7 @@ export const createSearchSlice: AppStateCreator<SearchSlice> = (set, get) => ({
 	requestId: 0,
 
 	setInput: (rawInput: string) => {
-		const parsed = parseCommand(rawInput);
+		const parsed: ParsedSearchInput = parseSearchInput(rawInput);
 		set({
 			rawInput: parsed.rawInput,
 			resolvedCommand: parsed.resolvedCommand,
