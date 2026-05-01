@@ -4,64 +4,65 @@ import type {
 	GridNavigationSlice,
 } from '@/store/slices/navigation/gridNavigationSlice/gridNavigationSlice.types';
 
-export const createGridNavigationSlice: AppStateCreator<GridNavigationSlice> = (set, get) => ({
-	selectedGridCell: null,
+export const createGridNavigationSlice: AppStateCreator<GridNavigationSlice> = (set, get) =>
+	({
+		selectedGridCell: null,
 
-	setSelectedGridCell: (index: number | null) => {
-		set({ selectedGridCell: index });
-	},
+		setSelectedGridCell: (index: number | null) => {
+			set({ selectedGridCell: index });
+		},
 
-	moveGridSelection: (direction: GridDirection, columns: number) => {
-		const { results, selectedGridCell } = get();
-		if (results.length === 0) return;
+		moveGridSelection: (direction: GridDirection, columns: number) => {
+			const { results, selectedGridCell } = get();
+			if (results.length === 0) return;
 
-		if (selectedGridCell === null) {
-			set({ selectedGridCell: 0 });
-			return;
-		}
-
-		let nextGridCellIndex = selectedGridCell;
-		const count = results.length;
-
-		switch (direction) {
-			case 'right': {
-				nextGridCellIndex = selectedGridCell + 1;
-				if (nextGridCellIndex >= count) nextGridCellIndex = 0;
-				break;
+			if (selectedGridCell === null) {
+				set({ selectedGridCell: 0 });
+				return;
 			}
-			case 'left': {
-				nextGridCellIndex = selectedGridCell - 1;
-				if (nextGridCellIndex < 0) nextGridCellIndex = count - 1;
-				break;
-			}
-			case 'down': {
-				nextGridCellIndex = selectedGridCell + columns;
-				if (nextGridCellIndex >= count) {
-					// wrap to top of next column if reached end of column visually
-					// but row-major order: index 0,1,2 / 3,4,5.
-					// Example: down from 5 (if 7 items), could be 5+3=8 >= 7. Next index should be next column?
-					// Wait, "wrap to next column correctly".
-					nextGridCellIndex = (selectedGridCell % columns) + 1;
-					if (nextGridCellIndex >= columns) nextGridCellIndex = 0;
+
+			let nextGridCellIndex = selectedGridCell;
+			const count = results.length;
+
+			switch (direction) {
+				case 'right': {
+					nextGridCellIndex = selectedGridCell + 1;
+					if (nextGridCellIndex >= count) nextGridCellIndex = 0;
+					break;
 				}
-				break;
-			}
-			case 'up': {
-				nextGridCellIndex = selectedGridCell - columns;
-				if (nextGridCellIndex < 0) {
-					// parent component unsets selected index
-					return;
+				case 'left': {
+					nextGridCellIndex = selectedGridCell - 1;
+					if (nextGridCellIndex < 0) nextGridCellIndex = count - 1;
+					break;
 				}
-				break;
+				case 'down': {
+					nextGridCellIndex = selectedGridCell + columns;
+					if (nextGridCellIndex >= count) {
+						// wrap to top of next column if reached end of column visually
+						// but row-major order: index 0,1,2 / 3,4,5.
+						// Example: down from 5 (if 7 items), could be 5+3=8 >= 7. Next index should be next column?
+						// Wait, "wrap to next column correctly".
+						nextGridCellIndex = (selectedGridCell % columns) + 1;
+						if (nextGridCellIndex >= columns) nextGridCellIndex = 0;
+					}
+					break;
+				}
+				case 'up': {
+					nextGridCellIndex = selectedGridCell - columns;
+					if (nextGridCellIndex < 0) {
+						// parent component unsets selected index
+						return;
+					}
+					break;
+				}
+				default: {
+					const neverReachedDirection: never = direction;
+					throw new Error(`Unhandled direction: ${JSON.stringify(neverReachedDirection)}`);
+				}
 			}
-			default: {
-				const neverReachedDirection: never = direction;
-				throw new Error(`Unhandled direction: ${JSON.stringify(neverReachedDirection)}`);
-			}
-		}
 
-		if (nextGridCellIndex >= 0 && nextGridCellIndex < count) {
-			set({ selectedGridCell: nextGridCellIndex });
-		}
-	},
-});
+			if (nextGridCellIndex >= 0 && nextGridCellIndex < count) {
+				set({ selectedGridCell: nextGridCellIndex });
+			}
+		},
+	}) satisfies GridNavigationSlice;

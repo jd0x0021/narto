@@ -5,16 +5,17 @@ import type { CommandMenuSlice } from '@/store/slices/commandMenuSlice/commandMe
 
 const commandOptions: readonly AppCommandType[] = Object.values(AppCommand);
 
-export const createCommandMenuSlice: AppStateCreator<CommandMenuSlice> = (set, get) => ({
-	selectedCommandIndex: 0,
+export const createCommandMenuSlice: AppStateCreator<CommandMenuSlice> = (set, get) =>
+	({
+		selectedCommandIndex: 0,
 
-	setSelectedCommandIndex: (index: number) => {
-		set({ selectedCommandIndex: index });
-	},
+		setSelectedCommandIndex: (index: number) => {
+			set({ selectedCommandIndex: index });
+		},
 
-	chooseCommand: (index: number) => {
-		const command: AppCommandType = commandOptions[index];
-		get().setInput(`/${command} `);
-		set({ selectedCommandIndex: 0 });
-	},
-});
+		chooseCommand: (index: number) => {
+			const command: AppCommandType = commandOptions[index];
+			get().setInput(`/${command} `);
+			set({ selectedCommandIndex: 0 });
+		},
+	}) satisfies CommandMenuSlice;
