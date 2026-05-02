@@ -4,6 +4,14 @@ import type {
 	GridNavigationSlice,
 } from '@/store/slices/navigation/gridNavigationSlice/gridNavigationSlice.types';
 
+/**
+ * This slice manages the keyboard navigation logic for the 2D image grid, handling
+ * boundary conditions, column wrapping, and the currently selected grid cell index.
+ *
+ * @param set - The Zustand setter function for updating state.
+ * @param get - The Zustand getter function for reading current state.
+ * @returns The initial state and actions for grid navigation.
+ */
 export const createGridNavigationSlice: AppStateCreator<GridNavigationSlice> = (set, get) =>
 	({
 		selectedGridCell: null,

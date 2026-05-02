@@ -6,6 +6,15 @@ import type { SearchSlice } from '@/store/slices/searchSlice/searchSlice.types';
 import type { ParsedSearchInput } from '@/utils/parseSearchInput';
 import { parseSearchInput } from '@/utils/parseSearchInput';
 
+/**
+ * This slice is responsible for orchestrating the main search workflow. It handles
+ * the parsing of raw user input into valid commands and queries, and manages the
+ * asynchronous fetching of search results via the {@link searchProvider}.
+ *
+ * @param set - The Zustand setter function for updating state.
+ * @param get - The Zustand getter function for reading current state.
+ * @returns The initial state and actions for executing searches.
+ */
 export const createSearchSlice: AppStateCreator<SearchSlice> = (set, get) =>
 	({
 		rawInput: '',
