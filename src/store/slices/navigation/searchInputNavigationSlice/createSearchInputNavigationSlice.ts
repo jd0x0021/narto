@@ -1,24 +1,38 @@
 import type { KeyboardEvent } from 'react';
 
 import { AppCommand, type AppCommandType } from '@/services/providers/searchProvider.types';
-import type { AppStateCreator } from '@/store/appStore.types';
+import type { AppStateCreator, AppStoreApi } from '@/store/appStore.types';
 import type { SearchInputNavigationSlice } from '@/store/slices/navigation/searchInputNavigationSlice/searchInputNavigationSlice.types';
 
 const SPACE = ' ' as const;
-const searchInputKeys = ['Escape', 'ArrowDown', 'ArrowUp', 'Enter', SPACE, 'Tab'] as const;
+const searchModeKeys = ['Escape', 'ArrowDown', 'ArrowUp'] as const;
+const commandMenuModeKeys = ['Escape', 'ArrowDown', 'ArrowUp', 'Tab', 'Enter', SPACE] as const;
 const commandOptions: readonly AppCommandType[] = Object.values(AppCommand);
 
-type SearchInputKey = (typeof searchInputKeys)[number];
+type SearchModeKey = (typeof searchModeKeys)[number];
+type CommandMenuModeKey = (typeof commandMenuModeKeys)[number];
 
 /**
- * Narrow the runtime key string to search input keys.
+ * Narrow the runtime `key` parameter to keys handled when the global
+ * search bar is in **search mode**, meaning the command menu is inactive.
  *
- * Returns `true` when the pressed key is one of the supported search input
- * navigation keys, allowing the caller to safely treat `key` as a
- * `SearchInputKey`.
+ * When `true`, `key` is one of the keys listed in {@link searchModeKeys}.
+ *
+ * @param key - keyboard event key.
  */
-const isSearchInputKeyboardKey = (key: string): key is SearchInputKey => {
-	return searchInputKeys.some((k) => k === key);
+const isSearchModeKeyboardKey = (key: string): key is SearchModeKey => {
+	return searchModeKeys.some((k) => k === key);
+};
+
+/**
+ * Narrow the runtime `key` parameter to keys handled when the command menu is open/active.
+ *
+ * When `true`, `key` is one of the keys listed in {@link commandMenuModeKeys}.
+ *
+ * @param key - keyboard event key.
+ */
+const isCommandMenuModeKeyboardKey = (key: string): key is CommandMenuModeKey => {
+	return commandMenuModeKeys.some((k) => k === key);
 };
 
 /**
@@ -36,79 +50,98 @@ export const createSearchInputNavigationSlice: AppStateCreator<SearchInputNaviga
 ) =>
 	({
 		handleSearchInputKeyDown: (e: KeyboardEvent<HTMLElement>) => {
-			if (!isSearchInputKeyboardKey(e.key)) return;
-
 			const showCommandMenu = get().rawInput === '/';
 
-			const keyEventHandlers: Record<SearchInputKey, () => void> = {
-				Escape: () => {
-					if (showCommandMenu) {
-						get().setInput('');
-						set({ selectedCommandIndex: 0 });
-						return;
-					}
-
-					window.close();
-				},
-				ArrowDown: () => {
-					if (showCommandMenu) {
-						const selectedCommandIndex = get().selectedCommandIndex;
-						set({
-							selectedCommandIndex:
-								selectedCommandIndex < commandOptions.length - 1
-									? selectedCommandIndex + 1
-									: 0,
-						});
-						return;
-					}
-
-					if (get().results.length > 0) {
-						get().setSelectedGridCell(0);
-					}
-				},
-				ArrowUp: () => {
-					if (showCommandMenu) {
-						const selectedCommandIndex = get().selectedCommandIndex;
-						set({
-							selectedCommandIndex:
-								selectedCommandIndex > 0
-									? selectedCommandIndex - 1
-									: commandOptions.length - 1,
-						});
-						return;
-					}
-
-					if (get().results.length > 0) {
-						get().setSelectedGridCell(get().results.length - 1);
-					}
-				},
-				Tab: () => {
-					if (showCommandMenu) {
-						const selectedCommandIndex = get().selectedCommandIndex;
-						set({
-							selectedCommandIndex:
-								selectedCommandIndex < commandOptions.length - 1
-									? selectedCommandIndex + 1
-									: 0,
-						});
-					}
-				},
-				Enter: () => {
-					if (showCommandMenu) {
-						get().chooseCommand(get().selectedCommandIndex);
-					}
-				},
-				[SPACE]: () => {
-					if (showCommandMenu) {
-						get().chooseCommand(get().selectedCommandIndex);
-					}
-				},
-			};
-
-			if (e.key !== SPACE || get().rawInput === '/') {
-				e.preventDefault();
+			if (showCommandMenu) {
+				executeCommandMenuModeKeyAction(e, { get, set });
+			} else {
+				executeSearchModeKeyAction(e, { get });
 			}
-
-			keyEventHandlers[e.key]();
 		},
 	}) satisfies SearchInputNavigationSlice;
+
+/**
+ * Handle a keydown event when the command menu is open/active.
+ *
+ * These are the only supported keys: {@link commandMenuModeKeys}.
+ *
+ * @param e - Keyboard event from the search input.
+ * @param appStore - Zustand APIs used to read and update app state.
+ */
+function executeCommandMenuModeKeyAction(
+	e: KeyboardEvent<HTMLElement>,
+	appStore: AppStoreApi,
+): void {
+	if (!isCommandMenuModeKeyboardKey(e.key)) return;
+
+	const keyEventHandlers: Record<CommandMenuModeKey, () => void> = {
+		Escape: () => {
+			appStore.get().setInput('');
+			appStore.set({ selectedCommandIndex: 0 });
+		},
+		ArrowDown: () => {
+			const selectedCommandIndex = appStore.get().selectedCommandIndex;
+			appStore.set({
+				selectedCommandIndex:
+					selectedCommandIndex < commandOptions.length - 1 ? selectedCommandIndex + 1 : 0,
+			});
+		},
+		ArrowUp: () => {
+			const selectedCommandIndex = appStore.get().selectedCommandIndex;
+			appStore.set({
+				selectedCommandIndex:
+					selectedCommandIndex > 0 ? selectedCommandIndex - 1 : commandOptions.length - 1,
+			});
+		},
+		Tab: () => {
+			const selectedCommandIndex = appStore.get().selectedCommandIndex;
+			appStore.set({
+				selectedCommandIndex:
+					selectedCommandIndex < commandOptions.length - 1 ? selectedCommandIndex + 1 : 0,
+			});
+		},
+		Enter: () => {
+			appStore.get().chooseCommand(appStore.get().selectedCommandIndex);
+		},
+		[SPACE]: () => {
+			appStore.get().chooseCommand(appStore.get().selectedCommandIndex);
+		},
+	};
+
+	e.preventDefault();
+	keyEventHandlers[e.key]();
+}
+
+/**
+ * Handle a keydown event when the global search bar is in **search mode**.
+ *
+ * These are the only supported keys: {@link searchModeKeys}.
+ *
+ * @param e - Keyboard event from the search input.
+ * @param get - Zustand getter for the combined app state.
+ */
+function executeSearchModeKeyAction(
+	e: KeyboardEvent<HTMLElement>,
+	appStore: Pick<AppStoreApi, 'get'>,
+): void {
+	if (!isSearchModeKeyboardKey(e.key)) return;
+
+	const keyEventHandlers: Record<SearchModeKey, () => void> = {
+		Escape: () => {
+			window.close();
+		},
+		ArrowDown: () => {
+			if (appStore.get().results.length > 0) {
+				appStore.get().setSelectedGridCell(0);
+			}
+		},
+		ArrowUp: () => {
+			if (appStore.get().results.length > 0) {
+				appStore.get().setSelectedGridCell(appStore.get().results.length - 1);
+			}
+		},
+	};
+
+	e.preventDefault();
+	keyEventHandlers[e.key]();
+}

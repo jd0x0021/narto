@@ -1,4 +1,4 @@
-import type { StateCreator } from 'zustand';
+import type { StateCreator, StoreApi } from 'zustand';
 
 import type { CommandMenuSlice } from '@/store/slices/commandMenuSlice/commandMenuSlice.types';
 import type { GridNavigationSlice } from '@/store/slices/navigation/gridNavigationSlice/gridNavigationSlice.types';
@@ -9,3 +9,8 @@ export interface AppState
 	extends CommandMenuSlice, GridNavigationSlice, SearchInputNavigationSlice, SearchSlice {}
 
 export type AppStateCreator<T> = StateCreator<AppState, [], [], T>;
+
+export type AppStoreApi = {
+	get: StoreApi<AppState>['getState'];
+	set: StoreApi<AppState>['setState'];
+};
