@@ -1,5 +1,5 @@
 import type { KeyboardEvent } from 'react';
 
-export type SearchInputNavigationSlice = {
+export type SearchInputKeyDownSlice = {
 	handleSearchInputKeyDown: (e: KeyboardEvent<HTMLElement>) => void;
 };

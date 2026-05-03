@@ -2,7 +2,7 @@ import type { KeyboardEvent } from 'react';
 
 import { AppCommand, type AppCommandType } from '@/services/providers/searchProvider.types';
 import type { AppStateCreator, AppStoreApi } from '@/store/appStore.types';
-import type { SearchInputNavigationSlice } from '@/store/slices/navigation/searchInputNavigationSlice/searchInputNavigationSlice.types';
+import type { SearchInputKeyDownSlice } from '@/store/slices/searchInputKeyDownSlice/searchInputKeyDownSlice.types';
 
 const SPACE = ' ' as const;
 const searchModeKeys = ['Escape', 'ArrowDown', 'ArrowUp'] as const;
@@ -44,10 +44,7 @@ const isCommandMenuModeKeyboardKey = (key: string): key is CommandMenuModeKey =>
  * @param get - The Zustand getter function for reading current state.
  * @returns The initial state and actions for search input navigation.
  */
-export const createSearchInputNavigationSlice: AppStateCreator<SearchInputNavigationSlice> = (
-	set,
-	get,
-) =>
+export const createSearchInputKeyDownSlice: AppStateCreator<SearchInputKeyDownSlice> = (set, get) =>
 	({
 		handleSearchInputKeyDown: (e: KeyboardEvent<HTMLElement>) => {
 			const showCommandMenu = get().rawInput === '/';
@@ -58,7 +55,7 @@ export const createSearchInputNavigationSlice: AppStateCreator<SearchInputNaviga
 				executeSearchModeKeyAction(e, { get });
 			}
 		},
-	}) satisfies SearchInputNavigationSlice;
+	}) satisfies SearchInputKeyDownSlice;
 
 /**
  * Handle a keydown event when the command menu is open/active.
