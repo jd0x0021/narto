@@ -5,9 +5,7 @@ import type { GridNavigationSlice } from '@/store/slices/navigation/gridNavigati
 import type { SearchInputNavigationSlice } from '@/store/slices/navigation/searchInputNavigationSlice/searchInputNavigationSlice.types';
 import type { SearchSlice } from '@/store/slices/searchSlice/searchSlice.types';
 
-export type AppState = CommandMenuSlice &
-	GridNavigationSlice &
-	SearchInputNavigationSlice &
-	SearchSlice;
+export interface AppState
+	extends CommandMenuSlice, GridNavigationSlice, SearchInputNavigationSlice, SearchSlice {}
 
 export type AppStateCreator<T> = StateCreator<AppState, [], [], T>;
