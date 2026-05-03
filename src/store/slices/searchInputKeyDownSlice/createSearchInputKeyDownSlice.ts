@@ -36,9 +36,9 @@ const isCommandMenuModeKeyboardKey = (key: string): key is CommandMenuModeKey =>
 };
 
 /**
- * This slice manages the keyboard navigation logic specifically tailored for the global
+ * This slice manages the keyboard keydown logic specifically tailored for the global
  * search input component. It acts as an orchestrator, to interact with either the
- * command menu dropdown or the image grid, depending on the current search context.
+ * command menu dropdown or the image grid, depending on the current search input mode.
  *
  * @param set - The Zustand setter function for updating state.
  * @param get - The Zustand getter function for reading current state.
