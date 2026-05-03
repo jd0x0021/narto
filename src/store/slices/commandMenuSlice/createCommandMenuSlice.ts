@@ -19,10 +19,6 @@ export const createCommandMenuSlice: AppStateCreator<CommandMenuSlice> = (set, g
 	({
 		selectedCommandIndex: 0,
 
-		setSelectedCommandIndex: (index: number) => {
-			set({ selectedCommandIndex: index });
-		},
-
 		chooseCommand: (index: number) => {
 			const command: AppCommandType = commandOptions[index];
 			get().setInput(`/${command} `);
