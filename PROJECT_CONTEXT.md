@@ -18,7 +18,8 @@ NARTO is a keyboard-first meme and GIF discovery tool delivered as a Chrome Exte
 - Forgiving, synchronous command resolution:
    - Inputs without a valid command resolve internally to `/meme`
    - Invalid/partial commands are not visually “corrected”; only recognized commands are highlighted
-- Debounced automatic search requests (150–200ms) triggered only by input changes.
+- Slash command picker (**command menu**): when a user is choosing a slash command before entering a query, a dropdown lists valid commands (e.g. `/meme`, `/gif`) with short descriptions. Selection state and applying the chosen command to the search input live in Zustand (`createCommandMenuSlice.ts`), with UI in `CommandMenu.tsx`.
+- Debounced automatic search requests (**200ms**) triggered **only by input changes** (Enter **MUST NEVER** trigger fetch). Explicit fetch rules are summarized under Data Flow section.
 - Klipy-powered search with provider services + response normalization into an internal model.
 - Three-column masonry grid (always exactly 3 columns) using absolute positioning to preserve DOM order and keyboard/tab behavior.
    - Exactly **3** columns; container `position: relative`; children **absolutely** positioned.
@@ -52,7 +53,7 @@ High-level responsibilities:
    - Own rendering, styling, focus management, and keyboard event wiring.
    - Must not perform API calls or implement Klipy endpoint logic.
 - **State (Zustand store)**
-   - Own the search input state (`rawInput`, `resolvedCommand`, `query`), normalized results, selection index, and fetch status.
+   - Own the search input state (`rawInput`, `resolvedCommand`, `query`), normalized results, selection index, command menu slice state/actions, grid navigation, and fetch status (`useAppStore` composes slices).
    - Store only normalized/internal models (never raw API payloads).
 - **Services (providers)**
    - Own all Klipy network logic behind typed provider interfaces.
@@ -74,7 +75,8 @@ Expected main directories (align with implementation plan):
 
 - `src/components/`
    - `Header.tsx`: static header (`NARTO`, status indicator, version)
-   - `SearchInput.tsx`: command-aware input, debounced trigger wiring, command highlighting visuals, keyboard focus behavior
+   - `SearchInput.tsx`: command-aware input, debounced trigger wiring, command highlighting visuals, keyboard focus behavior; opens the command menu when appropriate
+   - `CommandMenu.tsx`: command menu listbox (valid commands + descriptions); selection is driven by the command menu slice
    - `ImageGallery.tsx`: chooses between empty state and `MasonryGrid` based on normalized results/state
    - `MasonryGrid.tsx`: 3-column absolute-positioned masonry layout + arrow-key navigation logic
    - `GridImage.tsx`: one result tile (blur preview, display image load, hover/focus/selected visuals, copy on Enter, drag support)
@@ -86,7 +88,11 @@ Expected main directories (align with implementation plan):
    - `gifSearchProvider.ts`: GIF search provider
    - `types.ts`: Klipy response types + internal `NormalizedSearchResult` type
 - `src/store/`
-   - `useSearchStore.ts`: Zustand store for search state/actions
+   - `useAppStore.ts`: composed Zustand store (search, command menu, grid navigation, search-input key handling, etc.)
+   - `slices/commandMenuSlice/`: command menu selection and applying a chosen command to the input
+   - `slices/gridNavigationSlice/`: grid focus/selection navigation state + actions for arrow-key movement (inside the grid) and input/grid focus handoff
+   - `slices/searchInputKeyDownSlice/`: centralized mode-aware (command menu, and search mode) keydown handling for the search input
+   - `slices/searchSlice/`: parsed input fields, `runSearch`, results, request cancellation
 - `src/utils/`
    - `debounce.ts`: reusable debounce helper (with `cancel`)
    - `clipboard.ts`: clipboard copy utilities (image/URL fallback behavior centralized)
@@ -147,6 +153,12 @@ Inputs must be parsed synchronously and never throw or block.
       - `rawInput` (exact user input)
       - `resolvedCommand: 'meme' | 'gif'` (internal resolution)
       - `query` (string used for searching)
+
+## Command Menu
+
+- **Purpose:** Let the user pick valid commands (e.g. `/meme`, `/gif`) when the input is in “command menu” mode, without firing searches.
+- **Command Menu mode**: When the user types `/` **only**, the command menu is shown under the search input.
+- **Search interaction:** While the command menu is shown (“command menu” mode), the app does **not** schedule `runSearch` (no fetch) via the debounced input path (pending debounced calls are canceled; results are cleared so stale responses cannot apply).
 
 ## Provider & Klipy Contract
 
@@ -235,18 +247,20 @@ Mapping rules:
 ## Data Flow
 
 1. `SearchInput.tsx`
-   - On each input change:
-      - parse synchronously into `{ rawInput, resolvedCommand, query }`
+   - On each **input change** (not on `Enter`):
+      - parse raw user input synchronously into `{ rawInput, resolvedCommand, query }`
       - update Zustand immediately
-      - trigger debounced search only if:
-         - `resolvedCommand` exists
+      - **Debouncing:** a search is scheduled with a **200ms** debounce from the last change; each new input change resets the timer.
+      - **When a Klipy fetch runs (via `runSearch`):** the debounced callback is used only if **all** of the following is true (only fetch when **all** is true):
+         - `resolvedCommand` is present
          - `query.length >= 1`
-2. Zustand store (`useSearchStore.ts`)
+         - **the command menu is not shown** (no search while the user is still picking a valid command (e.g. `/meme`, `/gif`)—see Command Menu section)
+      - Otherwise the debounced search is canceled and the store clears/invalidates as needed so nothing fetches on bare `/`.
+2. Zustand store (`useAppStore.ts` / search slice)
    - Owns request cancellation/ignoring:
       - assign an incrementing `requestId` per search
       - ignore any results that do not match the latest `requestId`
-   - Calls provider services and stores only normalized results.
-   - `Enter` in the input must never trigger fetch.
+   - `runSearch` calls provider services and stores only normalized results.
 3. Providers
    - Perform Klipy API requests and normalize responses into `NormalizedSearchResult[]`.
    - All requests via `src/services/providers/**`
