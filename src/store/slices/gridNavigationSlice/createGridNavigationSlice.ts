@@ -2,7 +2,7 @@ import type { AppStateCreator } from '@/store/appStore.types';
 import type {
 	GridDirection,
 	GridNavigationSlice,
-} from '@/store/slices/navigation/gridNavigationSlice/gridNavigationSlice.types';
+} from '@/store/slices/gridNavigationSlice/gridNavigationSlice.types';
 
 /**
  * This slice manages the keyboard navigation logic for the 2D image grid, handling

@@ -1,7 +1,7 @@
 import type { StateCreator, StoreApi } from 'zustand';
 
 import type { CommandMenuSlice } from '@/store/slices/commandMenuSlice/commandMenuSlice.types';
-import type { GridNavigationSlice } from '@/store/slices/navigation/gridNavigationSlice/gridNavigationSlice.types';
+import type { GridNavigationSlice } from '@/store/slices/gridNavigationSlice/gridNavigationSlice.types';
 import type { SearchInputNavigationSlice } from '@/store/slices/navigation/searchInputNavigationSlice/searchInputNavigationSlice.types';
 import type { SearchSlice } from '@/store/slices/searchSlice/searchSlice.types';
 
