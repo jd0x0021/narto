@@ -13,6 +13,28 @@ type SearchModeKey = (typeof searchModeKeys)[number];
 type CommandMenuModeKey = (typeof commandMenuModeKeys)[number];
 
 /**
+ * This slice manages the keyboard keydown logic specifically tailored for the global
+ * search input component. It acts as an orchestrator, to interact with either the
+ * command menu dropdown or the image grid, depending on the current search input mode.
+ *
+ * @param set - The Zustand setter function for updating state.
+ * @param get - The Zustand getter function for reading current state.
+ * @returns The initial state and actions for search input navigation.
+ */
+export const createSearchInputKeyDownSlice: AppStateCreator<SearchInputKeyDownSlice> = (set, get) =>
+	({
+		handleSearchInputKeyDown: (e: KeyboardEvent<HTMLElement>) => {
+			const showCommandMenu = get().rawInput === '/';
+
+			if (showCommandMenu) {
+				executeCommandMenuModeKeyAction(e, { get, set });
+			} else {
+				executeSearchModeKeyAction(e, { get });
+			}
+		},
+	}) satisfies SearchInputKeyDownSlice;
+
+/**
  * Narrow the runtime `key` parameter to keys handled when the global
  * search bar is in **search mode**, meaning the command menu is inactive.
  *
@@ -34,28 +56,6 @@ const isSearchModeKeyboardKey = (key: string): key is SearchModeKey => {
 const isCommandMenuModeKeyboardKey = (key: string): key is CommandMenuModeKey => {
 	return commandMenuModeKeys.some((k) => k === key);
 };
-
-/**
- * This slice manages the keyboard keydown logic specifically tailored for the global
- * search input component. It acts as an orchestrator, to interact with either the
- * command menu dropdown or the image grid, depending on the current search input mode.
- *
- * @param set - The Zustand setter function for updating state.
- * @param get - The Zustand getter function for reading current state.
- * @returns The initial state and actions for search input navigation.
- */
-export const createSearchInputKeyDownSlice: AppStateCreator<SearchInputKeyDownSlice> = (set, get) =>
-	({
-		handleSearchInputKeyDown: (e: KeyboardEvent<HTMLElement>) => {
-			const showCommandMenu = get().rawInput === '/';
-
-			if (showCommandMenu) {
-				executeCommandMenuModeKeyAction(e, { get, set });
-			} else {
-				executeSearchModeKeyAction(e, { get });
-			}
-		},
-	}) satisfies SearchInputKeyDownSlice;
 
 /**
  * Handle a keydown event when the command menu is open/active.
