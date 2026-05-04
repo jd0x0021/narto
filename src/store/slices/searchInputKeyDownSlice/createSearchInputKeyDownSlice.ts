@@ -65,10 +65,10 @@ const isCommandMenuModeKeyboardKey = (key: string): key is CommandMenuModeKey =>
  * @param e - Keyboard event from the search input.
  * @param appStore - Zustand APIs used to read and update app state.
  */
-function executeCommandMenuModeKeyAction(
+const executeCommandMenuModeKeyAction = (
 	e: KeyboardEvent<HTMLElement>,
 	appStore: AppStoreApi,
-): void {
+): void => {
 	if (!isCommandMenuModeKeyboardKey(e.key)) return;
 
 	const keyEventHandlers: Record<CommandMenuModeKey, () => void> = {
@@ -107,7 +107,7 @@ function executeCommandMenuModeKeyAction(
 
 	e.preventDefault();
 	keyEventHandlers[e.key]();
-}
+};
 
 /**
  * Handle a keydown event when the global search bar is in **search mode**.
@@ -117,10 +117,10 @@ function executeCommandMenuModeKeyAction(
  * @param e - Keyboard event from the search input.
  * @param get - Zustand getter for the combined app state.
  */
-function executeSearchModeKeyAction(
+const executeSearchModeKeyAction = (
 	e: KeyboardEvent<HTMLElement>,
 	appStore: Pick<AppStoreApi, 'get'>,
-): void {
+): void => {
 	if (!isSearchModeKeyboardKey(e.key)) return;
 
 	const keyEventHandlers: Record<SearchModeKey, () => void> = {
@@ -141,4 +141,4 @@ function executeSearchModeKeyAction(
 
 	e.preventDefault();
 	keyEventHandlers[e.key]();
-}
+};
