@@ -1,7 +1,7 @@
 import type { KeyboardEvent, ReactNode } from 'react';
 import { memo, useCallback, useEffect, useRef } from 'react';
 
-import { useSearchStore } from '@/store/useSearchStore';
+import { useAppStore } from '@/store/useAppStore';
 
 type MasonryGridProps = {
 	children: ReactNode;
@@ -52,27 +52,27 @@ const MasonryGrid = memo(({ children, columnCount, gap }: MasonryGridProps) => {
 		calculateLayout();
 	}, [children, calculateLayout]);
 
-	const moveSelection = useSearchStore((s) => s.moveSelection);
-	const setSelectedIndex = useSearchStore((s) => s.setSelectedIndex);
+	const moveGridSelection = useAppStore((s) => s.moveGridSelection);
+	const setSelectedGridCell = useAppStore((s) => s.setSelectedGridCell);
 
 	const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
 		if (e.key === 'ArrowUp') {
 			e.preventDefault();
-			const sIndex = useSearchStore.getState().selectedIndex;
-			if (sIndex !== null && sIndex < columnCount) {
-				setSelectedIndex(null); // Return to input
+			const selectedGridCellIndex = useAppStore.getState().selectedGridCell;
+			if (selectedGridCellIndex !== null && selectedGridCellIndex < columnCount) {
+				setSelectedGridCell(null); // Return to input
 			} else {
-				moveSelection('up', columnCount);
+				moveGridSelection('up', columnCount);
 			}
 		} else if (e.key === 'ArrowDown') {
 			e.preventDefault();
-			moveSelection('down', columnCount);
+			moveGridSelection('down', columnCount);
 		} else if (e.key === 'ArrowLeft') {
 			e.preventDefault();
-			moveSelection('left', columnCount);
+			moveGridSelection('left', columnCount);
 		} else if (e.key === 'ArrowRight') {
 			e.preventDefault();
-			moveSelection('right', columnCount);
+			moveGridSelection('right', columnCount);
 		}
 	};
 

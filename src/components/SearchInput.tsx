@@ -1,24 +1,30 @@
-import type { ChangeEvent, KeyboardEvent } from 'react';
+import type { ChangeEvent } from 'react';
 import { useEffect, useMemo, useRef } from 'react';
 
+import CommandMenu from '@/components/CommandMenu';
 import FormattedInputValue from '@/components/FormattedInputValue';
 import { useSearchInputFocusHotkeys } from '@/hooks/useSearchInputFocusHotkeys';
-import { useSearchStore } from '@/store/useSearchStore';
+import type { AppCommandType } from '@/services/providers/searchProvider.types';
+import { useAppStore } from '@/store/useAppStore';
 import { debounce } from '@/utils/debounce';
-import { isValidCommand } from '@/utils/parseCommand';
+import type { ParsedSearchInput } from '@/utils/parseSearchInput';
+import { isValidCommand, parseSearchInput } from '@/utils/parseSearchInput';
 
 export default function SearchInput() {
-	const rawInput = useSearchStore((s) => s.rawInput);
-	const setInput = useSearchStore((s) => s.setInput);
-	const setSelectedIndex = useSearchStore((s) => s.setSelectedIndex);
-	const results = useSearchStore((s) => s.results);
+	const rawInput = useAppStore((s) => s.rawInput);
+	const query: string = useAppStore((s) => s.query);
+	const resolvedCommand: AppCommandType = useAppStore((s) => s.resolvedCommand);
+	const setInput = useAppStore((s) => s.setInput);
+	const setSelectedGridCell = useAppStore((s) => s.setSelectedGridCell);
+	const handleSearchInputKeyDown = useAppStore((s) => s.handleSearchInputKeyDown);
 
 	const inputRef = useRef<HTMLInputElement>(null);
 	const presentationLayerRef = useRef<HTMLDivElement>(null);
 
-	useSearchInputFocusHotkeys(inputRef);
-
+	const showCommandMenu: boolean = rawInput === '/';
 	const hasValidCommand: boolean = isValidCommand(rawInput);
+
+	useSearchInputFocusHotkeys(inputRef);
 
 	const handleScroll = (e: React.UIEvent<HTMLInputElement>) => {
 		if (presentationLayerRef.current) {
@@ -31,56 +37,47 @@ export default function SearchInput() {
 		inputRef.current?.focus();
 	}, []);
 
+	/**
+	 * Schedules the search function to run after 200ms is elapsed since the last
+	 * invocation. If the user types again before the 200ms is up, the timer resets.
+	 */
 	const debouncedSearch = useMemo(
 		() =>
 			debounce(() => {
-				void useSearchStore.getState().runSearch();
+				void useAppStore.getState().runSearch();
 			}, 200),
 		[],
 	);
 
 	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-		setInput(e.target.value);
-		const { query } = useSearchStore.getState();
+		const rawUserInput = e.target.value;
+		setInput(rawUserInput);
+		const parsed: ParsedSearchInput = parseSearchInput(rawUserInput);
 
-		if (query.length >= 1) {
-			debouncedSearch();
-		} else {
+		// Don't fetch if command menu is shown or if query is empty
+		if (rawUserInput === '/' || parsed.query.length < 1) {
 			debouncedSearch.cancel();
-			useSearchStore.setState({
+
+			const { requestId } = useAppStore.getState();
+			useAppStore.setState({
+				// Increment the global requestId to invalidate any in-flight search requests.
+				// This is crucial for canceling searches that may have already started executing.
+				// When runSearch's captured nextId no longer matches the updated requestId in the store, the
+				// stale fetch result will be rejected, preventing old data from overwriting cleared results.
+				requestId: requestId + 1,
 				results: [],
 				status: 'idle',
-				selectedIndex: null,
+				selectedGridCell: null,
 			});
-		}
-	};
-
-	const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-		if (e.key === 'Escape') {
-			e.preventDefault();
-			window.close();
-		} else if (e.key === 'ArrowDown') {
-			e.preventDefault();
-			if (results.length > 0) {
-				setSelectedIndex(0);
-				inputRef.current?.blur(); // drop focus from input
-			}
-		} else if (e.key === 'ArrowUp') {
-			e.preventDefault();
-			if (results.length > 0) {
-				setSelectedIndex(results.length - 1);
-				inputRef.current?.blur(); // drop focus from input
-			}
-		} else if (e.key === 'Enter') {
-			e.preventDefault();
-			// Enter never fetches
+		} else {
+			debouncedSearch();
 		}
 	};
 
 	useEffect(() => {
-		return useSearchStore.subscribe((state, prevState) => {
+		return useAppStore.subscribe((state, prevState) => {
 			// Return focus to input if selectedIndex goes to null from grid
-			if (prevState.selectedIndex !== null && state.selectedIndex === null) {
+			if (prevState.selectedGridCell !== null && state.selectedGridCell === null) {
 				inputRef.current?.focus();
 			}
 		});
@@ -97,10 +94,21 @@ export default function SearchInput() {
 						input field and handles all the visual styling, like the command chip and text formatting. */}
 					<div
 						ref={presentationLayerRef}
-						className='absolute inset-0 flex items-center pointer-events-none whitespace-pre overflow-hidden text-narto-text'
+						className='absolute inset-0 flex items-center pointer-events-none overflow-hidden text-narto-text'
 						aria-hidden='true'
 					>
-						<FormattedInputValue rawInput={rawInput} />
+						{hasValidCommand ? (
+							<FormattedInputValue
+								command={resolvedCommand}
+								text={query.length === 0 ? ` Search ${resolvedCommand}s...` : ` ${query}`}
+								isTextMuted={query.length === 0}
+							/>
+						) : !rawInput ? (
+							// show placeholder text
+							<span className='text-narto-muted/50'>Search KLIPY</span>
+						) : (
+							<span>{rawInput}</span>
+						)}
 					</div>
 
 					{/* Interaction Layer: This is where the user actually types. It's a completely transparent input
@@ -111,10 +119,10 @@ export default function SearchInput() {
 						type='text'
 						value={rawInput}
 						onChange={handleChange}
-						onKeyDown={handleKeyDown}
+						onKeyDown={handleSearchInputKeyDown}
 						onScroll={handleScroll}
 						onFocus={() => {
-							setSelectedIndex(null);
+							setSelectedGridCell(null);
 						}}
 						className={`w-full bg-transparent outline-none p-0 m-0 border-none text-transparent caret-white z-10 selection:bg-narto-accent/40 selection:text-transparent ${
 							// The command chip element (from a valid command) uses a 'px-1' class (handled by the FormattedInputValue
@@ -129,9 +137,11 @@ export default function SearchInput() {
 				</div>
 			</div>
 
-			<div className='mt-2.5 text-[0.75rem] text-narto-muted/60 pl-1'>
-				Example: <span className='text-narto-muted/40'>/meme cat, /gif oiia</span>
-			</div>
+			{showCommandMenu ? (
+				<div className='mt-2'>
+					<CommandMenu />
+				</div>
+			) : null}
 		</div>
 	);
 }

@@ -1,7 +1,7 @@
 import type { AppCommandType } from '@/services/providers/searchProvider.types';
 import { AppCommand } from '@/services/providers/searchProvider.types';
 
-export type ParsedCommand = {
+export type ParsedSearchInput = {
 	rawInput: string;
 	resolvedCommand: AppCommandType;
 	query: string;
@@ -34,7 +34,7 @@ export function isValidCommand(input: string): boolean {
  *  that will be displayed on the FormattedInputValue component)
  * 	- the extracted query string
  */
-export function parseCommand(input: string): ParsedCommand {
+export function parseSearchInput(input: string): ParsedSearchInput {
 	const trimmed = input.trimStart();
 
 	if (!trimmed.startsWith('/')) {

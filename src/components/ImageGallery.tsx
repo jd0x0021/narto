@@ -1,15 +1,13 @@
 import GridImage from '@/components/GridImage';
 import MasonryGrid from '@/components/MasonryGrid';
 import ResultsFallbackState from '@/components/ResultsFallbackState';
-import { useSearchStore } from '@/store/useSearchStore';
+import { useAppStore } from '@/store/useAppStore';
 
 export default function ImageGallery() {
-	const results = useSearchStore((s) => s.results);
-	const query = useSearchStore((s) => s.query);
-	const status = useSearchStore((s) => s.status);
-	const searchError = useSearchStore((s) =>
-		s.status === 'error' && s.error ? s.error : undefined,
-	);
+	const results = useAppStore((s) => s.results);
+	const query = useAppStore((s) => s.query);
+	const status = useAppStore((s) => s.status);
+	const searchError = useAppStore((s) => (s.status === 'error' && s.error ? s.error : undefined));
 
 	if (!query && results.length === 0) {
 		return <div></div>;
