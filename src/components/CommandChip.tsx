@@ -4,6 +4,13 @@ type CommandChipProps = Readonly<{
 	command: AppCommandType;
 }>;
 
+/**
+ * A chip component for displaying a valid command in the search input. It
+ * is styled to visually differentiate command styling from regular text.
+ *
+ * @param command - The valiid command to be displayed inside the chip.
+ * @returns A styled span element containing the command.
+ */
 export default function CommandChip({ command }: CommandChipProps) {
 	return (
 		<span

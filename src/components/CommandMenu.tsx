@@ -10,6 +10,12 @@ const commandDescriptions = {
 
 const validCommands: readonly AppCommandType[] = Object.values(AppCommand);
 
+/**
+ * This component renders a dropdown list of valid commands ({@link validCommands}) when the user
+ * types `/` in the global search input. It allows users to select a command, which will then be applied
+ * as a value to  the search input. Different commands trigger different search behaviors, and this menu
+ * serves as a guide to  inform users of their options (e.g. `/gif` command will get animated memes).
+ */
 export default function CommandMenu() {
 	const selectedCommandIndex = useAppStore((s) => s.selectedCommandIndex);
 	const chooseCommand = useAppStore((s) => s.chooseCommand);

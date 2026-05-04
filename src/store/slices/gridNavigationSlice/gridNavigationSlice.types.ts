@@ -1,4 +1,4 @@
-export type GridDirection = 'up' | 'down' | 'left' | 'right'; // update to GridDirection
+export type GridDirection = 'up' | 'down' | 'left' | 'right';
 
 export type GridNavigationSlice = {
 	selectedGridCell: number | null;
