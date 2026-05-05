@@ -27,6 +27,7 @@ export type AppCommandType = (typeof AppCommand)[keyof typeof AppCommand];
 export type NormalizedSearchResult<TCommand extends string = string> = {
 	id: number;
 	type: TCommand;
+	title: string;
 	width: number;
 	height: number;
 	previewUrl: string;

@@ -120,6 +120,7 @@ function normalizeKlipyResponse(responseData: RawKlipySearchResponse): Normalize
 		return {
 			id: raw.id,
 			type: type,
+			title: raw.title,
 			width: md.width,
 			height: md.height,
 			previewUrl: md.url,
