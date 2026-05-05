@@ -10,38 +10,39 @@ function Keycap({ children }: { children: ReactNode }) {
 
 export default function Footer() {
 	return (
-		<footer className='flex items-center px-6 py-4 bg-narto-footer mt-auto'>
-			<div className='flex items-center w-full justify-between text-xs text-narto-muted font-medium tracking-wide'>
-				<div className='flex items-center gap-2'>
-					<Keycap>/</Keycap>
-					<span className='text-narto-muted/60 text-[0.688rem]'>COMMAND</span>
+		<footer
+			className='flex items-center w-full justify-between px-6 py-4
+			 bg-narto-footer text-xs text-narto-muted font-medium tracking-wide'
+		>
+			<div className='flex items-center gap-2'>
+				<Keycap>/</Keycap>
+				<span className='text-narto-muted/60 text-[0.688rem]'>COMMAND</span>
+			</div>
+
+			<div className='w-[0.063rem] h-3 bg-white/10'></div>
+
+			<div className='flex items-center gap-2'>
+				<div className='flex items-center gap-1'>
+					<Keycap>↑</Keycap>
+					<Keycap>↓</Keycap>
+					<Keycap>←</Keycap>
+					<Keycap>→</Keycap>
 				</div>
+				<span className='text-narto-muted/60 text-[0.688rem]'>NAVIGATE</span>
+			</div>
 
-				<div className='w-[0.063rem] h-3 bg-white/10'></div>
+			<div className='w-[0.063rem] h-3 bg-white/10'></div>
 
-				<div className='flex items-center gap-2'>
-					<div className='flex items-center gap-1'>
-						<Keycap>↑</Keycap>
-						<Keycap>↓</Keycap>
-						<Keycap>←</Keycap>
-						<Keycap>→</Keycap>
-					</div>
-					<span className='text-narto-muted/60 text-[0.688rem]'>NAVIGATE</span>
-				</div>
+			<div className='flex items-center gap-2'>
+				<Keycap>Enter</Keycap>
+				<span className='text-narto-muted/60 text-[0.688rem]'>SELECT</span>
+			</div>
 
-				<div className='w-[0.063rem] h-3 bg-white/10'></div>
+			<div className='w-[0.063rem] h-3 bg-white/10'></div>
 
-				<div className='flex items-center gap-2'>
-					<Keycap>Enter</Keycap>
-					<span className='text-narto-muted/60 text-[0.688rem]'>SELECT</span>
-				</div>
-
-				<div className='w-[0.063rem] h-3 bg-white/10'></div>
-
-				<div className='flex items-center gap-2'>
-					<Keycap>Esc</Keycap>
-					<span className='text-narto-muted/60 text-[0.688rem]'>CLOSE</span>
-				</div>
+			<div className='flex items-center gap-2'>
+				<Keycap>Esc</Keycap>
+				<span className='text-narto-muted/60 text-[0.688rem]'>CLOSE</span>
 			</div>
 		</footer>
 	);
