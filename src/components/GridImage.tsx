@@ -121,7 +121,7 @@ const GridImage = memo(
 						tabIndex={-1}
 						aria-label='Copy image'
 						className={`flex items-center gap-1 pointer-events-auto absolute right-2 bottom-2 rounded-md  
-								bg-narto-accent/90 px-2 py-1 text-xs text-white transition-opacity duration-200 ease-out
+								bg-narto-accent/90 px-2 py-1 text-xs text-narto-text transition-opacity duration-200 ease-out
 								${copying ? 'opacity-0 pointer-events-none' : 'opacity-0 group-hover:opacity-100 hover:bg-narto-accent'}`}
 						onClick={handleCopyOnEvent}
 					>
@@ -149,11 +149,11 @@ const GridImage = memo(
 						{copying ? (
 							<div className='size-8 border-4 border-gray-300 border-t-narto-accent/80 rounded-full animate-spin'></div>
 						) : isCopied ? (
-							<span className='bg-green-500 text-white rounded-md px-2 py-1 text-sm mx-2 text-center max-w-[90%] shadow-sm'>
+							<span className='bg-green-500 text-narto-text rounded-md px-2 py-1 text-sm mx-2 text-center max-w-[90%] shadow-sm'>
 								Copied 😼
 							</span>
 						) : copyErrored ? (
-							<span className='bg-red-600 text-white rounded-md px-2 py-1 text-sm mx-2 text-center max-w-[90%] shadow-sm'>
+							<span className='bg-red-600 text-narto-text rounded-md px-2 py-1 text-sm mx-2 text-center max-w-[90%] shadow-sm'>
 								Copy failed 💀
 							</span>
 						) : null}
