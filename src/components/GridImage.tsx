@@ -37,7 +37,7 @@ const GridImage = memo(({ image, index }: GridImageProps) => {
 		const handleCopy = async (): Promise<void> => {
 			try {
 				setCopying(true);
-				await copyImageFromUrl(image.originalUrl, image.format);
+				await copyImageFromUrl(image.highResUrl, image.format);
 				setCopying(false);
 				setIsCopied(true);
 				setTimeout(() => {

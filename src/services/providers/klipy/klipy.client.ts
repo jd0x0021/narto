@@ -125,7 +125,7 @@ function normalizeKlipyResponse(responseData: RawKlipySearchResponse): Normalize
 			height: md.height,
 			previewUrl: md.url,
 			displayUrl: md.url,
-			originalUrl: hd.url,
+			highResUrl: hd.url,
 			blurPreview: raw.blur_preview,
 			format: format,
 		};

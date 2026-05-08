@@ -32,7 +32,7 @@ export type NormalizedSearchResult<TCommand extends string = string> = {
 	height: number;
 	previewUrl: string;
 	displayUrl: string;
-	originalUrl: string;
+	highResUrl: string;
 	blurPreview: string;
 	format: FileFormatType;
 };

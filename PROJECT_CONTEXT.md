@@ -192,7 +192,7 @@ Normalized objects must be used everywhere in UI/store.
 - `height: number`
 - `previewUrl: string` (preview for blur background)
 - `displayUrl: string` (grid display)
-- `originalUrl: string` (highest-quality for copy + drag)
+- `highResUrl: string` (highest-quality for copy + drag)
 - `blurPreview: string`
 - `format: 'webp' | 'gif'` (source asset format used for rendering/drag behavior)
 

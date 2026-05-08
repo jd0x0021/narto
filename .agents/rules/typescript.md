@@ -38,7 +38,7 @@ export type NormalizedSearchResult = Readonly<{
   id: string;
   type: "meme" | "gif";
   displayUrl: string;
-  originalUrl: string;
+  highResUrl: string;
   blurPreview: string;
 }>;
 ```
