@@ -95,7 +95,7 @@ const GridImage = memo(({ image, index }: GridImageProps) => {
 				<img
 					src={image.displayUrl}
 					className={`absolute inset-0 w-full h-full object-cover active:cursor-grabbing
-						transition-opacity duration-300 ${displayLoaded ? 'opacity-100' : 'opacity-0'}`}
+						transition-opacity duration-300 ${displayLoaded ? 'opacity-100' : 'opacity-0 cursor-wait'}`}
 					onLoad={() => {
 						setDisplayLoaded(true);
 					}}
