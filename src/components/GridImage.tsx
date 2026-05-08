@@ -18,14 +18,14 @@ const GridImage = memo(({ image, index }: GridImageProps) => {
 	const [copying, setCopying] = useState(false);
 	const [isCopied, setIsCopied] = useState(false);
 	const [copyErrored, setCopyErrored] = useState(false);
-	const ref = useRef<HTMLDivElement>(null);
+	const gridImageCellRef = useRef<HTMLDivElement>(null);
 
 	// Focus tracking
 	useEffect(() => {
-		if (isSelected && ref.current) {
-			ref.current.focus({ preventScroll: true });
+		if (isSelected && gridImageCellRef.current) {
+			gridImageCellRef.current.focus({ preventScroll: true });
 			// native scroll into view if needed
-			ref.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+			gridImageCellRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 		}
 	}, [isSelected]);
 
@@ -59,7 +59,7 @@ const GridImage = memo(({ image, index }: GridImageProps) => {
 
 	return (
 		<div
-			ref={ref}
+			ref={gridImageCellRef}
 			tabIndex={0}
 			className={`group absolute top-0 left-0 transition-shadow outline-none cursor-pointer
 				overflow-hidden leading-none select-none rounded-narto-sm border-[0.188rem]
