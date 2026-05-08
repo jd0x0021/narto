@@ -123,10 +123,9 @@ function normalizeKlipyResponse(responseData: RawKlipySearchResponse): Normalize
 			title: raw.title,
 			width: md.width,
 			height: md.height,
-			previewUrl: md.url,
+			previewUrl: raw.blur_preview,
 			displayUrl: md.url,
 			highResUrl: hd.url,
-			blurPreview: raw.blur_preview,
 			format: format,
 		};
 	});

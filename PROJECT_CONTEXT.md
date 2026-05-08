@@ -193,7 +193,6 @@ Normalized objects must be used everywhere in UI/store.
 - `previewUrl: string` (preview for blur background)
 - `displayUrl: string` (grid display)
 - `highResUrl: string` (highest-quality for copy + drag)
-- `blurPreview: string`
 - `format: 'webp' | 'gif'` (source asset format used for rendering/drag behavior)
 
 Mapping rules:
@@ -270,7 +269,7 @@ Mapping rules:
    - `ImageGallery` chooses between empty state vs `MasonryGrid`.
    - `MasonryGrid` uses absolute positioning coordinates but does not reorder DOM.
    - `GridImage` renders:
-      - blur preview first (`blurPreview`)
+      - blur preview first (`previewUrl`)
       - display image second (`displayUrl`) with no layout shift
 
 ## Coding Standards

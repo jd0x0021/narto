@@ -86,7 +86,7 @@ const GridImage = memo(({ image, index }: GridImageProps) => {
 				<div
 					className='absolute inset-0 bg-cover bg-center bg-no-repeat blur-[0.125rem] transition-opacity duration-300'
 					style={{
-						backgroundImage: `url(${image.blurPreview})`,
+						backgroundImage: `url(${image.previewUrl})`,
 						opacity: displayLoaded ? 0 : 1,
 					}}
 				/>
