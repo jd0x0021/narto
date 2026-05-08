@@ -18,19 +18,27 @@ export function useSearchInputFocusHotkeys(inputRef: RefObject<HTMLInputElement 
 	useEffect(() => {
 		const handleGlobalKeyDown = (e: globalThis.KeyboardEvent) => {
 			const isShortcutKey: boolean =
-				e.key === '`' || e.key === '/' || ((e.ctrlKey || e.metaKey) && e.key === 'k');
+				e.key === '`' ||
+				e.key === '/' ||
+				((e.ctrlKey || e.metaKey) && e.key === 'k') ||
+				((e.ctrlKey || e.metaKey) && e.key === 'a');
 
 			if (!isShortcutKey) return;
 
 			const isInputFocused: boolean = document.activeElement instanceof HTMLInputElement;
 
-			// do not focus the input if: it's already focused, AND if we did not press ctrl + k
-			if (isInputFocused && e.key !== 'k') return;
+			// do not focus the input if: it's already focused, AND if we did not press ctrl + k or ctrl + a
+			if (isInputFocused && e.key !== 'k' && e.key !== 'a') return;
 
-			// pressing ctrl + k is the only way to focus the input when it's already focused
+			// pressing ctrl + k or ctrl + a is the only way to focus the input when it's already focused
 			e.preventDefault();
 			setSelectedGridCell(null);
 			inputRef.current?.focus();
+
+			if (e.key === 'a' && inputRef.current) {
+				// select all text in the input if ctrl + a is pressed
+				inputRef.current.select();
+			}
 		};
 
 		window.addEventListener('keydown', handleGlobalKeyDown);
