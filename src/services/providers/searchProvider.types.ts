@@ -24,9 +24,9 @@ export const AppCommand = {
  */
 export type AppCommandType = (typeof AppCommand)[keyof typeof AppCommand];
 
-export type NormalizedSearchResult<TCommand extends string = string> = {
+export type NormalizedSearchResult = {
 	id: number;
-	type: TCommand;
+	type: AppCommandType;
 	title: string;
 	width: number;
 	height: number;
