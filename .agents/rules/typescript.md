@@ -22,7 +22,7 @@ Enforce strict TypeScript typing, type safety, and scalable type patterns
 
 ## Naming
 
-- Types: `PascalCase` (`NormalizedSearchResult`).
+- Types: `PascalCase` (`NormalizedImageData`).
 - Type-only imports: `import type { X } from '...'`.
 - Constants: `SCREAMING_SNAKE` for true constants (`DEBOUNCE_MS`, `COLUMN_COUNT`).
 
@@ -34,7 +34,7 @@ Enforce strict TypeScript typing, type safety, and scalable type patterns
 ## Patterns (follow)
 
 ```ts
-export type NormalizedSearchResult = Readonly<{
+export type NormalizedImageData = Readonly<{
   id: string;
   type: "meme" | "gif";
   displayUrl: string;

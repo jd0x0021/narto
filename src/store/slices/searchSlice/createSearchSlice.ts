@@ -1,6 +1,6 @@
 import { searchProvider } from '@/services/providers/searchProvider';
 import { SearchProviderError } from '@/services/providers/searchProvider.errors';
-import { AppCommand, type NormalizedSearchResult } from '@/services/providers/searchProvider.types';
+import { AppCommand, type NormalizedImageData } from '@/services/providers/searchProvider.types';
 import type { AppStateCreator } from '@/store/appStore.types';
 import type { SearchSlice } from '@/store/slices/searchSlice/searchSlice.types';
 import type { ParsedSearchInput } from '@/utils/parseSearchInput';
@@ -48,10 +48,7 @@ export const createSearchSlice: AppStateCreator<SearchSlice> = (set, get) =>
 			set({ requestId: nextId, status: 'loading', selectedGridCell: null });
 
 			try {
-				const data: NormalizedSearchResult[] = await searchProvider.search(
-					resolvedCommand,
-					query,
-				);
+				const data: NormalizedImageData[] = await searchProvider.search(resolvedCommand, query);
 
 				// Validate that this request is still the latest by comparing the captured snapshot (nextId)
 				// against the current store value (get().requestId). If they don't match, a newer search

@@ -13,7 +13,7 @@ import {
 import type {
 	AppCommandType,
 	FileFormatType,
-	NormalizedSearchResult,
+	NormalizedImageData,
 	SearchProvider,
 } from '@/services/providers/searchProvider.types';
 
@@ -104,10 +104,10 @@ async function getOrCreateCustomerId(): Promise<string> {
 	return id;
 }
 
-function normalizeKlipyResponse(responseData: RawKlipySearchResponse): NormalizedSearchResult[] {
+function normalizeKlipyResponse(responseData: RawKlipySearchResponse): NormalizedImageData[] {
 	const data: RawKlipyImageData[] = responseData.data.data;
 
-	return data.map((raw: RawKlipyImageData): NormalizedSearchResult => {
+	return data.map((raw: RawKlipyImageData): NormalizedImageData => {
 		const isGif = raw.type === 'gif';
 
 		// file resolutions

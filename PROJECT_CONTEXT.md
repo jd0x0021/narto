@@ -57,7 +57,7 @@ High-level responsibilities:
    - Store only normalized/internal models (never raw API payloads).
 - **Services (providers)**
    - Own all Klipy network logic behind typed provider interfaces.
-   - Normalize raw responses into `NormalizedSearchResult[]`.
+   - Normalize raw responses into `NormalizedImageData[]`.
    - Klipy is replaceable: other providers should be swappable behind the same interface.
 - **Utilities**
    - Own cross-cutting behaviors like debouncing, clipboard copying, and masonry positioning helpers.
@@ -86,7 +86,7 @@ Expected main directories (align with implementation plan):
    - `klipyClient.ts`: HTTP client, base URL, API key handling, shared request params
    - `memeSearchProvider.ts`: static meme search provider
    - `gifSearchProvider.ts`: GIF search provider
-   - `types.ts`: Klipy response types + internal `NormalizedSearchResult` type
+   - `types.ts`: Klipy response types + internal `NormalizedImageData` type
 - `src/store/`
    - `useAppStore.ts`: composed Zustand store (search, command menu, grid navigation, search-input key handling, etc.)
    - `slices/commandMenuSlice/`: command menu selection and applying a chosen command to the input
@@ -184,7 +184,7 @@ Providers own all network calls and normalization.
 
 Normalized objects must be used everywhere in UI/store.
 
-`NormalizedSearchResult` shape (conceptual, align with plan/spec):
+`NormalizedImageData` shape (conceptual, align with plan/spec):
 
 - `id: string`
 - `type: 'meme' | 'gif'`
@@ -263,7 +263,7 @@ Mapping rules:
       - ignore any results that do not match the latest `requestId`
    - `runSearch` calls provider services and stores only normalized results.
 3. Providers
-   - Perform Klipy API requests and normalize responses into `NormalizedSearchResult[]`.
+   - Perform Klipy API requests and normalize responses into `NormalizedImageData[]`.
    - All requests via `src/services/providers/**`
 4. UI rendering
    - `ImageGallery` chooses between empty state vs `MasonryGrid`.

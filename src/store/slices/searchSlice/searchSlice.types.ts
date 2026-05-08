@@ -1,7 +1,7 @@
 import type { SearchProviderError } from '@/services/providers/searchProvider.errors';
 import type {
 	AppCommandType,
-	NormalizedSearchResult,
+	NormalizedImageData,
 } from '@/services/providers/searchProvider.types';
 
 type SearchStatus = 'idle' | 'loading' | 'success' | 'error';
@@ -10,7 +10,7 @@ export type SearchSlice = {
 	rawInput: string;
 	resolvedCommand: AppCommandType;
 	query: string;
-	results: NormalizedSearchResult[];
+	results: NormalizedImageData[];
 	status: SearchStatus;
 	error?: SearchProviderError;
 	requestId: number;

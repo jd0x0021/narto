@@ -1,12 +1,12 @@
 import type { KeyboardEvent, MouseEvent } from 'react';
 import { memo, useEffect, useRef, useState } from 'react';
 
-import type { NormalizedSearchResult } from '@/services/providers/searchProvider.types';
+import type { NormalizedImageData } from '@/services/providers/searchProvider.types';
 import { useAppStore } from '@/store/useAppStore';
 import { copyImageFromUrl } from '@/utils/clipboard';
 
 type GridImageProps = {
-	image: NormalizedSearchResult;
+	image: NormalizedImageData;
 	index: number;
 };
 

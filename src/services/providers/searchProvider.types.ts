@@ -24,7 +24,7 @@ export const AppCommand = {
  */
 export type AppCommandType = (typeof AppCommand)[keyof typeof AppCommand];
 
-export type NormalizedSearchResult = {
+export type NormalizedImageData = {
 	id: number;
 	type: AppCommandType;
 	title: string;
@@ -37,5 +37,5 @@ export type NormalizedSearchResult = {
 };
 
 export type SearchProvider = {
-	search: (resolvedCommand: AppCommandType, query: string) => Promise<NormalizedSearchResult[]>;
+	search: (resolvedCommand: AppCommandType, query: string) => Promise<NormalizedImageData[]>;
 };
