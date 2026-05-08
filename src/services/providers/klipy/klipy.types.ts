@@ -6,12 +6,12 @@ const ImageVariantSchema = z.looseObject({
 	height: z.number(),
 });
 
-const PngResolutionSchema = z.looseObject({
+const WebpResolutionSchema = z.looseObject({
 	md: z.looseObject({
-		png: ImageVariantSchema,
+		webp: ImageVariantSchema,
 	}),
 	hd: z.looseObject({
-		png: ImageVariantSchema,
+		webp: ImageVariantSchema,
 	}),
 });
 
@@ -32,7 +32,7 @@ const BaseImageSchema = z.looseObject({
 
 const StaticMemeSchema = BaseImageSchema.extend({
 	type: z.literal('static_meme'),
-	file: PngResolutionSchema,
+	file: WebpResolutionSchema,
 });
 
 const GifSchema = BaseImageSchema.extend({

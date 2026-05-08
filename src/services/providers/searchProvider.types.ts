@@ -1,4 +1,4 @@
-export type FileFormatType = 'png' | 'gif';
+export type FileFormatType = 'webp' | 'gif';
 
 /**
  * These are the only VALID app-level commands that the system recognizes. Each command represents

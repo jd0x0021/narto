@@ -1,4 +1,4 @@
-import type { DragEvent, KeyboardEvent, MouseEvent } from 'react';
+import type { KeyboardEvent, MouseEvent } from 'react';
 import { memo, useEffect, useRef, useState } from 'react';
 
 import type { NormalizedSearchResult } from '@/services/providers/searchProvider.types';
@@ -29,34 +29,30 @@ const GridImage = memo(({ image, index }: GridImageProps) => {
 		}
 	}, [isSelected]);
 
-	const handleCopy = async (): Promise<void> => {
-		try {
-			setCopying(true);
-			await copyImageFromUrl(image.originalUrl, image.format);
-			setCopying(false);
-			setIsCopied(true);
-			setTimeout(() => {
-				setIsCopied(false);
-			}, 2000);
-		} catch {
-			setCopyErrored(true);
-			setCopying(false);
-			setTimeout(() => {
-				setCopyErrored(false);
-			}, 2000);
-		}
-	};
-
 	const handleCopyOnEvent = (
 		e: KeyboardEvent<HTMLDivElement> | MouseEvent<HTMLButtonElement>,
 	): void => {
 		e.stopPropagation();
-		void handleCopy();
-	};
 
-	const handleDragStart = (e: DragEvent): void => {
-		e.dataTransfer.setData('text/uri-list', image.originalUrl);
-		e.dataTransfer.setData('text/plain', image.originalUrl);
+		const handleCopy = async (): Promise<void> => {
+			try {
+				setCopying(true);
+				await copyImageFromUrl(image.originalUrl, image.format);
+				setCopying(false);
+				setIsCopied(true);
+				setTimeout(() => {
+					setIsCopied(false);
+				}, 2000);
+			} catch {
+				setCopyErrored(true);
+				setCopying(false);
+				setTimeout(() => {
+					setCopyErrored(false);
+				}, 2000);
+			}
+		};
+
+		void handleCopy();
 	};
 
 	const intrinsicRatio = image.width && image.height ? image.height / image.width : 1;
@@ -83,8 +79,6 @@ const GridImage = memo(({ image, index }: GridImageProps) => {
 					handleCopyOnEvent(e);
 				}
 			}}
-			draggable
-			onDragStart={handleDragStart}
 			role='gridcell'
 		>
 			<div className='w-full relative' style={{ paddingBottom: `${intrinsicRatio * 100}%` }}>
@@ -100,13 +94,14 @@ const GridImage = memo(({ image, index }: GridImageProps) => {
 				{/* Main image */}
 				<img
 					src={image.displayUrl}
-					className={`absolute inset-0 w-full h-full object-cover
+					className={`absolute inset-0 w-full h-full object-cover active:cursor-grabbing
 						transition-opacity duration-300 ${displayLoaded ? 'opacity-100' : 'opacity-0'}`}
 					onLoad={() => {
 						setDisplayLoaded(true);
 					}}
 					alt={image.title}
 					loading='lazy'
+					draggable
 				/>
 
 				{/* Loading overlay */}

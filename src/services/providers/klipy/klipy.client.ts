@@ -107,14 +107,14 @@ async function getOrCreateCustomerId(): Promise<string> {
 function normalizeKlipyResponse(responseData: RawKlipySearchResponse): NormalizedSearchResult[] {
 	const data: RawKlipyImageData[] = responseData.data.data;
 
-	return data.map((raw): NormalizedSearchResult => {
+	return data.map((raw: RawKlipyImageData): NormalizedSearchResult => {
 		const isGif = raw.type === 'gif';
 
 		// file resolutions
-		const md: ImageVariant = isGif ? raw.file.md.gif : raw.file.md.png;
-		const hd: ImageVariant = isGif ? raw.file.hd.gif : raw.file.hd.png;
+		const md: ImageVariant = isGif ? raw.file.md.gif : raw.file.md.webp;
+		const hd: ImageVariant = isGif ? raw.file.hd.gif : raw.file.hd.webp;
 
-		const format: FileFormatType = isGif ? 'gif' : 'png';
+		const format: FileFormatType = isGif ? 'gif' : 'webp';
 		const type: AppCommandType = isGif ? 'gif' : 'meme';
 
 		return {

@@ -194,13 +194,13 @@ Normalized objects must be used everywhere in UI/store.
 - `displayUrl: string` (grid display)
 - `originalUrl: string` (highest-quality for copy + drag)
 - `blurPreview: string`
-- `format: 'png' | 'gif'` (whatever the chosen variant implies)
+- `format: 'webp' | 'gif'` (source asset format used for rendering/drag behavior)
 
 Mapping rules:
 
 - **Static memes**
-   - Grid display image: `file.md.png.url` (md.png)
-   - Copy/drag source: `file.hd.png.url`
+   - Grid display image uses WebP (`.webp`) for rendering in `GridImage` (`file.md.webp.url`).
+   - Drag source uses WebP so cross-app drag/drop carries the WebP asset (`file.hd.webp.url`).
    - Placeholder: `blur_preview`
 - **GIFs**
    - Grid display image: prefer `file.md.gif.url` (md.gif)
@@ -233,6 +233,8 @@ Mapping rules:
 
 - **Enter selection copy**
    - When a grid tile is focused, `Enter` copies the highest-quality available asset.
+      - Copy-on-Enter behavior converts a `.webp` image (from `file.hd.webp.url`) to a `.png` image to make it suitable for Clipboard API writes.
+   - Clipboard image data is written as PNG (Copy-on-Enter is PNG).
    - Keep popup open after copy.
    - Selection unchanged.
 - **Copy choice**
@@ -241,7 +243,7 @@ Mapping rules:
    - Centralize this in `src/utils/clipboard.ts`.
 - **Drag**
    - Draggable tiles must provide data for chat targets to accept drops.
-   - Use the highest-quality URL for drag.
+   - Use the highest-quality URL for drag in WebP format.
    - Drag should be non-blocking for UI rendering; asset fetching for drag happens only when the drag starts.
 
 ## Data Flow
