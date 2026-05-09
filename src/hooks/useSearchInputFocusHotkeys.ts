@@ -16,9 +16,7 @@ const SEARCH_FOCUS_MODIFIER_KEYS: ReadonlySet<string> = new Set(['k', 'a']);
  * @param e - The keyboard event to check for a modifier chord.
  * @returns - `true` if the event is part of a modifier chord, false otherwise.
  */
-function hasModifierChord(e: KeyboardEvent): boolean {
-	return e.ctrlKey || e.metaKey;
-}
+const hasModifierChord = (e: KeyboardEvent): boolean => e.ctrlKey || e.metaKey;
 
 /**
  * Checks whether the keydown event key matches a search-input focus shortcut.
@@ -26,14 +24,14 @@ function hasModifierChord(e: KeyboardEvent): boolean {
  * @param e - Keyboard event to evaluate.
  * @returns `true` if the event key should focus the search input.
  */
-function isSearchInputFocusShortcut(e: KeyboardEvent): boolean {
+const isSearchInputFocusShortcut = (e: KeyboardEvent): boolean => {
 	if (SEARCH_FOCUS_PLAIN_KEYS.has(e.key)) {
 		return true;
 	}
 
 	// e.g. Ctrl/Cmd + K or Ctrl/Cmd + A
 	return hasModifierChord(e) && SEARCH_FOCUS_MODIFIER_KEYS.has(e.key);
-}
+};
 
 /**
  * Attaches a global keyboard event listener that listens for specific hotkeys
@@ -44,7 +42,7 @@ function isSearchInputFocusShortcut(e: KeyboardEvent): boolean {
  *
  * @param inputRef - A React ref object pointing to the target HTMLInputElement.
  */
-export function useSearchInputFocusHotkeys(inputRef: RefObject<HTMLInputElement | null>): void {
+export const useSearchInputFocusHotkeys = (inputRef: RefObject<HTMLInputElement | null>): void => {
 	const setSelectedGridCell = useAppStore((s) => s.setSelectedGridCell);
 
 	useEffect(() => {
@@ -54,7 +52,8 @@ export function useSearchInputFocusHotkeys(inputRef: RefObject<HTMLInputElement 
 			const isInputFocused: boolean =
 				inputRef.current != null && inputRef.current === document.activeElement;
 
-			// When the input is already focused, ignore plain shortcuts; only K and A continue (matches prior `e.key` checks).
+			// When the input is already focused, ignore plain shortcuts;
+			// Only keys with modifiers continue (matches prior `e.key` checks).
 			if (isInputFocused && !SEARCH_FOCUS_MODIFIER_KEYS.has(e.key)) return;
 
 			e.preventDefault();
@@ -72,4 +71,4 @@ export function useSearchInputFocusHotkeys(inputRef: RefObject<HTMLInputElement 
 			window.removeEventListener('keydown', handleGlobalKeyDown);
 		};
 	}, [inputRef, setSelectedGridCell]);
-}
+};
