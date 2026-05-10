@@ -7,7 +7,7 @@ export default function ImageGallery() {
 	const results = useAppStore((s) => s.results);
 	const query = useAppStore((s) => s.query);
 	const status = useAppStore((s) => s.status);
-	const searchError = useAppStore((s) => (s.status === 'error' && s.error ? s.error : undefined));
+	const searchError = useAppStore((s) => (s.status === 'Error' && s.error ? s.error : undefined));
 
 	if (!query && results.length === 0) {
 		return <div></div>;
@@ -19,7 +19,7 @@ export default function ImageGallery() {
 		);
 	}
 
-	if (results.length === 0 && status === 'success') {
+	if (results.length === 0 && status === 'Success') {
 		return <ResultsFallbackState fallbackState='empty' message={query} />;
 	}
 

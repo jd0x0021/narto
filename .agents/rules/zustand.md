@@ -54,10 +54,10 @@ const setInput = useAppStore((s) => s.setInput);
 ```ts
 // Inside a slice action
 const next = get().requestId + 1;
-set({ requestId: next, status: "loading" });
+set({ requestId: next, status: "Loading" });
 const data = await searchGifs(q);
 if (get().requestId !== next) return;
-set({ results: data, status: "success" });
+set({ results: data, status: "Success" });
 ```
 
 ## Patterns (avoid)

@@ -66,7 +66,7 @@ export default function SearchInput() {
 				// stale fetch result will be rejected, preventing old data from overwriting cleared results.
 				requestId: requestId + 1,
 				results: [],
-				status: 'idle',
+				status: 'Idle',
 				selectedGridCell: null,
 			});
 		} else {
