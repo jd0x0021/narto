@@ -23,6 +23,11 @@ export const createSearchSlice: AppStateCreator<SearchSlice> = (set, get) =>
 		results: [],
 		status: 'idle',
 		requestId: 0,
+		gridLayoutCalculationCompleted: false,
+
+		setGridLayoutCalculationCompleted: (completed: boolean) => {
+			set({ gridLayoutCalculationCompleted: completed });
+		},
 
 		setInput: (rawInput: string) => {
 			const parsed: ParsedSearchInput = parseSearchInput(rawInput);
@@ -37,7 +42,12 @@ export const createSearchSlice: AppStateCreator<SearchSlice> = (set, get) =>
 			const { query, resolvedCommand, requestId } = get();
 
 			if (!query) {
-				set({ results: [], status: 'idle', selectedGridCell: null });
+				set({
+					results: [],
+					status: 'idle',
+					selectedGridCell: null,
+					gridLayoutCalculationCompleted: false,
+				});
 				return;
 			}
 
@@ -45,7 +55,12 @@ export const createSearchSlice: AppStateCreator<SearchSlice> = (set, get) =>
 			// Each async runSearch call gets its own independent nextId snapshot that persists through the
 			// entire fetch lifecycle, even as the global requestId in the store changes due to new searches.
 			const nextId = requestId + 1;
-			set({ requestId: nextId, status: 'loading', selectedGridCell: null });
+			set({
+				requestId: nextId,
+				status: 'loading',
+				selectedGridCell: null,
+				gridLayoutCalculationCompleted: false,
+			});
 
 			try {
 				const data: NormalizedImageData[] = await searchProvider.search(resolvedCommand, query);
@@ -56,7 +71,7 @@ export const createSearchSlice: AppStateCreator<SearchSlice> = (set, get) =>
 				// This allows newer requests to invalidate older in-flight requests.
 				if (get().requestId !== nextId) return;
 
-				set({ results: data, status: 'success' });
+				set({ results: data, status: 'success', gridLayoutCalculationCompleted: false });
 			} catch (err: unknown) {
 				if (get().requestId !== nextId) return;
 
@@ -68,7 +83,7 @@ export const createSearchSlice: AppStateCreator<SearchSlice> = (set, get) =>
 								'An unknown error occurred while fetching results.',
 							);
 
-				set({ status: 'error', error, results: [] });
+				set({ status: 'error', error, results: [], gridLayoutCalculationCompleted: false });
 			}
 		},
 	}) satisfies SearchSlice;

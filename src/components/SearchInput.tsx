@@ -68,6 +68,7 @@ export default function SearchInput() {
 				results: [],
 				status: 'idle',
 				selectedGridCell: null,
+				gridLayoutCalculationCompleted: false,
 			});
 		} else {
 			debouncedSearch();

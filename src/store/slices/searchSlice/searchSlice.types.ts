@@ -14,7 +14,10 @@ export type SearchSlice = {
 	status: SearchStatus;
 	error?: SearchProviderError;
 	requestId: number;
+	/** False until masonry has run initial width/translate/height for the current visible result set. */
+	gridLayoutCalculationCompleted: boolean;
 
 	setInput: (rawInput: string) => void;
 	runSearch: () => Promise<void>;
+	setGridLayoutCalculationCompleted: (completed: boolean) => void;
 };
