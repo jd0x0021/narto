@@ -21,7 +21,7 @@ export const createSearchSlice: AppStateCreator<SearchSlice> = (set, get) =>
 		resolvedCommand: AppCommand.Meme,
 		query: '',
 		results: [],
-		status: 'Idle',
+		status: 'idle',
 		requestId: 0,
 
 		setInput: (rawInput: string) => {
@@ -37,7 +37,7 @@ export const createSearchSlice: AppStateCreator<SearchSlice> = (set, get) =>
 			const { query, resolvedCommand, requestId } = get();
 
 			if (!query) {
-				set({ results: [], status: 'Idle', selectedGridCell: null });
+				set({ results: [], status: 'idle', selectedGridCell: null });
 				return;
 			}
 
@@ -45,7 +45,7 @@ export const createSearchSlice: AppStateCreator<SearchSlice> = (set, get) =>
 			// Each async runSearch call gets its own independent nextId snapshot that persists through the
 			// entire fetch lifecycle, even as the global requestId in the store changes due to new searches.
 			const nextId = requestId + 1;
-			set({ requestId: nextId, status: 'Loading', selectedGridCell: null });
+			set({ requestId: nextId, status: 'loading', selectedGridCell: null });
 
 			try {
 				const data: NormalizedImageData[] = await searchProvider.search(resolvedCommand, query);
@@ -56,7 +56,7 @@ export const createSearchSlice: AppStateCreator<SearchSlice> = (set, get) =>
 				// This allows newer requests to invalidate older in-flight requests.
 				if (get().requestId !== nextId) return;
 
-				set({ results: data, status: 'Success' });
+				set({ results: data, status: 'success' });
 			} catch (err: unknown) {
 				if (get().requestId !== nextId) return;
 
@@ -68,7 +68,7 @@ export const createSearchSlice: AppStateCreator<SearchSlice> = (set, get) =>
 								'An unknown error occurred while fetching results.',
 							);
 
-				set({ status: 'Error', error, results: [] });
+				set({ status: 'error', error, results: [] });
 			}
 		},
 	}) satisfies SearchSlice;

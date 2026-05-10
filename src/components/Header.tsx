@@ -1,9 +1,42 @@
-import { SEARCH_STATUS_HEX_COLORS } from '@/store/slices/searchSlice/searchSlice.types';
+import { cva } from 'class-variance-authority';
+
 import { useAppStore } from '@/store/useAppStore';
+
+const statusDotVariants = cva('relative h-2 w-2 rounded-full', {
+	variants: {
+		status: {
+			idle: 'bg-narto-accent',
+			loading: 'bg-narto-loading',
+			success: 'bg-narto-success',
+			error: 'bg-narto-error',
+		},
+	},
+});
+
+const statusPingVariants = cva('absolute inset-0 rounded-full opacity-50', {
+	variants: {
+		status: {
+			idle: 'animate-ping bg-narto-accent',
+			loading: 'animate-ping bg-narto-loading',
+			success: 'animate-ping bg-narto-success',
+			error: 'animate-ping bg-narto-error',
+		},
+	},
+});
+
+const statusTextVariants = cva('font-mono leading-none text-xs tracking-wide capitalize', {
+	variants: {
+		status: {
+			idle: 'text-narto-accent',
+			loading: 'text-narto-loading',
+			success: 'text-narto-success',
+			error: 'text-narto-error',
+		},
+	},
+});
 
 export default function Header() {
 	const status = useAppStore((s) => s.status);
-	const statusColor = SEARCH_STATUS_HEX_COLORS[status];
 
 	return (
 		<header className='flex w-full items-stretch justify-between px-6 py-3'>
@@ -27,24 +60,11 @@ export default function Header() {
 				aria-live='polite'
 			>
 				<span className='relative flex h-2 w-2 shrink-0 items-center justify-center'>
-					<span
-						className='absolute inset-0 animate-ping rounded-full opacity-50'
-						style={{ backgroundColor: statusColor }}
-						aria-hidden
-					/>
-					<span
-						className='relative h-2 w-2 rounded-full'
-						style={{ backgroundColor: statusColor }}
-						aria-hidden
-					/>
+					<span className={statusPingVariants({ status })} aria-hidden />
+					<span className={statusDotVariants({ status })} aria-hidden />
 				</span>
 
-				<span
-					className='font-mono leading-none text-xs tracking-wide'
-					style={{ color: statusColor }}
-				>
-					{status}
-				</span>
+				<span className={statusTextVariants({ status })}>{status}</span>
 			</div>
 		</header>
 	);
