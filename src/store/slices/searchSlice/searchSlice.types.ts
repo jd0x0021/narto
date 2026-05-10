@@ -4,7 +4,14 @@ import type {
 	NormalizedImageData,
 } from '@/services/providers/searchProvider.types';
 
-type SearchStatus = 'Idle' | 'Loading' | 'Success' | 'Error';
+export type SearchStatus = 'Idle' | 'Loading' | 'Success' | 'Error';
+
+export const SEARCH_STATUS_HEX_COLORS = {
+	Idle: '#ff6b00',
+	Loading: '#FDC601',
+	Success: '#10B981',
+	Error: '#EF4444',
+} as const satisfies Record<SearchStatus, string>;
 
 export type SearchSlice = {
 	rawInput: string;

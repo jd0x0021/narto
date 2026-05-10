@@ -1,4 +1,10 @@
+import { SEARCH_STATUS_HEX_COLORS } from '@/store/slices/searchSlice/searchSlice.types';
+import { useAppStore } from '@/store/useAppStore';
+
 export default function Header() {
+	const status = useAppStore((s) => s.status);
+	const statusColor = SEARCH_STATUS_HEX_COLORS[status];
+
 	return (
 		<header className='flex w-full items-stretch justify-between px-6 py-3'>
 			<div className='flex items-center space-x-4'>
@@ -22,13 +28,23 @@ export default function Header() {
 			>
 				<span className='relative flex h-2 w-2 shrink-0 items-center justify-center'>
 					<span
-						className='absolute inset-0 animate-ping rounded-full bg-narto-success opacity-50'
+						className='absolute inset-0 animate-ping rounded-full opacity-50'
+						style={{ backgroundColor: statusColor }}
 						aria-hidden
 					/>
-					<span className='relative h-2 w-2 rounded-full bg-narto-success' aria-hidden />
+					<span
+						className='relative h-2 w-2 rounded-full'
+						style={{ backgroundColor: statusColor }}
+						aria-hidden
+					/>
 				</span>
 
-				<span className='leading-none text-xs tracking-wide text-narto-success'>Connected</span>
+				<span
+					className='font-mono leading-none text-xs tracking-wide'
+					style={{ color: statusColor }}
+				>
+					{status}
+				</span>
 			</div>
 		</header>
 	);

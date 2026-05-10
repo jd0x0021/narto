@@ -14,7 +14,9 @@ export default {
 				'narto-text': '#fcfcfc',
 				'narto-muted': '#71717a',
 				'narto-border': '#292a2d',
+				'narto-loading': '#FDC601',
 				'narto-success': '#10B981',
+				'narto-error': '#EF4444',
 			},
 			borderRadius: {
 				narto: '14px',
