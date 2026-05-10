@@ -7,12 +7,14 @@ export default {
 			colors: {
 				'narto-main': '#111116',
 				'narto-panel': '#151518',
+				'narto-pill': '#16161B',
 				'narto-input': '#18181d',
 				'narto-footer': '#070709',
 				'narto-accent': '#ff6b00',
 				'narto-text': '#fcfcfc',
 				'narto-muted': '#71717a',
 				'narto-border': '#292a2d',
+				'narto-success': '#10B981',
 			},
 			borderRadius: {
 				narto: '14px',
