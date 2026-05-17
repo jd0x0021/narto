@@ -83,10 +83,12 @@ const GridImage = memo(({ image, index }: GridImageProps) => {
 		>
 			<div className='w-full relative' style={{ paddingBottom: `${intrinsicRatio * 100}%` }}>
 				{/* Blur preview */}
-				<div
-					className='absolute inset-0 bg-cover bg-center bg-no-repeat blur-[0.125rem] transition-opacity duration-300'
+				<img
+					src={image.previewUrl}
+					alt={`Preview of ${image.title}`}
+					className={`absolute inset-0 h-full w-full object-cover blur-sm transition-opacity duration-300
+						${displayLoaded ? 'opacity-0' : 'opacity-100'}`}
 					style={{
-						backgroundImage: `url(${image.previewUrl})`,
 						opacity: displayLoaded ? 0 : 1,
 					}}
 				/>
