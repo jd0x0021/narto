@@ -88,9 +88,6 @@ const GridImage = memo(({ image, index }: GridImageProps) => {
 					alt={`Preview of ${image.title}`}
 					className={`absolute inset-0 h-full w-full object-cover blur-sm transition-opacity duration-300
 						${displayLoaded ? 'opacity-0' : 'opacity-100'}`}
-					style={{
-						opacity: displayLoaded ? 0 : 1,
-					}}
 				/>
 
 				{/* Main image */}
