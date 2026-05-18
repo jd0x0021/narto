@@ -15,12 +15,15 @@ export default function ImageGallery() {
 	const loadedPreviewImageIds = useRef(new Set<number>());
 
 	useEffect(() => {
-		const resultIds = new Set<number>(results.map((r) => r.id));
 		const loadedPreviewImages = loadedPreviewImageIds.current;
 
 		if (results.length <= 0) {
 			loadedPreviewImages.clear();
+			setIsGridPreviewReady(false);
+			return;
 		}
+
+		const resultIds = new Set<number>(results.map((r) => r.id));
 
 		for (const id of loadedPreviewImages) {
 			if (!resultIds.has(id)) {
