@@ -8,9 +8,10 @@ import { copyImageFromUrl } from '@/utils/clipboard';
 type GridImageProps = {
 	image: NormalizedImageData;
 	index: number;
+	handlePreviewImageLoad: (imageId: number) => void;
 };
 
-const GridImage = memo(({ image, index }: GridImageProps) => {
+const GridImage = memo(({ image, index, handlePreviewImageLoad }: GridImageProps) => {
 	const isSelected = useAppStore((s) => s.selectedGridCell === index);
 	const setSelectedGridCell = useAppStore((s) => s.setSelectedGridCell);
 
@@ -88,6 +89,9 @@ const GridImage = memo(({ image, index }: GridImageProps) => {
 					alt={`Preview of ${image.title}`}
 					className={`absolute inset-0 h-full w-full object-cover blur-sm transition-opacity duration-300
 						${displayLoaded ? 'opacity-0' : 'opacity-100'}`}
+					onLoad={() => {
+						handlePreviewImageLoad(image.id);
+					}}
 				/>
 
 				{/* Main image */}

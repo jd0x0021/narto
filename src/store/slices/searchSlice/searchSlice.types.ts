@@ -14,7 +14,9 @@ export type SearchSlice = {
 	status: SearchStatus;
 	error?: SearchProviderError;
 	requestId: number;
+	isGridPreviewReady: boolean;
 
 	setInput: (rawInput: string) => void;
+	setIsGridPreviewReady: (isGridPreviewReady: boolean) => void;
 	runSearch: () => Promise<void>;
 };
