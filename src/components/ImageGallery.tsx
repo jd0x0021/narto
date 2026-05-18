@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
 import GridImage from '@/components/GridImage';
 import MasonryGrid from '@/components/MasonryGrid';
@@ -34,16 +34,19 @@ export default function ImageGallery() {
 		setIsGridPreviewReady(false);
 	}, [results, setIsGridPreviewReady]);
 
-	const handlePreviewImageLoad = (imageId: number) => {
-		if (results.length <= 0) return;
+	const handlePreviewImageLoad = useCallback(
+		(imageId: number) => {
+			if (results.length <= 0) return;
 
-		const loadedPreviewImages = loadedPreviewImageIds.current;
-		loadedPreviewImages.add(imageId);
+			const loadedPreviewImages = loadedPreviewImageIds.current;
+			loadedPreviewImages.add(imageId);
 
-		if (results.length === loadedPreviewImages.size) {
-			setIsGridPreviewReady(true);
-		}
-	};
+			if (results.length === loadedPreviewImages.size) {
+				setIsGridPreviewReady(true);
+			}
+		},
+		[results.length, setIsGridPreviewReady],
+	);
 
 	if (!query && results.length === 0) {
 		return <div></div>;
