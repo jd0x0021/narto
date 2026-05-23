@@ -1,6 +1,7 @@
 import GridImage from '@/components/GridImage';
 import MasonryGrid from '@/components/MasonryGrid';
 import ResultsFallbackState from '@/components/ResultsFallbackState';
+import { useGridDisplayLoadState } from '@/hooks/useGridDisplayLoadState';
 import { useGridPreviewLoadState } from '@/hooks/useGridPreviewLoadState';
 import { useAppStore } from '@/store/useAppStore';
 
@@ -11,6 +12,7 @@ export default function ImageGallery() {
 	const isGridPreviewReady = useAppStore((s) => s.isGridPreviewReady);
 	const searchError = useAppStore((s) => (s.status === 'error' && s.error ? s.error : undefined));
 	const handlePreviewImageLoad = useGridPreviewLoadState();
+	const handleDisplayImageLoad = useGridDisplayLoadState();
 
 	if (!query && results.length === 0) {
 		return <div></div>;
@@ -41,6 +43,7 @@ export default function ImageGallery() {
 						image={image}
 						index={i}
 						handlePreviewImageLoad={handlePreviewImageLoad}
+						handleDisplayImageLoad={handleDisplayImageLoad}
 					/>
 				))}
 			</MasonryGrid>

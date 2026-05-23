@@ -37,6 +37,8 @@ const statusTextVariants = cva('font-mono leading-none text-xs tracking-wide cap
 
 export default function Header() {
 	const status = useAppStore((s) => s.status);
+	const isGridDisplayReady = useAppStore((s) => s.isGridDisplayReady);
+	const displayStatus = status === 'success' && !isGridDisplayReady ? 'loading' : status;
 
 	return (
 		<header className='flex w-full items-stretch justify-between px-6 py-3'>
@@ -60,11 +62,11 @@ export default function Header() {
 				aria-live='polite'
 			>
 				<span className='relative flex h-2 w-2 shrink-0 items-center justify-center'>
-					<span className={statusPingVariants({ status })} aria-hidden />
-					<span className={statusDotVariants({ status })} aria-hidden />
+					<span className={statusPingVariants({ status: displayStatus })} aria-hidden />
+					<span className={statusDotVariants({ status: displayStatus })} aria-hidden />
 				</span>
 
-				<span className={statusTextVariants({ status })}>{status}</span>
+				<span className={statusTextVariants({ status: displayStatus })}>{displayStatus}</span>
 			</div>
 		</header>
 	);

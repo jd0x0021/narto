@@ -24,6 +24,7 @@ export const createSearchSlice: AppStateCreator<SearchSlice> = (set, get) =>
 		status: 'idle',
 		requestId: 0,
 		isGridPreviewReady: false,
+		isGridDisplayReady: false,
 
 		setInput: (rawInput: string) => {
 			const parsed: ParsedSearchInput = parseSearchInput(rawInput);
@@ -36,6 +37,10 @@ export const createSearchSlice: AppStateCreator<SearchSlice> = (set, get) =>
 
 		setIsGridPreviewReady: (isGridPreviewReady: boolean) => {
 			set({ isGridPreviewReady });
+		},
+
+		setIsGridDisplayReady: (isGridDisplayReady: boolean) => {
+			set({ isGridDisplayReady });
 		},
 
 		runSearch: async () => {
