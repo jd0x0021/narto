@@ -31,9 +31,8 @@ export default function ImageGallery() {
 	return (
 		<div
 			className={
-				isGridPreviewReady
-					? 'flex-1 overflow-x-hidden scrollbar-hidden relative mt-2.5'
-					: 'hidden' // to avoid layout shift when preview images are loading
+				`flex-1 overflow-x-hidden scrollbar-hidden relative 
+				${isGridPreviewReady ? 'mt-2.5' : ''}` // to avoid layout shift when preview images are loading
 			}
 		>
 			<MasonryGrid columnCount={3} gap={12}>
