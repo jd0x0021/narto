@@ -1,3 +1,6 @@
+import type { KeyboardEvent } from 'react';
+
+import { MASONRY_GRID_COLUMN_COUNT } from '@/constants/masonryGrid.constants';
 import type { AppStateCreator } from '@/store/appStore.types';
 import type {
 	GridDirection,
@@ -71,6 +74,30 @@ export const createGridNavigationSlice: AppStateCreator<GridNavigationSlice> = (
 
 			if (nextGridCellIndex >= 0 && nextGridCellIndex < count) {
 				set({ selectedGridCell: nextGridCellIndex });
+			}
+		},
+
+		handleGridKeyDown: (e: KeyboardEvent<HTMLDivElement>) => {
+			if (e.key === 'ArrowUp') {
+				e.preventDefault();
+				const selectedGridCellIndex = get().selectedGridCell;
+				if (
+					selectedGridCellIndex !== null &&
+					selectedGridCellIndex < MASONRY_GRID_COLUMN_COUNT
+				) {
+					get().setSelectedGridCell(null); // Return to input
+				} else {
+					get().moveGridSelection('up', MASONRY_GRID_COLUMN_COUNT);
+				}
+			} else if (e.key === 'ArrowDown') {
+				e.preventDefault();
+				get().moveGridSelection('down', MASONRY_GRID_COLUMN_COUNT);
+			} else if (e.key === 'ArrowLeft') {
+				e.preventDefault();
+				get().moveGridSelection('left', MASONRY_GRID_COLUMN_COUNT);
+			} else if (e.key === 'ArrowRight') {
+				e.preventDefault();
+				get().moveGridSelection('right', MASONRY_GRID_COLUMN_COUNT);
 			}
 		},
 	}) satisfies GridNavigationSlice;

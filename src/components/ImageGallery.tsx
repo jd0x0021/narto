@@ -1,6 +1,7 @@
 import GridImage from '@/components/GridImage';
 import MasonryGrid from '@/components/MasonryGrid';
 import ResultsFallbackState from '@/components/ResultsFallbackState';
+import { MASONRY_GRID_COLUMN_COUNT, MASONRY_GRID_GAP } from '@/constants/masonryGrid.constants';
 import { useGridDisplayLoadState } from '@/hooks/useGridDisplayLoadState';
 import { useGridPreviewLoadState } from '@/hooks/useGridPreviewLoadState';
 import { useAppStore } from '@/store/useAppStore';
@@ -37,7 +38,7 @@ export default function ImageGallery() {
 					isGridPreviewReady ? 'mt-2.5' : ''
 				}`}
 		>
-			<MasonryGrid columnCount={3} gap={12}>
+			<MasonryGrid columnCount={MASONRY_GRID_COLUMN_COUNT} gap={MASONRY_GRID_GAP}>
 				{results.map((image, i) => (
 					<GridImage
 						key={image.id}
