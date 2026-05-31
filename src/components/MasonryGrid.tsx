@@ -1,4 +1,4 @@
-import type { KeyboardEvent, ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { memo, useCallback, useEffect, useRef } from 'react';
 
 import { useAppStore } from '@/store/useAppStore';
@@ -8,8 +8,10 @@ type MasonryGridProps = {
 	columnCount: number;
 	gap: number;
 };
+
 const MasonryGrid = memo(({ children, columnCount, gap }: MasonryGridProps) => {
 	const containerRef = useRef<HTMLDivElement>(null);
+	const handleGridKeyDown = useAppStore((s) => s.handleGridKeyDown);
 
 	const calculateLayout = useCallback(() => {
 		if (!containerRef.current) return;
@@ -52,36 +54,12 @@ const MasonryGrid = memo(({ children, columnCount, gap }: MasonryGridProps) => {
 		calculateLayout();
 	}, [children, calculateLayout]);
 
-	const moveGridSelection = useAppStore((s) => s.moveGridSelection);
-	const setSelectedGridCell = useAppStore((s) => s.setSelectedGridCell);
-
-	const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
-		if (e.key === 'ArrowUp') {
-			e.preventDefault();
-			const selectedGridCellIndex = useAppStore.getState().selectedGridCell;
-			if (selectedGridCellIndex !== null && selectedGridCellIndex < columnCount) {
-				setSelectedGridCell(null); // Return to input
-			} else {
-				moveGridSelection('up', columnCount);
-			}
-		} else if (e.key === 'ArrowDown') {
-			e.preventDefault();
-			moveGridSelection('down', columnCount);
-		} else if (e.key === 'ArrowLeft') {
-			e.preventDefault();
-			moveGridSelection('left', columnCount);
-		} else if (e.key === 'ArrowRight') {
-			e.preventDefault();
-			moveGridSelection('right', columnCount);
-		}
-	};
-
 	return (
 		<div
 			ref={containerRef}
 			className='relative w-full outline-none'
 			tabIndex={-1}
-			onKeyDown={handleKeyDown}
+			onKeyDown={handleGridKeyDown}
 			role='grid'
 		>
 			{children}

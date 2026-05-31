@@ -1,13 +1,19 @@
 import GridImage from '@/components/GridImage';
 import MasonryGrid from '@/components/MasonryGrid';
 import ResultsFallbackState from '@/components/ResultsFallbackState';
+import { MASONRY_GRID_COLUMN_COUNT, MASONRY_GRID_GAP } from '@/constants/masonryGrid.constants';
+import { useGridDisplayLoadState } from '@/hooks/useGridDisplayLoadState';
+import { useGridPreviewLoadState } from '@/hooks/useGridPreviewLoadState';
 import { useAppStore } from '@/store/useAppStore';
 
 export default function ImageGallery() {
 	const results = useAppStore((s) => s.results);
 	const query = useAppStore((s) => s.query);
 	const status = useAppStore((s) => s.status);
+	const isGridPreviewReady = useAppStore((s) => s.isGridPreviewReady);
 	const searchError = useAppStore((s) => (s.status === 'error' && s.error ? s.error : undefined));
+	const handlePreviewImageLoad = useGridPreviewLoadState();
+	const handleDisplayImageLoad = useGridDisplayLoadState();
 
 	if (!query && results.length === 0) {
 		return <div></div>;
@@ -24,10 +30,23 @@ export default function ImageGallery() {
 	}
 
 	return (
-		<div className='flex-1 overflow-x-hidden scrollbar-hidden relative mt-2.5'>
-			<MasonryGrid columnCount={3} gap={12}>
+		<div
+			className={`flex-1 overflow-x-hidden scrollbar-hidden relative 
+				${
+					// This is to avoid layout shift when preview images are loading (this
+					// is the spacing between the SearchInput, and the ImageGallery components)
+					isGridPreviewReady ? 'mt-2.5' : ''
+				}`}
+		>
+			<MasonryGrid columnCount={MASONRY_GRID_COLUMN_COUNT} gap={MASONRY_GRID_GAP}>
 				{results.map((image, i) => (
-					<GridImage key={image.id} image={image} index={i} />
+					<GridImage
+						key={image.id}
+						image={image}
+						index={i}
+						handlePreviewImageLoad={handlePreviewImageLoad}
+						handleDisplayImageLoad={handleDisplayImageLoad}
+					/>
 				))}
 			</MasonryGrid>
 		</div>

@@ -4,7 +4,7 @@ import type {
 	NormalizedImageData,
 } from '@/services/providers/searchProvider.types';
 
-type SearchStatus = 'idle' | 'loading' | 'success' | 'error';
+export type SearchStatus = 'idle' | 'loading' | 'success' | 'error';
 
 export type SearchSlice = {
 	rawInput: string;
