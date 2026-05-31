@@ -30,10 +30,12 @@ export default function ImageGallery() {
 
 	return (
 		<div
-			className={
-				`flex-1 overflow-x-hidden scrollbar-hidden relative 
-				${isGridPreviewReady ? 'mt-2.5' : ''}` // to avoid layout shift when preview images are loading
-			}
+			className={`flex-1 overflow-x-hidden scrollbar-hidden relative 
+				${
+					// This is to avoid layout shift when preview images are loading (this
+					// is the spacing between the SearchInput, and the ImageGallery components)
+					isGridPreviewReady ? 'mt-2.5' : ''
+				}`}
 		>
 			<MasonryGrid columnCount={3} gap={12}>
 				{results.map((image, i) => (
