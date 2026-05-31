@@ -96,7 +96,7 @@ const GridImage = memo(
 						}}
 					/>
 
-					{/* Main image */}
+					{/* Display image */}
 					<img
 						src={image.displayUrl}
 						className={`absolute inset-0 w-full h-full object-cover active:cursor-grabbing
