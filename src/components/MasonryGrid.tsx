@@ -9,7 +9,7 @@ type MasonryGridProps = {
 	gap: number;
 };
 
-const MasonryGrid = memo(({ children, columnCount, gap }: MasonryGridProps) => {
+function MasonryGridComponent({ children, columnCount, gap }: MasonryGridProps) {
 	const containerRef = useRef<HTMLDivElement>(null);
 	const handleGridKeyDown = useAppStore((s) => s.handleGridKeyDown);
 
@@ -65,8 +65,6 @@ const MasonryGrid = memo(({ children, columnCount, gap }: MasonryGridProps) => {
 			{children}
 		</div>
 	);
-});
+}
 
-MasonryGrid.displayName = 'MasonryGrid';
-
-export default MasonryGrid;
+export const MasonryGrid = memo(MasonryGridComponent);

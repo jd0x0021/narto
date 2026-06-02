@@ -11,7 +11,7 @@ type CommandChipProps = Readonly<{
  * @param command - The valiid command to be displayed inside the chip.
  * @returns A styled span element containing the command.
  */
-export default function CommandChip({ command }: CommandChipProps) {
+export function CommandChip({ command }: CommandChipProps) {
 	return (
 		<span
 			className='inline-flex h-6 items-center rounded-md bg-narto-accent

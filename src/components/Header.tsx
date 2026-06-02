@@ -1,6 +1,6 @@
 import { SearchStatusIndicator } from '@/components/SearchStatusIndicator';
 
-export default function Header() {
+export function Header() {
 	return (
 		<header className='flex w-full items-stretch justify-between px-6 py-3'>
 			<div className='flex items-center space-x-4'>

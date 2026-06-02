@@ -1,4 +1,4 @@
-import CommandChip from '@/components/CommandChip';
+import { CommandChip } from '@/components/CommandChip';
 import type { AppCommandType } from '@/services/providers/searchProvider.types';
 
 type FormattedInputValueProps = {
@@ -17,11 +17,7 @@ type FormattedInputValueProps = {
  * @param isTextMuted - Optional flag to mute the text styling.
  * @returns A JSX Fragment containing the formatted input UI elements.
  */
-export default function FormattedInputValue({
-	command,
-	text,
-	isTextMuted,
-}: FormattedInputValueProps) {
+export function FormattedInputValue({ command, text, isTextMuted }: FormattedInputValueProps) {
 	return (
 		<span className='text-base leading-6 flex items-baseline whitespace-pre'>
 			<CommandChip command={command} />

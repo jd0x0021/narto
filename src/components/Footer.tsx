@@ -8,7 +8,7 @@ function Keycap({ children }: { children: ReactNode }) {
 	);
 }
 
-export default function Footer() {
+export function Footer() {
 	return (
 		<footer
 			className='flex items-center w-full justify-between px-6 py-4

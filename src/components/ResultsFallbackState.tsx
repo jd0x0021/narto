@@ -72,7 +72,7 @@ const messageVariants = cva('text-3xl font-black break-words', {
 	},
 });
 
-export default function ResultsFallbackState({
+export function ResultsFallbackState({
 	fallbackState,
 	message,
 	addColoredMask = false,

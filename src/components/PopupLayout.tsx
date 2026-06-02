@@ -1,14 +1,14 @@
 import type { ReactNode } from 'react';
 
-import Footer from '@/components/Footer';
-import Header from '@/components/Header';
+import { Footer } from '@/components/Footer';
+import { Header } from '@/components/Header';
 import { useAppStore } from '@/store/useAppStore';
 
 type PopupLayoutProps = {
 	children: ReactNode;
 };
 
-export default function PopupLayout({ children }: PopupLayoutProps) {
+export function PopupLayout({ children }: PopupLayoutProps) {
 	const isGridPreviewReady = useAppStore((s) => s.isGridPreviewReady);
 
 	return (

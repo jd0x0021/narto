@@ -1,8 +1,8 @@
 import type { ChangeEvent } from 'react';
 import { useEffect, useMemo, useRef } from 'react';
 
-import CommandMenu from '@/components/CommandMenu';
-import FormattedInputValue from '@/components/FormattedInputValue';
+import { CommandMenu } from '@/components/CommandMenu';
+import { FormattedInputValue } from '@/components/FormattedInputValue';
 import { useSearchInputFocusHotkeys } from '@/hooks/useSearchInputFocusHotkeys';
 import type { AppCommandType } from '@/services/providers/searchProvider.types';
 import { useAppStore } from '@/store/useAppStore';
@@ -10,7 +10,7 @@ import { debounce } from '@/utils/debounce';
 import type { ParsedSearchInput } from '@/utils/parseSearchInput';
 import { isValidCommand, parseSearchInput } from '@/utils/parseSearchInput';
 
-export default function SearchInput() {
+export function SearchInput() {
 	const rawInput = useAppStore((s) => s.rawInput);
 	const query: string = useAppStore((s) => s.query);
 	const resolvedCommand: AppCommandType = useAppStore((s) => s.resolvedCommand);

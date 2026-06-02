@@ -1,4 +1,4 @@
-import FormattedInputValue from '@/components/FormattedInputValue';
+import { FormattedInputValue } from '@/components/FormattedInputValue';
 import type { AppCommandType } from '@/services/providers/searchProvider.types';
 import { AppCommand } from '@/services/providers/searchProvider.types';
 import { useAppStore } from '@/store/useAppStore';
@@ -16,7 +16,7 @@ const validCommands: readonly AppCommandType[] = Object.values(AppCommand);
  * as a value to  the search input. Different commands trigger different search behaviors, and this menu
  * serves as a guide to  inform users of their options (e.g. `/gif` command will get animated memes).
  */
-export default function CommandMenu() {
+export function CommandMenu() {
 	const selectedCommandIndex = useAppStore((s) => s.selectedCommandIndex);
 	const chooseCommand = useAppStore((s) => s.chooseCommand);
 
