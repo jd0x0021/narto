@@ -36,6 +36,7 @@ const CONTENT_FILTER = import.meta.env.VITE_KLIPY_CONTENT_FILTER;
 export const klipyEndpoints = {
 	meme: 'static-memes/search',
 	gif: 'gifs/search',
+	stk: 'stickers/search',
 } as const satisfies Record<AppCommandType, string>;
 
 export const klipyClient: SearchProvider = {
@@ -108,14 +109,15 @@ function normalizeKlipyResponse(responseData: RawKlipySearchResponse): Normalize
 	const data: RawKlipyImageData[] = responseData.data.data;
 
 	return data.map((raw: RawKlipyImageData): NormalizedImageData => {
+		const isAnimated = raw.type === 'gif' || raw.type === 'sticker';
 		const isGif = raw.type === 'gif';
 
 		// file resolutions
-		const md: ImageVariant = isGif ? raw.file.md.gif : raw.file.md.webp;
-		const hd: ImageVariant = isGif ? raw.file.hd.gif : raw.file.hd.webp;
+		const md: ImageVariant = isAnimated ? raw.file.md.gif : raw.file.md.webp;
+		const hd: ImageVariant = isAnimated ? raw.file.hd.gif : raw.file.hd.webp;
 
-		const format: FileFormatType = isGif ? 'gif' : 'webp';
-		const type: AppCommandType = isGif ? 'gif' : 'meme';
+		const format: FileFormatType = isAnimated ? 'gif' : 'webp';
+		const type: AppCommandType = isGif ? 'gif' : isAnimated ? 'stk' : 'meme';
 
 		return {
 			id: raw.id,

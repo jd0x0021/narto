@@ -7,6 +7,7 @@ export type FileFormatType = 'webp' | 'gif';
 export const AppCommand = {
 	Meme: 'meme',
 	Gif: 'gif',
+	Sticker: 'stk',
 } as const;
 
 /**
@@ -21,6 +22,7 @@ export const AppCommand = {
  * Example:
  * - "meme" → may map to "meme", "static_meme", etc.
  * - "gif"  → may map to "gif", "gifs/search", etc.
+ * - "stk"  → may map to "stk", "stickers/search", etc.
  */
 export type AppCommandType = (typeof AppCommand)[keyof typeof AppCommand];
 

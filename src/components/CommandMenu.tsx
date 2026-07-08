@@ -6,6 +6,7 @@ import { useAppStore } from '@/store/useAppStore';
 const commandDescriptions = {
 	meme: 'get static meme images',
 	gif: 'get animated memes',
+	stk: 'get sticker images',
 } as const satisfies Record<AppCommandType, string>;
 
 const validCommands: readonly AppCommandType[] = Object.values(AppCommand);

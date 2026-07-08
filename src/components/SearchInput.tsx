@@ -23,6 +23,7 @@ export function SearchInput() {
 
 	const showCommandMenu: boolean = rawInput === '/';
 	const hasValidCommand: boolean = isValidCommand(rawInput);
+	const placeholderLabel = resolvedCommand === 'stk' ? 'stickers' : `${resolvedCommand}s`;
 
 	useSearchInputFocusHotkeys(inputRef);
 
@@ -100,7 +101,7 @@ export function SearchInput() {
 						{hasValidCommand ? (
 							<FormattedInputValue
 								command={resolvedCommand}
-								text={query.length === 0 ? ` Search ${resolvedCommand}s...` : ` ${query}`}
+								text={query.length === 0 ? ` Search ${placeholderLabel}...` : ` ${query}`}
 								isTextMuted={query.length === 0}
 							/>
 						) : !rawInput ? (
