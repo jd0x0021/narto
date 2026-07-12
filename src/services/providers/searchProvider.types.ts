@@ -30,7 +30,7 @@ export const APP_COMMAND_FULL_NAME = {
 	[APP_COMMAND.MEME]: 'meme',
 	[APP_COMMAND.GIF]: 'gif',
 	[APP_COMMAND.STICKER]: 'sticker',
-} satisfies Record<AppCommandType, string>;
+} as const satisfies Record<AppCommandType, string>;
 
 export type NormalizedImageData = {
 	id: number;
