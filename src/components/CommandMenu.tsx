@@ -4,9 +4,9 @@ import { APP_COMMAND } from '@/services/providers/searchProvider.types';
 import { useAppStore } from '@/store/useAppStore';
 
 const commandDescriptions = {
-	meme: 'get static meme images',
-	gif: 'get animated memes',
-	stk: 'get sticker images',
+	meme: 'get static meme images ',
+	gif: 'get animated meme gifs',
+	stk: 'get animated sticker gifs',
 } as const satisfies Record<AppCommandType, string>;
 
 const validCommands: readonly AppCommandType[] = Object.values(APP_COMMAND);
@@ -46,7 +46,7 @@ export function CommandMenu() {
 						} ${index < validCommands.length - 1 ? 'border-b border-white/10' : ''}`}
 					>
 						<FormattedInputValue command={command} text=' + your search input:' isTextMuted />
-						<span className='text-base leading-6 text-narto-text'>
+						<span className='text-base leading-6 text-narto-text whitespace-pre'>
 							{commandDescriptions[command]}
 						</span>
 					</button>
