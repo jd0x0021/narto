@@ -26,6 +26,12 @@ export const APP_COMMAND = {
  */
 export type AppCommandType = (typeof APP_COMMAND)[keyof typeof APP_COMMAND];
 
+/**
+ * User-friendly labels for each supported app command.
+ *
+ * This mapping preserves the normalized internal command values
+ * while exposing a stable, human-readable name for UI rendering.
+ */
 export const APP_COMMAND_FULL_NAME = {
 	[APP_COMMAND.MEME]: 'meme',
 	[APP_COMMAND.GIF]: 'gif',
