@@ -1,5 +1,5 @@
-import type { ChangeEvent } from 'react';
-import { useEffect, useMemo, useRef } from 'react';
+import { cva } from 'class-variance-authority';
+import { type ChangeEvent, useEffect, useMemo, useRef } from 'react';
 
 import { CommandMenu } from '@/components/CommandMenu';
 import { FormattedInputValue } from '@/components/FormattedInputValue';
@@ -10,6 +10,27 @@ import { useAppStore } from '@/store/useAppStore';
 import { debounce } from '@/utils/debounce';
 import type { ParsedSearchInput } from '@/utils/parseSearchInput';
 import { isValidCommand, parseSearchInput } from '@/utils/parseSearchInput';
+
+const searchInputVariants = cva(
+	'w-full bg-transparent outline-none p-0 m-0 border-none text-transparent caret-white z-10 selection:text-transparent',
+	{
+		variants: {
+			command: {
+				meme: 'selection:bg-narto-accent/40',
+				gif: 'selection:bg-narto-gif/40',
+				stk: 'selection:bg-narto-stk/40',
+			},
+			hasValidCommand: {
+				// The command chip element (from a valid command) uses a 'px-1' class (handled by the
+				// FormattedInputValue component). We add 'pl-2' here to account for that padding and
+				// the space character, ensuring that the input element's caret aligns perfectly with
+				// the UI elements rendered from the presentation layer (the div above the input).
+				true: 'pl-2',
+				false: '',
+			},
+		},
+	},
+);
 
 export function SearchInput() {
 	const rawInput = useAppStore((s) => s.rawInput);
@@ -129,12 +150,10 @@ export function SearchInput() {
 						onFocus={() => {
 							setSelectedGridCell(null);
 						}}
-						className={`w-full bg-transparent outline-none p-0 m-0 border-none text-transparent caret-white z-10 selection:bg-narto-accent/40 selection:text-transparent ${
-							// The command chip element (from a valid command) uses a 'px-1' class (handled by the FormattedInputValue
-							// component). We add 'pl-2' here to account for that padding and the space character, ensuring that
-							// this input element's caret aligns perfectly with the UI elements rendered from the presentation layer.
-							hasValidCommand ? 'pl-2' : ''
-						}`}
+						className={searchInputVariants({
+							hasValidCommand,
+							command: resolvedCommand,
+						})}
 						autoComplete='off'
 						spellCheck='false'
 						maxLength={67}
