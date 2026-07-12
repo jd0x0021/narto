@@ -5,6 +5,7 @@ import { CommandMenu } from '@/components/CommandMenu';
 import { FormattedInputValue } from '@/components/FormattedInputValue';
 import { useSearchInputFocusHotkeys } from '@/hooks/useSearchInputFocusHotkeys';
 import type { AppCommandType } from '@/services/providers/searchProvider.types';
+import { APP_COMMAND_FULL_NAME } from '@/services/providers/searchProvider.types';
 import { useAppStore } from '@/store/useAppStore';
 import { debounce } from '@/utils/debounce';
 import type { ParsedSearchInput } from '@/utils/parseSearchInput';
@@ -100,7 +101,11 @@ export function SearchInput() {
 						{hasValidCommand ? (
 							<FormattedInputValue
 								command={resolvedCommand}
-								text={query.length === 0 ? ` Search ${resolvedCommand}s...` : ` ${query}`}
+								text={
+									query.length === 0
+										? ` Search ${APP_COMMAND_FULL_NAME[resolvedCommand]}s...`
+										: ` ${query}`
+								}
 								isTextMuted={query.length === 0}
 							/>
 						) : !rawInput ? (

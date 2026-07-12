@@ -1,9 +1,9 @@
 import type { AppCommandType } from '@/services/providers/searchProvider.types';
-import { AppCommand } from '@/services/providers/searchProvider.types';
+import { APP_COMMAND } from '@/services/providers/searchProvider.types';
 import type { AppStateCreator } from '@/store/appStore.types';
 import type { CommandMenuSlice } from '@/store/slices/commandMenuSlice/commandMenuSlice.types';
 
-const commandOptions: readonly AppCommandType[] = Object.values(AppCommand);
+const commandOptions: readonly AppCommandType[] = Object.values(APP_COMMAND);
 
 /**
  * This slice encapsulates the state and behavior of the command menu (the

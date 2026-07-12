@@ -35,12 +35,21 @@ const StaticMemeSchema = BaseImageSchema.extend({
 	file: WebpResolutionSchema,
 });
 
+const StickerSchema = BaseImageSchema.extend({
+	type: z.literal('sticker'),
+	file: GifResolutionSchema,
+});
+
 const GifSchema = BaseImageSchema.extend({
 	type: z.literal('gif'),
 	file: GifResolutionSchema,
 });
 
-const RawKlipyImageDataSchema = z.discriminatedUnion('type', [StaticMemeSchema, GifSchema]);
+const RawKlipyImageDataSchema = z.discriminatedUnion('type', [
+	StaticMemeSchema,
+	StickerSchema,
+	GifSchema,
+]);
 
 export const RawKlipySearchResponseSchema = z.looseObject({
 	data: z.looseObject({

@@ -1,14 +1,15 @@
 import { FormattedInputValue } from '@/components/FormattedInputValue';
 import type { AppCommandType } from '@/services/providers/searchProvider.types';
-import { AppCommand } from '@/services/providers/searchProvider.types';
+import { APP_COMMAND } from '@/services/providers/searchProvider.types';
 import { useAppStore } from '@/store/useAppStore';
 
 const commandDescriptions = {
-	meme: 'get static meme images',
-	gif: 'get animated memes',
+	meme: 'get static meme images ',
+	gif: 'get animated meme gifs',
+	stk: 'get animated sticker gifs',
 } as const satisfies Record<AppCommandType, string>;
 
-const validCommands: readonly AppCommandType[] = Object.values(AppCommand);
+const validCommands: readonly AppCommandType[] = Object.values(APP_COMMAND);
 
 /**
  * This component renders a dropdown list of valid commands ({@link validCommands}) when the user
@@ -45,7 +46,7 @@ export function CommandMenu() {
 						} ${index < validCommands.length - 1 ? 'border-b border-white/10' : ''}`}
 					>
 						<FormattedInputValue command={command} text=' + your search input:' isTextMuted />
-						<span className='text-base leading-6 text-narto-text'>
+						<span className='text-base leading-6 text-narto-text whitespace-pre'>
 							{commandDescriptions[command]}
 						</span>
 					</button>

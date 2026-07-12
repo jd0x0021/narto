@@ -2,11 +2,11 @@
 
 ## Product Overview
 
-NARTO is a keyboard-first meme and GIF discovery tool delivered as a Chrome Extension popup. It provides a premium, command-palette style interface for rapidly searching, previewing, and inserting memes/GIFs sourced from the Klipy API. The UI is optimized for instant keyboard navigation and non-blocking behavior: no spinners, minimal layout shifts, and responsive input-driven updates.
+NARTO is a keyboard-first meme, GIF, and sticker discovery tool delivered as a Chrome Extension popup. It provides a premium, command-palette style interface for rapidly searching, previewing, and inserting memes, GIFs, and stickers sourced from the Klipy API. The UI is optimized for instant keyboard navigation and non-blocking behavior: no spinners, minimal layout shifts, and responsive input-driven updates.
 
 ## Target User
 
-- Power users who live in chat tools (Slack, Discord, Messenger, etc.) and want a fast way to insert memes/GIFs without leaving the keyboard.
+- Power users who live in chat tools (Slack, Discord, Messenger, etc.) and want a fast way to insert memes, GIFs, and stickers without leaving the keyboard.
 - Teams and developers who expect polished, command-palette-like UX in modern SaaS products.
 
 ## Core Features (MVP)
@@ -15,10 +15,11 @@ NARTO is a keyboard-first meme and GIF discovery tool delivered as a Chrome Exte
 - Command-aware search supporting **only**:
    - `/meme`
    - `/gif`
+   - `/stk`
 - Forgiving, synchronous command resolution:
    - Inputs without a valid command resolve internally to `/meme`
    - Invalid/partial commands are not visually “corrected”; only recognized commands are highlighted
-- Slash command picker (**command menu**): when a user is choosing a slash command before entering a query, a dropdown lists valid commands (e.g. `/meme`, `/gif`) with short descriptions. Selection state and applying the chosen command to the search input live in Zustand (`createCommandMenuSlice.ts`), with UI in `CommandMenu.tsx`.
+- Slash command picker (**command menu**): when a user is choosing a slash command before entering a query, a dropdown lists valid commands (e.g. `/meme`, `/gif`, `/stk`) with short descriptions. Selection state and applying the chosen command to the search input live in Zustand (`createCommandMenuSlice.ts`), with UI in `CommandMenu.tsx`.
 - Debounced automatic search requests (**200ms**) triggered **only by input changes** (Enter **MUST NEVER** trigger fetch). Explicit fetch rules are summarized under Data Flow section.
 - Klipy-powered search with provider services + response normalization into an internal model.
 - Three-column masonry grid (always exactly 3 columns) using absolute positioning to preserve DOM order and keyboard/tab behavior.
@@ -136,11 +137,13 @@ Inputs must be parsed synchronously and never throw or block.
 - **Supported commands**
    - `/meme`
    - `/gif`
+   - `/stk`
 - **Parsing format**
    - Input format: `/command query`
 - **Forgiving resolution rules (internal)**
    - If user types `coding reaction` (no leading `/`), resolve internally as `/meme coding reaction`.
    - If user types `/gif happy cat`, resolve internally as GIF search with query `happy cat`.
+   - If user types `/stk happy cat`, resolve internally as sticker search with query `happy cat`.
    - If user types `/meme cat`, resolve internally as static meme search with query `cat`.
    - If user types `/m something`, resolve internally as `/meme something`.
    - If user types `/ something` or `/xyz something` or any invalid command, resolve internally to `/meme` (but see UI rule below).
@@ -151,12 +154,12 @@ Inputs must be parsed synchronously and never throw or block.
 - **Store outputs**
    - Parser returns:
       - `rawInput` (exact user input)
-      - `resolvedCommand: 'meme' | 'gif'` (internal resolution)
+      - `resolvedCommand: 'meme' | 'gif' | 'stk'` (internal resolution)
       - `query` (string used for searching)
 
 ## Command Menu
 
-- **Purpose:** Let the user pick valid commands (e.g. `/meme`, `/gif`) when the input is in “command menu” mode, without firing searches.
+- **Purpose:** Let the user pick valid commands (e.g. `/meme`, `/gif`, `/stk`) when the input is in “command menu” mode, without firing searches.
 - **Command Menu mode**: When the user types `/` **only**, the command menu is shown under the search input.
 - **Search interaction:** While the command menu is shown (“command menu” mode), the app does **not** schedule `runSearch` (no fetch) via the debounced input path (pending debounced calls are canceled; results are cleared so stale responses cannot apply).
 
@@ -169,6 +172,7 @@ Providers own all network calls and normalization.
 - **Endpoints**
    - Static memes: `/api/v1/API_KEY/static-memes/search`
    - GIFs: `/api/v1/API_KEY/gifs/search`
+   - Stickers: `/api/v1/API_KEY/stickers/search`
 - **Required query parameters**
    - `page=1`
    - `per_page=24`
@@ -187,7 +191,7 @@ Normalized objects must be used everywhere in UI/store.
 `NormalizedImageData` shape (conceptual, align with plan/spec):
 
 - `id: string`
-- `type: 'meme' | 'gif'`
+- `type: 'meme' | 'gif' | 'stk'`
 - `width: number`
 - `height: number`
 - `previewUrl: string` (preview for blur background)
@@ -201,7 +205,7 @@ Mapping rules:
    - Grid display image uses WebP (`.webp`) for rendering in `GridImage` (`file.md.webp.url`).
    - Drag source uses WebP so cross-app drag/drop carries the WebP asset (`file.hd.webp.url`).
    - Placeholder: `blur_preview`
-- **GIFs**
+- **GIFs** and **Stickers**
    - Grid display image: prefer `file.md.gif.url` (md.gif)
    - Copy/drag source: `file.hd.gif.url`
    - Placeholder: `blur_preview`

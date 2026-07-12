@@ -1,13 +1,14 @@
 import type { KeyboardEvent } from 'react';
 
-import { AppCommand, type AppCommandType } from '@/services/providers/searchProvider.types';
+import type { AppCommandType } from '@/services/providers/searchProvider.types';
+import { APP_COMMAND } from '@/services/providers/searchProvider.types';
 import type { AppStateCreator, AppStoreApi } from '@/store/appStore.types';
 import type { SearchInputKeyDownSlice } from '@/store/slices/searchInputKeyDownSlice/searchInputKeyDownSlice.types';
 
 const SPACE = ' ' as const;
 const searchModeKeys = ['Escape', 'ArrowDown', 'ArrowUp'] as const;
 const commandMenuModeKeys = ['Escape', 'ArrowDown', 'ArrowUp', 'Tab', 'Enter', SPACE] as const;
-const commandOptions: readonly AppCommandType[] = Object.values(AppCommand);
+const commandOptions: readonly AppCommandType[] = Object.values(APP_COMMAND);
 
 type SearchModeKey = (typeof searchModeKeys)[number];
 type CommandMenuModeKey = (typeof commandMenuModeKeys)[number];
