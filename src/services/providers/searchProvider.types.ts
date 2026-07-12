@@ -4,10 +4,10 @@ export type FileFormatType = 'webp' | 'gif';
  * These are the only VALID app-level commands that the system recognizes. Each command represents
  * a distinct category of search and is independent of any provider-specific implementation.
  */
-export const AppCommand = {
-	Meme: 'meme',
-	Gif: 'gif',
-	Sticker: 'stk',
+export const APP_COMMAND = {
+	MEME: 'meme',
+	GIF: 'gif',
+	STICKER: 'stk',
 } as const;
 
 /**
@@ -24,7 +24,13 @@ export const AppCommand = {
  * - "gif"  → may map to "gif", "gifs/search", etc.
  * - "stk"  → may map to "stk", "stickers/search", etc.
  */
-export type AppCommandType = (typeof AppCommand)[keyof typeof AppCommand];
+export type AppCommandType = (typeof APP_COMMAND)[keyof typeof APP_COMMAND];
+
+export const APP_COMMAND_FULL_NAME = {
+	[APP_COMMAND.MEME]: 'meme',
+	[APP_COMMAND.GIF]: 'gif',
+	[APP_COMMAND.STICKER]: 'sticker',
+} satisfies Record<AppCommandType, string>;
 
 export type NormalizedImageData = {
 	id: number;

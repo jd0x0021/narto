@@ -1,6 +1,6 @@
 import { FormattedInputValue } from '@/components/FormattedInputValue';
 import type { AppCommandType } from '@/services/providers/searchProvider.types';
-import { AppCommand } from '@/services/providers/searchProvider.types';
+import { APP_COMMAND } from '@/services/providers/searchProvider.types';
 import { useAppStore } from '@/store/useAppStore';
 
 const commandDescriptions = {
@@ -9,7 +9,7 @@ const commandDescriptions = {
 	stk: 'get sticker images',
 } as const satisfies Record<AppCommandType, string>;
 
-const validCommands: readonly AppCommandType[] = Object.values(AppCommand);
+const validCommands: readonly AppCommandType[] = Object.values(APP_COMMAND);
 
 /**
  * This component renders a dropdown list of valid commands ({@link validCommands}) when the user

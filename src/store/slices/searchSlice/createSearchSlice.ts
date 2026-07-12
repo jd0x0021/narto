@@ -1,6 +1,7 @@
 import { searchProvider } from '@/services/providers/searchProvider';
 import { SearchProviderError } from '@/services/providers/searchProvider.errors';
-import { AppCommand, type NormalizedImageData } from '@/services/providers/searchProvider.types';
+import type { NormalizedImageData } from '@/services/providers/searchProvider.types';
+import { APP_COMMAND } from '@/services/providers/searchProvider.types';
 import type { AppStateCreator } from '@/store/appStore.types';
 import type { SearchSlice } from '@/store/slices/searchSlice/searchSlice.types';
 import type { ParsedSearchInput } from '@/utils/parseSearchInput';
@@ -18,7 +19,7 @@ import { parseSearchInput } from '@/utils/parseSearchInput';
 export const createSearchSlice: AppStateCreator<SearchSlice> = (set, get) =>
 	({
 		rawInput: '',
-		resolvedCommand: AppCommand.Meme,
+		resolvedCommand: APP_COMMAND.MEME,
 		query: '',
 		results: [],
 		status: 'idle',

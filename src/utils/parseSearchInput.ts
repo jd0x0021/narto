@@ -1,5 +1,5 @@
 import type { AppCommandType } from '@/services/providers/searchProvider.types';
-import { AppCommand } from '@/services/providers/searchProvider.types';
+import { APP_COMMAND } from '@/services/providers/searchProvider.types';
 
 export type ParsedSearchInput = {
 	rawInput: string;
@@ -7,7 +7,7 @@ export type ParsedSearchInput = {
 	query: string;
 };
 
-export const VALID_COMMAND_PREFIXES: readonly string[] = Object.values(AppCommand).map(
+export const VALID_COMMAND_PREFIXES: readonly string[] = Object.values(APP_COMMAND).map(
 	(cmd) => `/${cmd} `,
 );
 
@@ -38,23 +38,23 @@ export function parseSearchInput(input: string): ParsedSearchInput {
 	const trimmed = input.trimStart();
 
 	if (!trimmed.startsWith('/')) {
-		return { rawInput: input, resolvedCommand: AppCommand.Meme, query: input.trim() };
+		return { rawInput: input, resolvedCommand: APP_COMMAND.MEME, query: input.trim() };
 	}
 
 	const match = trimmed.match(/^\/([^\s]+)\s*(.*)?$/);
 
 	if (!match) {
 		// Just "/"
-		return { rawInput: input, resolvedCommand: AppCommand.Meme, query: '' };
+		return { rawInput: input, resolvedCommand: APP_COMMAND.MEME, query: '' };
 	}
 
 	const cmd = match[1].toLowerCase();
 	const rest = match[2] || '';
 
-	if (Object.values(AppCommand).includes(cmd as AppCommandType)) {
+	if (Object.values(APP_COMMAND).includes(cmd as AppCommandType)) {
 		return { rawInput: input, resolvedCommand: cmd as AppCommandType, query: rest };
 	}
 
 	// Invalid command
-	return { rawInput: input, resolvedCommand: AppCommand.Meme, query: rest };
+	return { rawInput: input, resolvedCommand: APP_COMMAND.MEME, query: rest };
 }
