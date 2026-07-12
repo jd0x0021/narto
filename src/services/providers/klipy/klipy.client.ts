@@ -16,6 +16,7 @@ import type {
 	NormalizedImageData,
 	SearchProvider,
 } from '@/services/providers/searchProvider.types';
+import { APP_COMMAND } from '@/services/providers/searchProvider.types';
 
 const KLIPY_BASE_URL = import.meta.env.VITE_KLIPY_BASE_URL;
 const API_KEY = import.meta.env.VITE_KLIPY_API_KEY;
@@ -34,10 +35,16 @@ const CONTENT_FILTER = import.meta.env.VITE_KLIPY_CONTENT_FILTER;
  * only this mapping needs to be updated.
  */
 export const klipyEndpoints = {
-	meme: 'static-memes/search',
-	gif: 'gifs/search',
-	stk: 'stickers/search',
+	[APP_COMMAND.MEME]: 'static-memes/search',
+	[APP_COMMAND.GIF]: 'gifs/search',
+	[APP_COMMAND.STICKER]: 'stickers/search',
 } as const satisfies Record<AppCommandType, string>;
+
+const KLIPY_IMAGE_TYPE_TO_APP_COMMAND = {
+	static_meme: APP_COMMAND.MEME,
+	gif: APP_COMMAND.GIF,
+	sticker: APP_COMMAND.STICKER,
+} as const satisfies Record<RawKlipyImageData['type'], AppCommandType>;
 
 export const klipyClient: SearchProvider = {
 	async search(resolvedCommand: AppCommandType, query: string) {
@@ -110,14 +117,13 @@ function normalizeKlipyResponse(responseData: RawKlipySearchResponse): Normalize
 
 	return data.map((raw: RawKlipyImageData): NormalizedImageData => {
 		const isAnimated = raw.type === 'gif' || raw.type === 'sticker';
-		const isGif = raw.type === 'gif';
 
 		// file resolutions
 		const md: ImageVariant = isAnimated ? raw.file.md.gif : raw.file.md.webp;
 		const hd: ImageVariant = isAnimated ? raw.file.hd.gif : raw.file.hd.webp;
 
 		const format: FileFormatType = isAnimated ? 'gif' : 'webp';
-		const type: AppCommandType = isGif ? 'gif' : isAnimated ? 'stk' : 'meme';
+		const type: AppCommandType = KLIPY_IMAGE_TYPE_TO_APP_COMMAND[raw.type];
 
 		return {
 			id: raw.id,
