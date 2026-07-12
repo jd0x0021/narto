@@ -4,8 +4,11 @@ import { type ChangeEvent, useEffect, useMemo, useRef } from 'react';
 import { CommandMenu } from '@/components/CommandMenu';
 import { FormattedInputValue } from '@/components/FormattedInputValue';
 import { useSearchInputFocusHotkeys } from '@/hooks/useSearchInputFocusHotkeys';
-import type { AppCommandType } from '@/services/providers/searchProvider.types';
-import { APP_COMMAND_FULL_NAME } from '@/services/providers/searchProvider.types';
+import {
+	APP_COMMAND,
+	APP_COMMAND_FULL_NAME,
+	type AppCommandType,
+} from '@/services/providers/searchProvider.types';
 import { useAppStore } from '@/store/useAppStore';
 import { debounce } from '@/utils/debounce';
 import type { ParsedSearchInput } from '@/utils/parseSearchInput';
@@ -16,10 +19,10 @@ const searchInputVariants = cva(
 	{
 		variants: {
 			command: {
-				meme: 'selection:bg-narto-accent/40',
-				gif: 'selection:bg-narto-gif/40',
-				stk: 'selection:bg-narto-stk/40',
-			},
+				[APP_COMMAND.MEME]: 'selection:bg-narto-accent/40',
+				[APP_COMMAND.GIF]: 'selection:bg-narto-gif/40',
+				[APP_COMMAND.STICKER]: 'selection:bg-narto-stk/40',
+			} as const satisfies Record<AppCommandType, string>,
 			hasValidCommand: {
 				// The command chip element (from a valid command) uses a 'px-1' class (handled by the
 				// FormattedInputValue component). We add 'pl-2' here to account for that padding and

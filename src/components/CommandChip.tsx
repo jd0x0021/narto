@@ -1,6 +1,6 @@
 import { cva } from 'class-variance-authority';
 
-import type { AppCommandType } from '@/services/providers/searchProvider.types';
+import { APP_COMMAND, type AppCommandType } from '@/services/providers/searchProvider.types';
 
 type CommandChipProps = Readonly<{
 	command: AppCommandType;
@@ -14,10 +14,10 @@ const commandChipVariants = cva(
 	{
 		variants: {
 			appCommand: {
-				meme: 'bg-narto-accent',
-				gif: 'bg-narto-gif',
-				stk: 'bg-narto-stk',
-			},
+				[APP_COMMAND.MEME]: 'bg-narto-accent',
+				[APP_COMMAND.GIF]: 'bg-narto-gif',
+				[APP_COMMAND.STICKER]: 'bg-narto-stk',
+			} as const satisfies Record<AppCommandType, string>,
 		},
 	},
 );

@@ -9,7 +9,7 @@ type FormattedInputValueProps = {
 
 /**
  * Renders the formatted version of the user's search input. This component is
- * responsible to conditionally format valid commands (e.g., "/meme") as styled
+ * responsible to conditionally format valid commands (e.g., "/m") as styled
  * chips alongside the remaining query text or a contextual placeholder.
  *
  * @param command - The parsed command type from the search input.
