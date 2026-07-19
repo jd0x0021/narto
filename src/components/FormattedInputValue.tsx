@@ -19,7 +19,7 @@ type FormattedInputValueProps = {
  */
 export function FormattedInputValue({ command, text, isTextMuted }: FormattedInputValueProps) {
 	return (
-		<span className='text-base leading-6 flex items-baseline whitespace-pre'>
+		<span className='text-base leading-6 flex items-center whitespace-pre'>
 			<CommandChip command={command} />
 			<span className={isTextMuted ? 'text-narto-muted/50' : 'text-narto-text'}>{text}</span>
 		</span>
