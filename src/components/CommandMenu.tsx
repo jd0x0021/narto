@@ -4,9 +4,9 @@ import { APP_COMMAND } from '@/services/providers/searchProvider.types';
 import { useAppStore } from '@/store/useAppStore';
 
 const commandDescriptions = {
-	meme: 'get static meme images ',
-	gif: 'get animated meme gifs',
-	stk: 'get animated sticker gifs',
+	[APP_COMMAND.MEME]: 'get static meme images ',
+	[APP_COMMAND.GIF]: 'get animated meme gifs',
+	[APP_COMMAND.STICKER]: 'get animated sticker gifs',
 } as const satisfies Record<AppCommandType, string>;
 
 const validCommands: readonly AppCommandType[] = Object.values(APP_COMMAND);

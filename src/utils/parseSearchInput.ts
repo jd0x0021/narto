@@ -20,12 +20,12 @@ export function isValidCommand(input: string): boolean {
  * Parses the raw user input to extract the command and query strings.
  *
  * The function handles the following cases:
- * 1. If the input starts with a valid command prefix (e.g., "/gif "), it extracts the command and the query.
- * 2. If the input starts with "/" but does not match any valid command, it treats it as an invalid command and defaults to "meme".
- * 3. If the input does not start with "/", it treats the entire input as a query for the default "meme" command.
+ * 1. If the input starts with a valid command prefix (e.g., "/g "), it extracts the command and the query.
+ * 2. If the input starts with "/" but does not match any valid command, it treats it as an invalid command and defaults to "m".
+ * 3. If the input does not start with "/", it treats the entire input as a query for the default "m" command.
  *
  * The {@link AppCommandType} defines the set of valid commands. This function ensures that the
- * resolved command is always a valid {@link AppCommandType}, defaulting to "meme" when necessary.
+ * resolved command is always a valid {@link AppCommandType}, defaulting to "m" when necessary.
  *
  * @param input - The raw user input string to parse.
  * @returns An object containing:

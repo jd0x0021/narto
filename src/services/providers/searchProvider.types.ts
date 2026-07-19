@@ -5,9 +5,9 @@ export type FileFormatType = 'webp' | 'gif';
  * a distinct category of search and is independent of any provider-specific implementation.
  */
 export const APP_COMMAND = {
-	MEME: 'meme',
-	GIF: 'gif',
-	STICKER: 'stk',
+	MEME: 'm',
+	GIF: 'g',
+	STICKER: 's',
 } as const;
 
 /**
@@ -20,9 +20,9 @@ export const APP_COMMAND = {
  * A command can be mapped to different provider-specific values depending on the provider's API design.
  *
  * Example:
- * - "meme" → may map to "meme", "static_meme", etc.
- * - "gif"  → may map to "gif", "gifs/search", etc.
- * - "stk"  → may map to "stk", "stickers/search", etc.
+ * - "m" → may map to "m", "static_meme", etc.
+ * - "g"  → may map to "g", "gifs/search", etc.
+ * - "s"  → may map to "s", "stickers/search", etc.
  */
 export type AppCommandType = (typeof APP_COMMAND)[keyof typeof APP_COMMAND];
 

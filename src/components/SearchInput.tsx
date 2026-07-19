@@ -1,15 +1,39 @@
-import type { ChangeEvent } from 'react';
-import { useEffect, useMemo, useRef } from 'react';
+import { cva } from 'class-variance-authority';
+import { type ChangeEvent, useEffect, useMemo, useRef } from 'react';
 
 import { CommandMenu } from '@/components/CommandMenu';
 import { FormattedInputValue } from '@/components/FormattedInputValue';
 import { useSearchInputFocusHotkeys } from '@/hooks/useSearchInputFocusHotkeys';
-import type { AppCommandType } from '@/services/providers/searchProvider.types';
-import { APP_COMMAND_FULL_NAME } from '@/services/providers/searchProvider.types';
+import {
+	APP_COMMAND,
+	APP_COMMAND_FULL_NAME,
+	type AppCommandType,
+} from '@/services/providers/searchProvider.types';
 import { useAppStore } from '@/store/useAppStore';
 import { debounce } from '@/utils/debounce';
 import type { ParsedSearchInput } from '@/utils/parseSearchInput';
 import { isValidCommand, parseSearchInput } from '@/utils/parseSearchInput';
+
+const searchInputVariants = cva(
+	'w-full bg-transparent outline-none p-0 m-0 border-none text-transparent caret-white z-10 selection:text-transparent',
+	{
+		variants: {
+			command: {
+				[APP_COMMAND.MEME]: 'selection:bg-narto-accent/40',
+				[APP_COMMAND.GIF]: 'selection:bg-narto-gif/40',
+				[APP_COMMAND.STICKER]: 'selection:bg-narto-stk/40',
+			} as const satisfies Record<AppCommandType, string>,
+			hasValidCommand: {
+				// The command chip element (from a valid command) uses a 'px-1' class (handled by the
+				// FormattedInputValue component). We add 'pl-2' here to account for that padding and
+				// the space character, ensuring that the input element's caret aligns perfectly with
+				// the UI elements rendered from the presentation layer (the div under the input).
+				true: 'pl-2',
+				false: '',
+			},
+		},
+	},
+);
 
 export function SearchInput() {
 	const rawInput = useAppStore((s) => s.rawInput);
@@ -85,7 +109,10 @@ export function SearchInput() {
 	}, []);
 
 	return (
-		<div className='shrink-0'>
+		// The SearchInput's presentation layer and interaction layer should have
+		// the same font styling to ensure that the caret (from the interaction layer)
+		// aligns perfectly with the text rendered in the presentation layer.
+		<div className='shrink-0 font-mono'>
 			<div
 				className='relative flex items-center bg-narto-input rounded-narto border border-white/10 px-4 py-[0.375rem]
 				transition-all duration-200 focus-within:border-narto-accent focus-within:ring-1 focus-within:ring-narto-accent overflow-hidden'
@@ -129,12 +156,10 @@ export function SearchInput() {
 						onFocus={() => {
 							setSelectedGridCell(null);
 						}}
-						className={`w-full bg-transparent outline-none p-0 m-0 border-none text-transparent caret-white z-10 selection:bg-narto-accent/40 selection:text-transparent ${
-							// The command chip element (from a valid command) uses a 'px-1' class (handled by the FormattedInputValue
-							// component). We add 'pl-2' here to account for that padding and the space character, ensuring that
-							// this input element's caret aligns perfectly with the UI elements rendered from the presentation layer.
-							hasValidCommand ? 'pl-2' : ''
-						}`}
+						className={searchInputVariants({
+							hasValidCommand,
+							command: resolvedCommand,
+						})}
 						autoComplete='off'
 						spellCheck='false'
 						maxLength={67}

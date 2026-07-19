@@ -11,6 +11,8 @@ export default {
 				'narto-input': '#18181d',
 				'narto-footer': '#070709',
 				'narto-accent': '#ff6b00',
+				'narto-gif': '#084572',
+				'narto-stk': '#B6AA10',
 				'narto-text': '#fcfcfc',
 				'narto-muted': '#71717a',
 				'narto-border': '#292a2d',
