@@ -27,7 +27,7 @@ const searchInputVariants = cva(
 				// The command chip element (from a valid command) uses a 'px-1' class (handled by the
 				// FormattedInputValue component). We add 'pl-2' here to account for that padding and
 				// the space character, ensuring that the input element's caret aligns perfectly with
-				// the UI elements rendered from the presentation layer (the div above the input).
+				// the UI elements rendered from the presentation layer (the div under the input).
 				true: 'pl-2',
 				false: '',
 			},
@@ -109,6 +109,9 @@ export function SearchInput() {
 	}, []);
 
 	return (
+		// The SearchInput's presentation layer and interaction layer should have
+		// the same font styling to ensure that the caret (from the interaction layer)
+		// aligns perfectly with the text rendered in the presentation layer.
 		<div className='shrink-0 font-mono'>
 			<div
 				className='relative flex items-center bg-narto-input rounded-narto border border-white/10 px-4 py-[0.375rem]
