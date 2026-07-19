@@ -53,5 +53,5 @@ export function SearchInputPresentationLayer() {
 
 	// show the raw input if it the search input
 	// doesn't have a valid command or a command prefix
-	return <span>{rawInput}</span>;
+	return <span className='whitespace-pre'>{rawInput}</span>;
 }
