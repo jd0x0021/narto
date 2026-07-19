@@ -2,6 +2,8 @@ import { useCallback, useEffect, useRef } from 'react';
 
 import { useAppStore } from '@/store/useAppStore';
 
+const RESULTS_PER_PAGE = Number.parseInt(import.meta.env.VITE_KLIPY_RESULTS_PER_PAGE);
+
 /**
  * Tracks the loading state of the display images (the images that we're
  * expecting to see based on the search criteria) in the masonry grid
@@ -48,8 +50,15 @@ export const useGridDisplayLoadState = () => {
 			}
 		}
 
-		// Reset the loaded state until the newly fetched display images are loaded
-		setIsGridDisplayReady(false);
+		// Do not reset the grid display readiness if ALL the display image IDs of the latest search result set
+		// have already been tracked as loaded (using loadedDisplayImages). This is possible when the
+		// latest search request returns the same display image IDs as the previous search request (for
+		// example, when the search query and internally resolved command are exactly the same).
+		if (RESULTS_PER_PAGE !== loadedDisplayImages.size) {
+			// The grid display readiness should only reset when the latest result set
+			// contains display images that have not yet been tracked internally.
+			setIsGridDisplayReady(false);
+		}
 	}, [results, setIsGridDisplayReady]);
 
 	/**

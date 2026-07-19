@@ -2,6 +2,8 @@ import { useCallback, useEffect, useRef } from 'react';
 
 import { useAppStore } from '@/store/useAppStore';
 
+const RESULTS_PER_PAGE = Number.parseInt(import.meta.env.VITE_KLIPY_RESULTS_PER_PAGE);
+
 /**
  * Manages the visual ready state of the masonry grid by tracking loaded preview images.
  *
@@ -49,8 +51,15 @@ export const useGridPreviewLoadState = () => {
 			}
 		}
 
-		// Reset the ready state until the newly fetched preview images are loaded
-		setIsGridPreviewReady(false);
+		// Do not reset the grid preview readiness if ALL the preview image IDs of the latest search result
+		// set have already been tracked as loaded (using loadedPreviewImages). This is possible when the
+		// latest search request returns the same preview image IDs as the previous search request (for
+		// example, when the search query and internally resolved command are exactly the same).
+		if (RESULTS_PER_PAGE !== loadedPreviewImages.size) {
+			// The grid preview readiness should only reset when the latest result set
+			// contains preview images that have not yet been tracked internally.
+			setIsGridPreviewReady(false);
+		}
 	}, [results, setIsGridPreviewReady]);
 
 	/**
