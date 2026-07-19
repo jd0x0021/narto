@@ -13,13 +13,13 @@ NARTO is a keyboard-first meme, GIF, and sticker discovery tool delivered as a C
 
 - Chrome Extension popup UI that auto-focuses the search input on open.
 - Command-aware search supporting **only**:
-   - `/meme`
-   - `/gif`
-   - `/stk`
+   - `/m`
+   - `/g`
+   - `/s`
 - Forgiving, synchronous command resolution:
-   - Inputs without a valid command resolve internally to `/meme`
+   - Inputs without a valid command resolve internally to `/m`
    - Invalid/partial commands are not visually “corrected”; only recognized commands are highlighted
-- Slash command picker (**command menu**): when a user is choosing a slash command before entering a query, a dropdown lists valid commands (e.g. `/meme`, `/gif`, `/stk`) with short descriptions. Selection state and applying the chosen command to the search input live in Zustand (`createCommandMenuSlice.ts`), with UI in `CommandMenu.tsx`.
+- Slash command picker (**command menu**): when a user is choosing a slash command before entering a query, a dropdown lists valid commands (e.g. `/m`, `/g`, `/s`) with short descriptions. Selection state and applying the chosen command to the search input live in Zustand (`createCommandMenuSlice.ts`), with UI in `CommandMenu.tsx`.
 - Debounced automatic search requests (**200ms**) triggered **only by input changes** (Enter **MUST NEVER** trigger fetch). Explicit fetch rules are summarized under Data Flow section.
 - Klipy-powered search with provider services + response normalization into an internal model.
 - Three-column masonry grid (always exactly 3 columns) using absolute positioning to preserve DOM order and keyboard/tab behavior.
@@ -135,18 +135,18 @@ Expected main directories (align with implementation plan):
 Inputs must be parsed synchronously and never throw or block.
 
 - **Supported commands**
-   - `/meme`
-   - `/gif`
-   - `/stk`
+   - `/m`
+   - `/g`
+   - `/s`
 - **Parsing format**
    - Input format: `/command query`
 - **Forgiving resolution rules (internal)**
-   - If user types `coding reaction` (no leading `/`), resolve internally as `/meme coding reaction`.
-   - If user types `/gif happy cat`, resolve internally as GIF search with query `happy cat`.
-   - If user types `/stk happy cat`, resolve internally as sticker search with query `happy cat`.
-   - If user types `/meme cat`, resolve internally as static meme search with query `cat`.
-   - If user types `/m something`, resolve internally as `/meme something`.
-   - If user types `/ something` or `/xyz something` or any invalid command, resolve internally to `/meme` (but see UI rule below).
+   - If user types `coding reaction` (no leading `/`), resolve internally as `/m coding reaction`.
+   - If user types `/g happy cat`, resolve internally as GIF search with query `happy cat`.
+   - If user types `/s happy cat`, resolve internally as sticker search with query `happy cat`.
+   - If user types `/m cat`, resolve internally as static image meme search with query `cat`.
+   - If user types `/j something`, resolve internally as `/m something`.
+   - If user types `/ something` or `/xyz something` or any invalid command, resolve internally to `/m` (but see UI rule below).
 - **UI highlighting rule**
    - Only valid commands should be highlighted visually.
    - Invalid commands must not be visually corrected.
@@ -154,12 +154,12 @@ Inputs must be parsed synchronously and never throw or block.
 - **Store outputs**
    - Parser returns:
       - `rawInput` (exact user input)
-      - `resolvedCommand: 'meme' | 'gif' | 'stk'` (internal resolution)
+      - `resolvedCommand: 'm' | 'g' | 's'` (internal resolution)
       - `query` (string used for searching)
 
 ## Command Menu
 
-- **Purpose:** Let the user pick valid commands (e.g. `/meme`, `/gif`, `/stk`) when the input is in “command menu” mode, without firing searches.
+- **Purpose:** Let the user pick valid commands (e.g. `/m`, `/g`, `/s`) when the input is in “command menu” mode, without firing searches.
 - **Command Menu mode**: When the user types `/` **only**, the command menu is shown under the search input.
 - **Search interaction:** While the command menu is shown (“command menu” mode), the app does **not** schedule `runSearch` (no fetch) via the debounced input path (pending debounced calls are canceled; results are cleared so stale responses cannot apply).
 
@@ -259,7 +259,7 @@ Mapping rules:
       - **When a Klipy fetch runs (via `runSearch`):** the debounced callback is used only if **all** of the following is true (only fetch when **all** is true):
          - `resolvedCommand` is present
          - `query.length >= 1`
-         - **the command menu is not shown** (no search while the user is still picking a valid command (e.g. `/meme`, `/gif`)—see Command Menu section)
+         - **the command menu is not shown** (no search while the user is still picking a valid command (e.g. `/m`, `/g`)—see Command Menu section)
       - Otherwise the debounced search is canceled and the store clears/invalidates as needed so nothing fetches on bare `/`.
 2. Zustand store (`useAppStore.ts` / search slice)
    - Owns request cancellation/ignoring:
