@@ -2,13 +2,9 @@ import { cva } from 'class-variance-authority';
 import { type ChangeEvent, useEffect, useMemo, useRef } from 'react';
 
 import { CommandMenu } from '@/components/CommandMenu';
-import { FormattedInputValue } from '@/components/FormattedInputValue';
+import { SearchInputPresentationLayer } from '@/components/SearchInputPresentationLayer';
 import { useSearchInputFocusHotkeys } from '@/hooks/useSearchInputFocusHotkeys';
-import {
-	APP_COMMAND,
-	APP_COMMAND_FULL_NAME,
-	type AppCommandType,
-} from '@/services/providers/searchProvider.types';
+import { APP_COMMAND, type AppCommandType } from '@/services/providers/searchProvider.types';
 import { useAppStore } from '@/store/useAppStore';
 import { debounce } from '@/utils/debounce';
 import type { ParsedSearchInput } from '@/utils/parseSearchInput';
@@ -37,7 +33,6 @@ const searchInputVariants = cva(
 
 export function SearchInput() {
 	const rawInput = useAppStore((s) => s.rawInput);
-	const query: string = useAppStore((s) => s.query);
 	const resolvedCommand: AppCommandType = useAppStore((s) => s.resolvedCommand);
 	const setInput = useAppStore((s) => s.setInput);
 	const setSelectedGridCell = useAppStore((s) => s.setSelectedGridCell);
@@ -125,22 +120,7 @@ export function SearchInput() {
 						className='absolute inset-0 flex items-center pointer-events-none overflow-hidden text-narto-text'
 						aria-hidden='true'
 					>
-						{hasValidCommand ? (
-							<FormattedInputValue
-								command={resolvedCommand}
-								text={
-									query.length === 0
-										? ` Search ${APP_COMMAND_FULL_NAME[resolvedCommand]}s...`
-										: ` ${query}`
-								}
-								isTextMuted={query.length === 0}
-							/>
-						) : !rawInput ? (
-							// show placeholder text
-							<span className='text-narto-muted/50'>Search KLIPY</span>
-						) : (
-							<span>{rawInput}</span>
-						)}
+						<SearchInputPresentationLayer />
 					</div>
 
 					{/* Interaction Layer: This is where the user actually types. It's a completely transparent input
