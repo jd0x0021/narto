@@ -109,7 +109,7 @@ export function SearchInput() {
 	}, []);
 
 	return (
-		<div className='shrink-0'>
+		<div className='shrink-0 font-mono'>
 			<div
 				className='relative flex items-center bg-narto-input rounded-narto border border-white/10 px-4 py-[0.375rem]
 				transition-all duration-200 focus-within:border-narto-accent focus-within:ring-1 focus-within:ring-narto-accent overflow-hidden'

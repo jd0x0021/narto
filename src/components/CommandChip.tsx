@@ -8,8 +8,8 @@ type CommandChipProps = Readonly<{
 
 const commandChipVariants = cva(
 	[
-		'inline-flex h-6 items-center rounded-md px-1 text-base',
-		'leading-6 text-narto-text align-middle pb-[0.15rem]',
+		'inline-flex h-6 items-center justify-center rounded-md px-1 text-base',
+		'leading-none text-narto-text font-mono',
 	],
 	{
 		variants: {
@@ -26,9 +26,16 @@ const commandChipVariants = cva(
  * A chip component for displaying a valid command in the search input. It
  * is styled to visually differentiate command styling from regular text.
  *
- * @param command - The valiid command to be displayed inside the chip.
+ * @param command - The valid command to be displayed inside the chip.
  * @returns A styled span element containing the command.
  */
 export function CommandChip({ command }: CommandChipProps) {
-	return <span className={commandChipVariants({ appCommand: command })}>{`/${command}`}</span>;
+	return (
+		<span className={commandChipVariants({ appCommand: command })}>
+			{/* Fonts reserve extra space above and below their letters (for characters with accents (É, Å)
+				or descenders (g, j, p, q, y)), which can make centered text look slightly off-center.
+				Apply a tiny upward offset so the text appears visually centered within the chip. */}
+			<span className='inline-block translate-y-[-0.5px]'>{`/${command}`}</span>
+		</span>
+	);
 }
