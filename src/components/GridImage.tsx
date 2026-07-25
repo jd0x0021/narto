@@ -115,9 +115,16 @@ function GridImageComponent({
 				/>
 
 				{/* Loading overlay */}
-				{!displayLoaded && (
-					<div className='absolute inset-0 bg-narto-muted/40 animate-pulse pointer-events-none' />
-				)}
+				<div
+					className={`absolute inset-0 overflow-hidden pointer-events-none transition-opacity 
+						duration-300 ${displayLoaded ? 'opacity-0' : 'opacity-100'}`}
+				>
+					<div
+						className="absolute inset-0 bg-narto-main/30 before:absolute before:inset-y-0
+						before:left-0 before:w-full before:bg-gradient-to-r before:from-transparent
+						before:via-gray-50/50 before:to-transparent before:animate-skeleton before:content-['']"
+					/>
+				</div>
 
 				{/* Copy button shown on hover */}
 				<button

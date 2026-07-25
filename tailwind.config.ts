@@ -29,6 +29,19 @@ export default {
 				sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
 				mono: ['JetBrains Mono', 'ui-monospace', 'SFMono-Regular', 'monospace'],
 			},
+			keyframes: {
+				skeleton: {
+					'0%': {
+						transform: 'translateX(-150%)',
+					},
+					'100%': {
+						transform: 'translateX(250%)',
+					},
+				},
+			},
+			animation: {
+				skeleton: 'skeleton 1.5s ease-in-out infinite',
+			},
 		},
 	},
 	plugins: [],
