@@ -5,6 +5,23 @@ import type { NormalizedImageData } from '@/services/providers/searchProvider.ty
 import { useAppStore } from '@/store/useAppStore';
 import { copyImageFromUrl } from '@/utils/clipboard';
 
+const MAX_DISPLAY_RETRIES = 3;
+const INITIAL_RETRY_BACKOFF_MS = 1000;
+
+type DisplayLoadState = 'loading' | 'retrying' | 'failed';
+
+function buildRetryDisplayUrl(baseUrl: string, attempt: number): string {
+	try {
+		const url = new URL(baseUrl);
+		url.searchParams.set('retry', String(attempt));
+		url.searchParams.set('t', String(Date.now()));
+		return url.href;
+	} catch {
+		const sep = baseUrl.includes('?') ? '&' : '?';
+		return `${baseUrl}${sep}retry=${attempt}&t=${Date.now()}`;
+	}
+}
+
 type GridImageProps = {
 	image: NormalizedImageData;
 	index: number;
@@ -25,8 +42,25 @@ function GridImageComponent({
 	const [copying, setCopying] = useState(false);
 	const [isCopied, setIsCopied] = useState(false);
 	const [copyErrored, setCopyErrored] = useState(false);
-	const [imageLoadError, setImageLoadError] = useState(false);
+	const [displaySrc, setDisplaySrc] = useState(image.displayUrl);
+	const [retryCount, setRetryCount] = useState(0);
+	const [displayLoadState, setDisplayLoadState] = useState<DisplayLoadState>('loading');
 	const gridImageCellRef = useRef<HTMLDivElement>(null);
+	const retryTimeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+
+	// Reset retry state when the image changes
+	useEffect(() => {
+		setDisplaySrc(image.displayUrl);
+		setRetryCount(0);
+		setDisplayLoadState('loading');
+		setDisplayLoaded(false);
+
+		return () => {
+			if (retryTimeoutRef.current) {
+				clearTimeout(retryTimeoutRef.current);
+			}
+		};
+	}, [image.id, image.displayUrl]);
 
 	// Focus tracking
 	useEffect(() => {
@@ -36,6 +70,22 @@ function GridImageComponent({
 			gridImageCellRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 		}
 	}, [isSelected]);
+
+	const handleDisplayError = (): void => {
+		if (retryCount >= MAX_DISPLAY_RETRIES) {
+			setDisplayLoadState('failed');
+			return;
+		}
+
+		setDisplayLoadState('retrying');
+
+		const delay = INITIAL_RETRY_BACKOFF_MS * 2 ** retryCount;
+		retryTimeoutRef.current = setTimeout(() => {
+			const nextAttempt = retryCount + 1;
+			setRetryCount(nextAttempt);
+			setDisplaySrc(buildRetryDisplayUrl(image.displayUrl, nextAttempt));
+		}, delay);
+	};
 
 	const handleCopyOnEvent = (
 		e: KeyboardEvent<HTMLDivElement> | MouseEvent<HTMLButtonElement>,
@@ -103,16 +153,15 @@ function GridImageComponent({
 
 				{/* Display image */}
 				<img
-					src={image.displayUrl}
+					src={displaySrc}
 					className={`absolute inset-0 w-full h-full object-cover active:cursor-grabbing
 						transition-opacity duration-300 ${displayLoaded ? 'opacity-100' : 'opacity-0 cursor-wait'}`}
 					onLoad={() => {
 						setDisplayLoaded(true);
+						setDisplayLoadState('loading');
 						handleDisplayImageLoad(image.id);
 					}}
-					onError={() => {
-						setImageLoadError(true);
-					}}
+					onError={handleDisplayError}
 					alt={image.title}
 					loading='lazy'
 					draggable
@@ -121,7 +170,7 @@ function GridImageComponent({
 				{/* Loading overlay */}
 				<div
 					className={`absolute inset-0 overflow-hidden pointer-events-none transition-opacity 
-						duration-300 ${displayLoaded || imageLoadError ? 'opacity-0' : 'opacity-100'}`}
+						duration-300 ${displayLoaded || displayLoadState !== 'loading' ? 'opacity-0' : 'opacity-100'}`}
 				>
 					<div
 						className="absolute inset-0 bg-narto-main/30 before:absolute before:inset-y-0
@@ -133,11 +182,13 @@ function GridImageComponent({
 				{/* Error overlay */}
 				<div
 					className={`flex items-center justify-center p-2 backdrop-blur-[1px] text-narto-text bg-narto-error/60 absolute inset-0 overflow-hidden pointer-events-none transition-opacity 
-		duration-300 ${imageLoadError ? 'opacity-100' : 'opacity-0'}`}
+		duration-300 ${displayLoadState === 'retrying' || displayLoadState === 'failed' ? 'opacity-100' : 'opacity-0'}`}
 				>
 					<span className='text-center'>
 						<span className='text-sm [filter:drop-shadow(0_0_0.5px_#111116)]'>💀 </span>
-						<span className='text-xs font-medium font-mono'>Reloading image…</span>
+						<span className='text-xs font-medium font-mono'>
+							{displayLoadState === 'failed' ? 'Failed to load image' : 'Reloading image…'}
+						</span>
 					</span>
 				</div>
 
