@@ -8,7 +8,7 @@ import { copyImageFromUrl } from '@/utils/clipboard';
 const MAX_DISPLAY_RETRIES = 3;
 const INITIAL_RETRY_BACKOFF_MS = 1000;
 
-type DisplayLoadState = 'loading' | 'retrying' | 'failed';
+type DisplayLoadState = 'loading' | 'retrying' | 'failed' | 'loaded';
 
 function buildRetryDisplayUrl(baseUrl: string, attempt: number): string {
 	try {
@@ -47,20 +47,6 @@ function GridImageComponent({
 	const [displayLoadState, setDisplayLoadState] = useState<DisplayLoadState>('loading');
 	const gridImageCellRef = useRef<HTMLDivElement>(null);
 	const retryTimeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-
-	// Reset retry state when the image changes
-	useEffect(() => {
-		setDisplaySrc(image.displayUrl);
-		setRetryCount(0);
-		setDisplayLoadState('loading');
-		setDisplayLoaded(false);
-
-		return () => {
-			if (retryTimeoutRef.current) {
-				clearTimeout(retryTimeoutRef.current);
-			}
-		};
-	}, [image.id, image.displayUrl]);
 
 	// Focus tracking
 	useEffect(() => {
@@ -158,7 +144,7 @@ function GridImageComponent({
 						transition-opacity duration-300 ${displayLoaded ? 'opacity-100' : 'opacity-0 cursor-wait'}`}
 					onLoad={() => {
 						setDisplayLoaded(true);
-						setDisplayLoadState('loading');
+						setDisplayLoadState('loaded');
 						handleDisplayImageLoad(image.id);
 					}}
 					onError={handleDisplayError}
