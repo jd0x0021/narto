@@ -57,6 +57,14 @@ function GridImageComponent({
 		}
 	}, [isSelected]);
 
+	useEffect(() => {
+		return () => {
+			if (retryTimeoutRef.current) {
+				clearTimeout(retryTimeoutRef.current);
+			}
+		};
+	}, []);
+
 	const handleDisplayError = (): void => {
 		if (retryCount >= MAX_DISPLAY_RETRIES) {
 			setDisplayLoadState('failed');
