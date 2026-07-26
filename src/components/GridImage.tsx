@@ -7,6 +7,7 @@ import { copyImageFromUrl } from '@/utils/clipboard';
 
 const MAX_DISPLAY_RETRIES = 3;
 const INITIAL_RETRY_BACKOFF_MS = 1000;
+const RELOADING_IMAGE = 'Reloading image…';
 
 type DisplayLoadState = 'loading' | 'retrying' | 'failed' | 'loaded';
 
@@ -175,13 +176,24 @@ function GridImageComponent({
 
 				{/* Error overlay */}
 				<div
-					className={`flex items-center justify-center p-2 backdrop-blur-[1px] text-narto-text bg-narto-error/60 absolute inset-0 overflow-hidden pointer-events-none transition-opacity 
-		duration-300 ${displayLoadState === 'retrying' || displayLoadState === 'failed' ? 'opacity-100' : 'opacity-0'}`}
+					className={`flex items-center justify-center p-2 backdrop-blur-[1px] text-narto-text bg-narto-error/60 
+						absolute inset-0 overflow-hidden pointer-events-none transition-opacity duration-300
+						${displayLoadState === 'retrying' || displayLoadState === 'failed' ? 'opacity-100' : 'opacity-0'}`}
 				>
 					<span className='text-center'>
 						<span className='text-sm [filter:drop-shadow(0_0_0.5px_#111116)]'>💀 </span>
 						<span className='text-xs font-medium font-mono'>
-							{displayLoadState === 'failed' ? 'Failed to load image' : 'Reloading image…'}
+							{displayLoadState === 'failed'
+								? 'Failed to load image'
+								: RELOADING_IMAGE.split('').map((char, index) => (
+										<span
+											key={index}
+											className='inline-block animate-text-wave'
+											style={{ animationDelay: `${index * 40}ms` }}
+										>
+											{char === ' ' ? '\u00A0' : char}
+										</span>
+									))}
 						</span>
 					</span>
 				</div>
