@@ -25,6 +25,7 @@ function GridImageComponent({
 	const [copying, setCopying] = useState(false);
 	const [isCopied, setIsCopied] = useState(false);
 	const [copyErrored, setCopyErrored] = useState(false);
+	const [imageLoadError, setImageLoadError] = useState(false);
 	const gridImageCellRef = useRef<HTMLDivElement>(null);
 
 	// Focus tracking
@@ -109,6 +110,9 @@ function GridImageComponent({
 						setDisplayLoaded(true);
 						handleDisplayImageLoad(image.id);
 					}}
+					onError={() => {
+						setImageLoadError(true);
+					}}
 					alt={image.title}
 					loading='lazy'
 					draggable
@@ -117,13 +121,24 @@ function GridImageComponent({
 				{/* Loading overlay */}
 				<div
 					className={`absolute inset-0 overflow-hidden pointer-events-none transition-opacity 
-						duration-300 ${displayLoaded ? 'opacity-0' : 'opacity-100'}`}
+						duration-300 ${displayLoaded || imageLoadError ? 'opacity-0' : 'opacity-100'}`}
 				>
 					<div
 						className="absolute inset-0 bg-narto-main/30 before:absolute before:inset-y-0
 						before:left-0 before:w-full before:bg-gradient-to-r before:from-transparent
 						before:via-gray-50/50 before:to-transparent before:animate-skeleton before:content-['']"
 					/>
+				</div>
+
+				{/* Error overlay */}
+				<div
+					className={`flex items-center justify-center p-2 backdrop-blur-[1px] text-narto-text bg-narto-error/60 absolute inset-0 overflow-hidden pointer-events-none transition-opacity 
+		duration-300 ${imageLoadError ? 'opacity-100' : 'opacity-0'}`}
+				>
+					<span className='text-center'>
+						<span className='text-sm [filter:drop-shadow(0_0_0.5px_#111116)]'>💀 </span>
+						<span className='text-xs font-medium font-mono'>Reloading image…</span>
+					</span>
 				</div>
 
 				{/* Copy button shown on hover */}
