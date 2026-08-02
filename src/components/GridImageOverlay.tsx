@@ -48,4 +48,14 @@ function GridImageOverlayComponent({ displayImageLoadState }: GridImageOverlayPr
 	);
 }
 
+/**
+ * Renders the shared visual overlay for grid image loading states.
+ *
+ * This component presents a non-interactive layer that communicates whether an
+ * image is still loading, is being retried after a failure, or has failed to
+ * load entirely. It keeps the overlay transparent for healthy states and uses
+ * lightweight transitions to surface loading animations or error messaging.
+ *
+ * @param displayImageLoadState - The current lifecycle state of the image.
+ */
 export const GridImageOverlay = memo(GridImageOverlayComponent);
