@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 
+import { useAppStore } from '@/store/useAppStore';
+
 const MAX_DISPLAY_RETRIES = 3;
 const INITIAL_RETRY_BACKOFF_MS = 1000;
 
@@ -40,7 +42,9 @@ function buildRetryDisplayUrl(baseUrl: string, retryAttempt: number): string {
  * @returns A stateful controller containing the current image source, load state, and
  * a handler for reacting to image load failures.
  */
-export function useImageRetry(initialUrl: string) {
+export function useImageRetry(imageId: number, initialUrl: string) {
+	const markDisplayImageFailed = useAppStore((s) => s.markDisplayImageFailed);
+
 	const [displayImageSrc, setDisplayImageSrc] = useState(initialUrl);
 	const [retryCount, setRetryCount] = useState(0);
 	const [displayImageLoadState, setDisplayImageLoadState] =
@@ -66,6 +70,7 @@ export function useImageRetry(initialUrl: string) {
 	const handleDisplayImageError = (): void => {
 		if (retryCount >= MAX_DISPLAY_RETRIES) {
 			setDisplayImageLoadState('failed');
+			markDisplayImageFailed(imageId);
 			return;
 		}
 

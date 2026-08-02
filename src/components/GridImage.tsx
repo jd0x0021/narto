@@ -33,7 +33,7 @@ function GridImageComponent({
 		displayImageLoadState,
 		setDisplayImageLoadState,
 		handleDisplayImageError,
-	} = useImageRetry(image.displayUrl);
+	} = useImageRetry(image.id, image.displayUrl);
 
 	// Focus tracking
 	useEffect(() => {

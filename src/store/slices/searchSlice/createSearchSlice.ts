@@ -24,6 +24,7 @@ export const createSearchSlice: AppStateCreator<SearchSlice> = (set, get) =>
 		results: [],
 		status: 'idle',
 		requestId: 0,
+		failedDisplayImageIds: [],
 
 		setInput: (rawInput: string) => {
 			const parsed: ParsedSearchInput = parseSearchInput(rawInput);
@@ -38,7 +39,7 @@ export const createSearchSlice: AppStateCreator<SearchSlice> = (set, get) =>
 			const { query, resolvedCommand, requestId } = get();
 
 			if (!query) {
-				set({ results: [], status: 'idle', selectedGridCell: null });
+				set({ results: [], status: 'idle', selectedGridCell: null, failedDisplayImageIds: [] });
 				return;
 			}
 
@@ -46,7 +47,12 @@ export const createSearchSlice: AppStateCreator<SearchSlice> = (set, get) =>
 			// Each async runSearch call gets its own independent nextId snapshot that persists through the
 			// entire fetch lifecycle, even as the global requestId in the store changes due to new searches.
 			const nextId = requestId + 1;
-			set({ requestId: nextId, status: 'loading', selectedGridCell: null });
+			set({
+				requestId: nextId,
+				status: 'loading',
+				selectedGridCell: null,
+				failedDisplayImageIds: [],
+			});
 
 			try {
 				const data: NormalizedImageData[] = await searchProvider.search(resolvedCommand, query);
@@ -57,7 +63,7 @@ export const createSearchSlice: AppStateCreator<SearchSlice> = (set, get) =>
 				// This allows newer requests to invalidate older in-flight requests.
 				if (get().requestId !== nextId) return;
 
-				set({ results: data, status: 'success' });
+				set({ results: data, status: 'success', failedDisplayImageIds: [] });
 			} catch (err: unknown) {
 				if (get().requestId !== nextId) return;
 
@@ -69,7 +75,29 @@ export const createSearchSlice: AppStateCreator<SearchSlice> = (set, get) =>
 								'An unknown error occurred while fetching results.',
 							);
 
-				set({ status: 'error', error, results: [] });
+				set({ status: 'error', error, results: [], failedDisplayImageIds: [] });
 			}
+		},
+
+		markDisplayImageFailed: (imageId: number) => {
+			const { results, failedDisplayImageIds, status } = get();
+
+			if (status === 'error' || results.length === 0) return;
+
+			if (failedDisplayImageIds.includes(imageId)) return;
+
+			const nextFailedDisplayImageIds = [...failedDisplayImageIds, imageId];
+
+			if (nextFailedDisplayImageIds.length === results.length) {
+				set({
+					status: 'error',
+					error: new SearchProviderError(
+						'network',
+						'Unable to load the ALL the requested images.',
+					),
+				});
+			}
+
+			set({ failedDisplayImageIds: nextFailedDisplayImageIds });
 		},
 	}) satisfies SearchSlice;
