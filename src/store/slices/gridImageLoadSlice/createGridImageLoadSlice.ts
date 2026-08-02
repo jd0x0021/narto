@@ -35,6 +35,7 @@ export const createGridImageLoadSlice: AppStateCreator<GridImageLoadSlice> = (se
 			if (nextFailedDisplayImageIds.length === results.length) {
 				set({
 					status: 'error',
+					isGridPreviewReady: false,
 					error: new SearchProviderError(
 						'network',
 						'Unable to load the ALL the requested images.',
