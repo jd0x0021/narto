@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 
 import { useAppStore } from '@/store/useAppStore';
 
-const MAX_DISPLAY_RETRIES = 3;
+const MAX_DISPLAY_RETRIES = 4;
 const INITIAL_RETRY_BACKOFF_MS = 1000;
 
 export type DisplayImageLoadState = 'loading' | 'retrying' | 'failed' | 'loaded';
