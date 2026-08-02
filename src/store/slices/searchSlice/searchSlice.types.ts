@@ -14,9 +14,7 @@ export type SearchSlice = {
 	status: SearchStatus;
 	error?: SearchProviderError;
 	requestId: number;
-	failedDisplayImageIds: number[];
 
 	setInput: (rawInput: string) => void;
 	runSearch: () => Promise<void>;
-	markDisplayImageFailed: (imageId: number) => void;
 };

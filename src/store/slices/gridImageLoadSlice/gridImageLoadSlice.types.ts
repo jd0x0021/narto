@@ -16,6 +16,12 @@ export type GridImageLoadSlice = {
 	 */
 	isGridDisplayReady: boolean;
 
+	/**
+	 * Tracks the IDs of display images that have failed to load after all the retry attempts.
+	 */
+	failedDisplayImageIds: number[];
+
 	setIsGridPreviewReady: (isGridPreviewReady: boolean) => void;
 	setIsGridDisplayReady: (isGridDisplayReady: boolean) => void;
+	markDisplayImageFailed: (imageId: number) => void;
 };

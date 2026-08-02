@@ -24,7 +24,6 @@ export const createSearchSlice: AppStateCreator<SearchSlice> = (set, get) =>
 		results: [],
 		status: 'idle',
 		requestId: 0,
-		failedDisplayImageIds: [],
 
 		setInput: (rawInput: string) => {
 			const parsed: ParsedSearchInput = parseSearchInput(rawInput);
@@ -77,27 +76,5 @@ export const createSearchSlice: AppStateCreator<SearchSlice> = (set, get) =>
 
 				set({ status: 'error', error, results: [], failedDisplayImageIds: [] });
 			}
-		},
-
-		markDisplayImageFailed: (imageId: number) => {
-			const { results, failedDisplayImageIds, status } = get();
-
-			if (status === 'error' || results.length === 0) return;
-
-			if (failedDisplayImageIds.includes(imageId)) return;
-
-			const nextFailedDisplayImageIds = [...failedDisplayImageIds, imageId];
-
-			if (nextFailedDisplayImageIds.length === results.length) {
-				set({
-					status: 'error',
-					error: new SearchProviderError(
-						'network',
-						'Unable to load the ALL the requested images.',
-					),
-				});
-			}
-
-			set({ failedDisplayImageIds: nextFailedDisplayImageIds });
 		},
 	}) satisfies SearchSlice;
