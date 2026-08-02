@@ -12,7 +12,7 @@ function GridImageOverlayComponent({ displayImageLoadState }: GridImageOverlayPr
 			{/* Loading overlay */}
 			<div
 				className={`absolute inset-0 overflow-hidden pointer-events-none transition-opacity 
-					duration-300 ${displayImageLoadState === 'loaded' || displayImageLoadState !== 'loading' ? 'opacity-0' : 'opacity-100'}`}
+					duration-300 ${displayImageLoadState === 'loading' ? 'opacity-100' : 'opacity-0'}`}
 			>
 				<div
 					className="absolute inset-0 bg-narto-main/30 before:absolute before:inset-y-0
