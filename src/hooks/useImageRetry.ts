@@ -41,7 +41,7 @@ function buildRetryDisplayUrl(baseUrl: string, retryAttempt: number): string {
  * a handler for reacting to image load failures.
  */
 export function useImageRetry(initialUrl: string) {
-	const [displaySrc, setDisplaySrc] = useState(initialUrl);
+	const [displayImageSrc, setDisplayImageSrc] = useState(initialUrl);
 	const [retryCount, setRetryCount] = useState(0);
 	const [displayImageLoadState, setDisplayImageLoadState] =
 		useState<DisplayImageLoadState>('loading');
@@ -75,12 +75,12 @@ export function useImageRetry(initialUrl: string) {
 		retryTimeoutRef.current = setTimeout(() => {
 			const nextRetryAttempt = retryCount + 1;
 			setRetryCount(nextRetryAttempt);
-			setDisplaySrc(buildRetryDisplayUrl(initialUrl, nextRetryAttempt));
+			setDisplayImageSrc(buildRetryDisplayUrl(initialUrl, nextRetryAttempt));
 		}, delay);
 	};
 
 	return {
-		displaySrc,
+		displayImageSrc,
 		displayImageLoadState,
 		setDisplayImageLoadState,
 		handleDisplayImageError,

@@ -28,8 +28,12 @@ function GridImageComponent({
 	const [copyErrored, setCopyErrored] = useState(false);
 	const gridImageCellRef = useRef<HTMLDivElement>(null);
 
-	const { displaySrc, displayImageLoadState, setDisplayImageLoadState, handleDisplayImageError } =
-		useImageRetry(image.displayUrl);
+	const {
+		displayImageSrc,
+		displayImageLoadState,
+		setDisplayImageLoadState,
+		handleDisplayImageError,
+	} = useImageRetry(image.displayUrl);
 
 	// Focus tracking
 	useEffect(() => {
@@ -106,7 +110,7 @@ function GridImageComponent({
 
 				{/* Display image */}
 				<img
-					src={displaySrc}
+					src={displayImageSrc}
 					className={`absolute inset-0 w-full h-full object-cover active:cursor-grabbing transition-opacity
 						duration-300 ${displayImageLoadState === 'loaded' ? 'opacity-100' : 'opacity-0 cursor-wait'}`}
 					onLoad={() => {
