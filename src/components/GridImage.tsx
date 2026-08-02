@@ -1,27 +1,11 @@
 import type { KeyboardEvent, MouseEvent } from 'react';
 import { memo, useEffect, useRef, useState } from 'react';
 
+import { GridImageOverlay } from '@/components/GridImageOverlay';
+import { useImageRetry } from '@/hooks/useImageRetry';
 import type { NormalizedImageData } from '@/services/providers/searchProvider.types';
 import { useAppStore } from '@/store/useAppStore';
 import { copyImageFromUrl } from '@/utils/clipboard';
-
-const MAX_DISPLAY_RETRIES = 3;
-const INITIAL_RETRY_BACKOFF_MS = 1000;
-const RELOADING_IMAGE = 'Reloading image…';
-
-type DisplayLoadState = 'loading' | 'retrying' | 'failed' | 'loaded';
-
-function buildRetryDisplayUrl(baseUrl: string, attempt: number): string {
-	try {
-		const url = new URL(baseUrl);
-		url.searchParams.set('retry', String(attempt));
-		url.searchParams.set('t', String(Date.now()));
-		return url.href;
-	} catch {
-		const sep = baseUrl.includes('?') ? '&' : '?';
-		return `${baseUrl}${sep}retry=${attempt}&t=${Date.now()}`;
-	}
-}
 
 type GridImageProps = {
 	image: NormalizedImageData;
@@ -39,15 +23,19 @@ function GridImageComponent({
 	const isSelected = useAppStore((s) => s.selectedGridCell === index);
 	const setSelectedGridCell = useAppStore((s) => s.setSelectedGridCell);
 
-	const [displayLoaded, setDisplayLoaded] = useState(false);
 	const [copying, setCopying] = useState(false);
 	const [isCopied, setIsCopied] = useState(false);
 	const [copyErrored, setCopyErrored] = useState(false);
-	const [displaySrc, setDisplaySrc] = useState(image.displayUrl);
-	const [retryCount, setRetryCount] = useState(0);
-	const [displayLoadState, setDisplayLoadState] = useState<DisplayLoadState>('loading');
 	const gridImageCellRef = useRef<HTMLDivElement>(null);
-	const retryTimeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+
+	const {
+		displayImageLoaded,
+		setDisplayImageLoaded,
+		displaySrc,
+		displayImageLoadState,
+		setDisplayImageLoadState,
+		handleDisplayImageError,
+	} = useImageRetry(image.displayUrl);
 
 	// Focus tracking
 	useEffect(() => {
@@ -57,30 +45,6 @@ function GridImageComponent({
 			gridImageCellRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 		}
 	}, [isSelected]);
-
-	useEffect(() => {
-		return () => {
-			if (retryTimeoutRef.current) {
-				clearTimeout(retryTimeoutRef.current);
-			}
-		};
-	}, []);
-
-	const handleDisplayError = (): void => {
-		if (retryCount >= MAX_DISPLAY_RETRIES) {
-			setDisplayLoadState('failed');
-			return;
-		}
-
-		setDisplayLoadState('retrying');
-
-		const delay = INITIAL_RETRY_BACKOFF_MS * 2 ** retryCount;
-		retryTimeoutRef.current = setTimeout(() => {
-			const nextAttempt = retryCount + 1;
-			setRetryCount(nextAttempt);
-			setDisplaySrc(buildRetryDisplayUrl(image.displayUrl, nextAttempt));
-		}, delay);
-	};
 
 	const handleCopyOnEvent = (
 		e: KeyboardEvent<HTMLDivElement> | MouseEvent<HTMLButtonElement>,
@@ -140,7 +104,7 @@ function GridImageComponent({
 					src={image.previewUrl}
 					alt={`Preview of ${image.title}`}
 					className={`absolute inset-0 h-full w-full object-cover blur-sm transition-opacity duration-300
-						${displayLoaded ? 'opacity-0' : 'opacity-100'}`}
+						${displayImageLoaded ? 'opacity-0' : 'opacity-100'}`}
 					onLoad={() => {
 						handlePreviewImageLoad(image.id);
 					}}
@@ -150,53 +114,23 @@ function GridImageComponent({
 				<img
 					src={displaySrc}
 					className={`absolute inset-0 w-full h-full object-cover active:cursor-grabbing
-						transition-opacity duration-300 ${displayLoaded ? 'opacity-100' : 'opacity-0 cursor-wait'}`}
+						transition-opacity duration-300 ${displayImageLoaded ? 'opacity-100' : 'opacity-0 cursor-wait'}`}
 					onLoad={() => {
-						setDisplayLoaded(true);
-						setDisplayLoadState('loaded');
+						setDisplayImageLoaded(true);
+						setDisplayImageLoadState('loaded');
 						handleDisplayImageLoad(image.id);
 					}}
-					onError={handleDisplayError}
+					onError={handleDisplayImageError}
 					alt={image.title}
 					loading='lazy'
 					draggable
 				/>
 
-				{/* Loading overlay */}
-				<div
-					className={`absolute inset-0 overflow-hidden pointer-events-none transition-opacity 
-						duration-300 ${displayLoaded || displayLoadState !== 'loading' ? 'opacity-0' : 'opacity-100'}`}
-				>
-					<div
-						className="absolute inset-0 bg-narto-main/30 before:absolute before:inset-y-0
-						before:left-0 before:w-full before:bg-gradient-to-r before:from-transparent
-						before:via-gray-50/50 before:to-transparent before:animate-skeleton before:content-['']"
-					/>
-				</div>
-
-				{/* Error overlay */}
-				<div
-					className={`flex items-center justify-center p-2 backdrop-blur-[1px] text-narto-text bg-narto-error/60 
-						absolute inset-0 overflow-hidden pointer-events-none transition-opacity duration-300
-						${displayLoadState === 'retrying' || displayLoadState === 'failed' ? 'opacity-100' : 'opacity-0'}`}
-				>
-					<span className='text-center'>
-						<span className='text-sm [filter:drop-shadow(0_0_0.5px_#111116)]'>💀 </span>
-						<span className='text-xs font-medium font-mono'>
-							{displayLoadState === 'failed'
-								? 'Failed to load image'
-								: RELOADING_IMAGE.split('').map((char, index) => (
-										<span
-											key={index}
-											className='inline-block animate-text-wave'
-											style={{ animationDelay: `${index * 40}ms` }}
-										>
-											{char === ' ' ? '\u00A0' : char}
-										</span>
-									))}
-						</span>
-					</span>
-				</div>
+				{/* Image Overlay */}
+				<GridImageOverlay
+					displayImageLoaded={displayImageLoaded}
+					displayImageLoadState={displayImageLoadState}
+				/>
 
 				{/* Copy button shown on hover */}
 				<button
