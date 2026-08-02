@@ -28,14 +28,8 @@ function GridImageComponent({
 	const [copyErrored, setCopyErrored] = useState(false);
 	const gridImageCellRef = useRef<HTMLDivElement>(null);
 
-	const {
-		displayImageLoaded,
-		setDisplayImageLoaded,
-		displaySrc,
-		displayImageLoadState,
-		setDisplayImageLoadState,
-		handleDisplayImageError,
-	} = useImageRetry(image.displayUrl);
+	const { displaySrc, displayImageLoadState, setDisplayImageLoadState, handleDisplayImageError } =
+		useImageRetry(image.displayUrl);
 
 	// Focus tracking
 	useEffect(() => {
@@ -104,7 +98,7 @@ function GridImageComponent({
 					src={image.previewUrl}
 					alt={`Preview of ${image.title}`}
 					className={`absolute inset-0 h-full w-full object-cover blur-sm transition-opacity duration-300
-						${displayImageLoaded ? 'opacity-0' : 'opacity-100'}`}
+						${displayImageLoadState === 'loaded' ? 'opacity-0' : 'opacity-100'}`}
 					onLoad={() => {
 						handlePreviewImageLoad(image.id);
 					}}
@@ -113,10 +107,9 @@ function GridImageComponent({
 				{/* Display image */}
 				<img
 					src={displaySrc}
-					className={`absolute inset-0 w-full h-full object-cover active:cursor-grabbing
-						transition-opacity duration-300 ${displayImageLoaded ? 'opacity-100' : 'opacity-0 cursor-wait'}`}
+					className={`absolute inset-0 w-full h-full object-cover active:cursor-grabbing transition-opacity
+						duration-300 ${displayImageLoadState === 'loaded' ? 'opacity-100' : 'opacity-0 cursor-wait'}`}
 					onLoad={() => {
-						setDisplayImageLoaded(true);
 						setDisplayImageLoadState('loaded');
 						handleDisplayImageLoad(image.id);
 					}}
@@ -127,10 +120,7 @@ function GridImageComponent({
 				/>
 
 				{/* Image Overlay */}
-				<GridImageOverlay
-					displayImageLoaded={displayImageLoaded}
-					displayImageLoadState={displayImageLoadState}
-				/>
+				<GridImageOverlay displayImageLoadState={displayImageLoadState} />
 
 				{/* Copy button shown on hover */}
 				<button

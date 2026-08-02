@@ -3,20 +3,16 @@ import { memo } from 'react';
 import type { DisplayImageLoadState } from '@/hooks/useImageRetry';
 
 export type GridImageOverlayProps = {
-	displayImageLoaded: boolean;
 	displayImageLoadState: DisplayImageLoadState;
 };
 
-function GridImageOverlayComponent({
-	displayImageLoaded,
-	displayImageLoadState,
-}: GridImageOverlayProps) {
+function GridImageOverlayComponent({ displayImageLoadState }: GridImageOverlayProps) {
 	return (
 		<>
 			{/* Loading overlay */}
 			<div
 				className={`absolute inset-0 overflow-hidden pointer-events-none transition-opacity 
-					duration-300 ${displayImageLoaded || displayImageLoadState !== 'loading' ? 'opacity-0' : 'opacity-100'}`}
+					duration-300 ${displayImageLoadState === 'loaded' || displayImageLoadState !== 'loading' ? 'opacity-0' : 'opacity-100'}`}
 			>
 				<div
 					className="absolute inset-0 bg-narto-main/30 before:absolute before:inset-y-0

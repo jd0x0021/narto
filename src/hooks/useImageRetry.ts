@@ -18,7 +18,6 @@ function buildRetryDisplayUrl(baseUrl: string, retryAttempt: number): string {
 }
 
 export function useImageRetry(initialUrl: string) {
-	const [displayImageLoaded, setDisplayImageLoaded] = useState(false);
 	const [displaySrc, setDisplaySrc] = useState(initialUrl);
 	const [retryCount, setRetryCount] = useState(0);
 	const [displayImageLoadState, setDisplayImageLoadState] =
@@ -50,8 +49,6 @@ export function useImageRetry(initialUrl: string) {
 	};
 
 	return {
-		displayImageLoaded,
-		setDisplayImageLoaded,
 		displaySrc,
 		displayImageLoadState,
 		setDisplayImageLoadState,
