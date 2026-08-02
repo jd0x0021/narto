@@ -24,7 +24,7 @@ export const createGridImageLoadSlice: AppStateCreator<GridImageLoadSlice> = (se
 			set({ isGridDisplayReady });
 		},
 
-		markDisplayImageFailed: (imageId: number) => {
+		setDisplayImageAsFailed: (imageId: number) => {
 			const { results, status, failedDisplayImageIds } = get();
 
 			if (status === 'error' || results.length === 0) return;

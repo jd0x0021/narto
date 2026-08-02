@@ -43,7 +43,7 @@ function buildRetryDisplayUrl(baseUrl: string, retryAttempt: number): string {
  * a handler for reacting to image load failures.
  */
 export function useImageRetry(imageId: number, initialUrl: string) {
-	const markDisplayImageFailed = useAppStore((s) => s.markDisplayImageFailed);
+	const setDisplayImageAsFailed = useAppStore((s) => s.setDisplayImageAsFailed);
 
 	const [displayImageSrc, setDisplayImageSrc] = useState(initialUrl);
 	const [retryCount, setRetryCount] = useState(0);
@@ -70,7 +70,7 @@ export function useImageRetry(imageId: number, initialUrl: string) {
 	const handleDisplayImageError = (): void => {
 		if (retryCount >= MAX_DISPLAY_RETRIES) {
 			setDisplayImageLoadState('failed');
-			markDisplayImageFailed(imageId);
+			setDisplayImageAsFailed(imageId);
 			return;
 		}
 
