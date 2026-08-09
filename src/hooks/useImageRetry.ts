@@ -25,8 +25,8 @@ function buildRetryDisplayUrl(baseUrl: string, retryAttempt: number): string {
 		url.searchParams.set('t', String(Date.now()));
 		return url.href;
 	} catch {
-		const sep = baseUrl.includes('?') ? '&' : '?';
-		return `${baseUrl}${sep}retry=${retryAttempt}&t=${Date.now()}`;
+		const querySeparator = baseUrl.includes('?') ? '&' : '?';
+		return `${baseUrl}${querySeparator}retry=${retryAttempt}&t=${Date.now()}`;
 	}
 }
 
