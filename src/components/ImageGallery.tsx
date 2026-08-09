@@ -12,6 +12,10 @@ export function ImageGallery() {
 	const status = useAppStore((s) => s.status);
 	const isGridPreviewReady = useAppStore((s) => s.isGridPreviewReady);
 	const searchError = useAppStore((s) => (s.status === 'error' && s.error ? s.error : undefined));
+	const allImagesFailedToLoad = useAppStore(
+		(s) => s.failedDisplayImageIds.length === s.results.length,
+	);
+
 	const handlePreviewImageLoad = useGridPreviewLoadState();
 	const handleDisplayImageLoad = useGridDisplayLoadState();
 
@@ -19,7 +23,10 @@ export function ImageGallery() {
 		return <div></div>;
 	}
 
-	if (searchError) {
+	// Show the full-page error when there is a search-related error and none of the display images loaded
+	// successfully. If at least one image loaded, keep the MasonryGrid visible (i.e., do not render the full-page
+	// error state) so users can still view the successfully loaded results and per-image error states.
+	if (searchError && allImagesFailedToLoad) {
 		return (
 			<ResultsFallbackState fallbackState='error' message={searchError.message} addColoredMask />
 		);
@@ -29,12 +36,14 @@ export function ImageGallery() {
 		return <ResultsFallbackState fallbackState='empty' message={query} />;
 	}
 
+	// Render the MasonryGrid as long as one or more display images loaded successfully.
+	// Images that failed to load are still rendered and shows their per-image error state.
 	return (
 		<div
 			className={`flex-1 overflow-x-hidden scrollbar-hidden relative 
 				${
-					// This is to avoid layout shift when preview images are loading (this
-					// is the spacing between the SearchInput, and the ImageGallery components)
+					// Keep the top margin stable and avoid layout shifts when preview images are loading
+					// (this is the spacing between the SearchInput, and the ImageGallery components)
 					isGridPreviewReady ? 'mt-2.5' : ''
 				}`}
 		>

@@ -25,24 +25,23 @@ export const createGridImageLoadSlice: AppStateCreator<GridImageLoadSlice> = (se
 		},
 
 		setDisplayImageAsFailed: (imageId: number) => {
-			const { results, status, failedDisplayImageIds } = get();
+			const { results, failedDisplayImageIds } = get();
 
-			if (status === 'error' || results.length === 0) return;
 			if (failedDisplayImageIds.includes(imageId)) return;
 
 			const nextFailedDisplayImageIds = [...failedDisplayImageIds, imageId];
+			const allImagesFailedToLoad = nextFailedDisplayImageIds.length === results.length;
 
-			if (nextFailedDisplayImageIds.length === results.length) {
-				set({
-					status: 'error',
-					isGridPreviewReady: false,
-					error: new SearchProviderError(
-						'network',
-						'Unable to load the ALL the requested images.',
-					),
-				});
-			}
-
-			set({ failedDisplayImageIds: nextFailedDisplayImageIds });
+			set({
+				status: 'error',
+				isGridPreviewReady: false,
+				failedDisplayImageIds: nextFailedDisplayImageIds,
+				error: new SearchProviderError(
+					'network',
+					allImagesFailedToLoad
+						? 'Unable to load ALL the requested images.'
+						: 'Unable to load at least one image.',
+				),
+			});
 		},
 	}) satisfies GridImageLoadSlice;
