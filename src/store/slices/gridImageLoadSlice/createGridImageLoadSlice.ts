@@ -34,7 +34,9 @@ export const createGridImageLoadSlice: AppStateCreator<GridImageLoadSlice> = (se
 
 			set({
 				status: 'error',
-				isGridPreviewReady: false,
+				// reset preview readiness so the full-page error state gets displayed instead of showing
+				// all the failed preview images (isGridPreviewReady helps stabilize the full-page error UI)
+				isGridPreviewReady: !allImagesFailedToLoad,
 				failedDisplayImageIds: nextFailedDisplayImageIds,
 				error: new SearchProviderError(
 					'network',
