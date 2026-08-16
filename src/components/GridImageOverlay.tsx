@@ -6,6 +6,15 @@ export type GridImageOverlayProps = {
 	displayImageLoadState: DisplayImageLoadState;
 };
 
+/**
+ * Renders the shared visual overlay for grid image loading states.
+ *
+ * Displays a non-interactive layer that communicates whether an image is still
+ * loading, is being retried after a failure, or has failed to load entirely.
+ * Uses lightweight transitions to surface loading animations or error messaging.
+ *
+ * @param displayImageLoadState - The current lifecycle state of the image.
+ */
 function GridImageOverlayComponent({ displayImageLoadState }: GridImageOverlayProps) {
 	return (
 		<>
