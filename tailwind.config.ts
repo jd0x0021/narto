@@ -38,9 +38,18 @@ export default {
 						transform: 'translateX(250%)',
 					},
 				},
+				textWave: {
+					'0%, 60%, 100%': {
+						transform: 'translateY(0)',
+					},
+					'30%': {
+						transform: 'translateY(-6px)',
+					},
+				},
 			},
 			animation: {
 				skeleton: 'skeleton 1.5s ease-in-out infinite',
+				'text-wave': 'textWave 1.2s ease-in-out infinite',
 			},
 		},
 	},

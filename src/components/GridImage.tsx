@@ -1,6 +1,8 @@
 import type { KeyboardEvent, MouseEvent } from 'react';
 import { memo, useEffect, useRef, useState } from 'react';
 
+import { GridImageOverlay } from '@/components/GridImageOverlay';
+import { useImageRetry } from '@/hooks/useImageRetry';
 import type { NormalizedImageData } from '@/services/providers/searchProvider.types';
 import { useAppStore } from '@/store/useAppStore';
 import { copyImageFromUrl } from '@/utils/clipboard';
@@ -21,11 +23,17 @@ function GridImageComponent({
 	const isSelected = useAppStore((s) => s.selectedGridCell === index);
 	const setSelectedGridCell = useAppStore((s) => s.setSelectedGridCell);
 
-	const [displayLoaded, setDisplayLoaded] = useState(false);
 	const [copying, setCopying] = useState(false);
 	const [isCopied, setIsCopied] = useState(false);
 	const [copyErrored, setCopyErrored] = useState(false);
 	const gridImageCellRef = useRef<HTMLDivElement>(null);
+
+	const {
+		displayImageSrc,
+		displayImageLoadState,
+		setDisplayImageLoadState,
+		handleDisplayImageError,
+	} = useImageRetry(image.id, image.displayUrl);
 
 	// Focus tracking
 	useEffect(() => {
@@ -94,7 +102,7 @@ function GridImageComponent({
 					src={image.previewUrl}
 					alt={`Preview of ${image.title}`}
 					className={`absolute inset-0 h-full w-full object-cover blur-sm transition-opacity duration-300
-						${displayLoaded ? 'opacity-0' : 'opacity-100'}`}
+						${displayImageLoadState === 'loaded' ? 'opacity-0' : 'opacity-100'}`}
 					onLoad={() => {
 						handlePreviewImageLoad(image.id);
 					}}
@@ -102,29 +110,21 @@ function GridImageComponent({
 
 				{/* Display image */}
 				<img
-					src={image.displayUrl}
-					className={`absolute inset-0 w-full h-full object-cover active:cursor-grabbing
-						transition-opacity duration-300 ${displayLoaded ? 'opacity-100' : 'opacity-0 cursor-wait'}`}
+					src={displayImageSrc}
+					className={`absolute inset-0 w-full h-full object-cover active:cursor-grabbing transition-opacity
+						duration-300 ${displayImageLoadState === 'loaded' ? 'opacity-100' : 'opacity-0 cursor-wait'}`}
 					onLoad={() => {
-						setDisplayLoaded(true);
+						setDisplayImageLoadState('loaded');
 						handleDisplayImageLoad(image.id);
 					}}
+					onError={handleDisplayImageError}
 					alt={image.title}
 					loading='lazy'
 					draggable
 				/>
 
-				{/* Loading overlay */}
-				<div
-					className={`absolute inset-0 overflow-hidden pointer-events-none transition-opacity 
-						duration-300 ${displayLoaded ? 'opacity-0' : 'opacity-100'}`}
-				>
-					<div
-						className="absolute inset-0 bg-narto-main/30 before:absolute before:inset-y-0
-						before:left-0 before:w-full before:bg-gradient-to-r before:from-transparent
-						before:via-gray-50/50 before:to-transparent before:animate-skeleton before:content-['']"
-					/>
-				</div>
+				{/* Image Overlay */}
+				<GridImageOverlay displayImageLoadState={displayImageLoadState} />
 
 				{/* Copy button shown on hover */}
 				<button

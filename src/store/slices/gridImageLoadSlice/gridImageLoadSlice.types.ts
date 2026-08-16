@@ -16,6 +16,23 @@ export type GridImageLoadSlice = {
 	 */
 	isGridDisplayReady: boolean;
 
+	/**
+	 * Tracks the IDs of display images that have failed to load after all the retry attempts.
+	 */
+	failedDisplayImageIds: number[];
+
 	setIsGridPreviewReady: (isGridPreviewReady: boolean) => void;
 	setIsGridDisplayReady: (isGridDisplayReady: boolean) => void;
+
+	/**
+	 * Records a display image that could not be loaded after its retry budget is exhausted.
+	 *
+	 * This is used to mark a specific image as permanently failed so the UI can suppress further
+	 * loading attempts and surface a fallback state for that image. If the set of failed display
+	 * images grows to match the full current result set, the search state is also updated
+	 * to an error state to reflect that the grid can no longer be rendered successfully.
+	 *
+	 * @param imageId - The unique identifier of the display image that failed to load.
+	 */
+	setDisplayImageAsFailed: (imageId: number) => void;
 };

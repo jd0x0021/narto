@@ -29,9 +29,16 @@ NARTO is a keyboard-first meme, GIF, and sticker discovery tool delivered as a C
    - `↑` from top row returns focus to the search input
    - `Enter` on a focused grid item selects/copies the highest-quality available asset while keeping the popup open
    - `Esc` closes the popup (standard extension dismissal behavior)
-- Blur-preview loading:
+- Progressive image loading:
    - Render blur preview immediately
    - Load display image afterward and replace without layout shift
+   - Support retry-based display image loading with exponential backoff and cache-busting URLs
+   - Show per-image loading, retrying, and failed overlays on grid cells
+- Search-related error handling and fallback states:
+   - Search-level errors are reflected in the header status indicator
+   - Provider clients should handle HTTP, schema, and network errors cleanly before normalization
+   - If **all** display images fail to load, replace the image gallery with a full-page error state
+   - If **some** images fail but others loaded successfully, keep the image gallery visible and show per-image error overlays on the failed grid cells
 - Copy and drag-and-drop behavior:
    - Copy highest-quality available image for selection
    - Drag highest-quality available image so drop targets like Messenger/Slack/Discord accept it
@@ -54,7 +61,8 @@ High-level responsibilities:
    - Own rendering, styling, focus management, and keyboard event wiring.
    - Must not perform API calls or implement Klipy endpoint logic.
 - **State (Zustand store)**
-   - Own the search input state (`rawInput`, `resolvedCommand`, `query`), normalized results, selection index, command menu slice state/actions, grid navigation, and fetch status (`useAppStore` composes slices).
+   - Own the search input state (`rawInput`, `resolvedCommand`, `query`), normalized results, selection index, command menu slice state/actions, grid navigation, fetch status, and image-loading lifecycle state (`useAppStore` composes slices).
+   - Track preview/display readiness and failed display-image IDs so the UI can render progressive loading states, retry progress, and image gallery-level fallback states.
    - Store only normalized/internal models (never raw API payloads).
 - **Services (providers)**
    - Own all Klipy network logic behind typed provider interfaces.
@@ -78,11 +86,14 @@ Expected main directories (align with implementation plan):
    - `Header.tsx`: static header (`NARTO`, status indicator, version)
    - `SearchInput.tsx`: command-aware input, debounced trigger wiring, command highlighting visuals, keyboard focus behavior; opens the command menu when appropriate
    - `CommandMenu.tsx`: command menu listbox (valid commands + descriptions); selection is driven by the command menu slice
-   - `ImageGallery.tsx`: chooses between empty state and `MasonryGrid` based on normalized results/state
+   - `ImageGallery.tsx`: chooses between empty state, full-page error state, and `MasonryGrid` based on normalized results and image-load failures
    - `MasonryGrid.tsx`: 3-column absolute-positioned masonry layout + arrow-key navigation logic
    - `GridImage.tsx`: one result tile (blur preview, display image load, hover/focus/selected visuals, copy on Enter, drag support)
+   - `GridImageOverlay.tsx`: visual overlay for loading, retrying, and failed display-image states
    - `Footer.tsx`: keyboard instruction row (arrows, `Enter`, `Esc`)
    - `PopupLayout.tsx`: composes header/main/footer
+- `src/hooks/`
+   - `useImageRetry.ts`: manages display-image retries, cache-busting URLs, and the `DisplayImageLoadState` lifecycle
 - `src/services/providers/`
    - `klipyClient.ts`: HTTP client, base URL, API key handling, shared request params
    - `memeSearchProvider.ts`: static meme search provider
@@ -93,7 +104,8 @@ Expected main directories (align with implementation plan):
    - `slices/commandMenuSlice/`: command menu selection and applying a chosen command to the input
    - `slices/gridNavigationSlice/`: grid focus/selection navigation state + actions for arrow-key movement (inside the grid) and input/grid focus handoff
    - `slices/searchInputKeyDownSlice/`: centralized mode-aware (command menu, and search mode) keydown handling for the search input
-   - `slices/searchSlice/`: parsed input fields, `runSearch`, results, request cancellation
+   - `slices/searchSlice/`: parsed input fields, `runSearch`, results, request cancellation, and search-level error state
+   - `slices/gridImageLoadSlice/`: grid preview/display readiness, failed-image tracking, and image-load error state
 - `src/utils/`
    - `debounce.ts`: reusable debounce helper (with `cancel`)
    - `clipboard.ts`: clipboard copy utilities (image/URL fallback behavior centralized)
@@ -120,8 +132,10 @@ Expected main directories (align with implementation plan):
    - Footer
 - **Pixel and behavior constraints**
    - Pixel-identical reproduction of the provided UI reference states is a primary requirement.
-   - No spinners and no layout shifts.
+   - No layout shifts.
    - Blur preview must appear immediately, then swap to the display image without changing tile dimensions.
+   - Display images transition through loading, retrying, and failed states; retrying shows an animated reload message, and failed display images show an error overlay.
+   - Search-related errors are surfaced in the header status indicator, while gallery-level error handling differs based on whether **all** images or only **some** images failed to load.
 - **Masonry Grid Rules**
    - Exactly **3 columns** always.
    - Use absolute positioning within a `position: relative` container.
