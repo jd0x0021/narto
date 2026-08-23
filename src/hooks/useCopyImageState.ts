@@ -31,7 +31,7 @@ export function useCopyImageState(highResUrl: string, format: FileFormatType) {
 	}, []);
 
 	/**
-	 * Starts copying the image while preserving the parent gallery item's event behavior.
+	 * Starts copying the image when an event is triggered.
 	 *
 	 * @param e The keyboard or pointer event that initiated the copy action.
 	 */
