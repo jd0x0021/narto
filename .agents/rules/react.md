@@ -35,6 +35,16 @@ Enforce React best practices for functional components, hooks, and component arc
 - Use `React.StrictMode`-dependent double-effect assumptions for extension popup lifecycle.
 - Render loading spinners or skeletons that shift layout (use blur preview + fixed tile sizing).
 
+## React Hooks
+
+- Extract logic into a custom hook when it represents **reusable stateful behavior, side effects, subscriptions, or complex interaction logic**—not merely because a component is getting large.
+- When refactoring JSX into a component, **also extract its logic into a custom hook** if that logic is complex, stateful, effect-heavy, or conceptually independent from the UI.
+- Keep hooks focused on **one cohesive responsibility** and name them with a `use` prefix that describes the behavior (e.g. `useImageRetry`).
+- Do not create a hook solely to wrap trivial calculations or simple event handlers that are clearer inline.
+- Prefer hooks for **behavior**, components for **UI**. The component should primarily consume hook state/actions and render the UI.
+- Follow React Hooks rules: call hooks only at the top level of React components or custom hooks; never conditionally or inside loops.
+- Avoid hooks that unnecessarily mirror props/state or introduce extra effects when derived values or event handlers are sufficient.
+
 ## File Structure
 
 - `src/components/<Name>.tsx` — UI + local ephemeral state (`useState`) only.
