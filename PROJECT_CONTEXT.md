@@ -255,9 +255,11 @@ Mapping rules:
    - Keep popup open after copy.
    - Selection unchanged.
 - **Copy choice**
-   - Prefer copying actual image data (PNG for memes, GIF for GIFs) when clipboard image writing is supported.
-   - If clipboard image writing is not supported, fallback to copying the asset URL.
-   - Centralize this in `src/utils/clipboard.ts`.
+   - GIFs are copied to the clipboard as URLs.
+   - For non-GIF assets, fetch the image and convert non-PNG blobs to PNG before writing image data to clipboard.
+   - Use `ClipboardItem` and `navigator.clipboard.write` when we can copy the image to clipboard; otherwise copy the image's URL.
+   - If image fetching, decoding, conversion, or binary clipboard writing fails, as a fallback, attempt to copy the image's URL to clipboard; propagate the error if that fallback also fails.
+   - Centralize this functionality in `src/utils/clipboard.ts`.
 - **Drag**
    - Draggable tiles must provide data for chat targets to accept drops.
    - Use the highest-quality URL for drag in WebP format.
