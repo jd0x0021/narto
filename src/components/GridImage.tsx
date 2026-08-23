@@ -21,6 +21,8 @@ function GridImageComponent({
 	handlePreviewImageLoad,
 	handleDisplayImageLoad,
 }: GridImageProps) {
+	const gridImageCellRef = useRef<HTMLDivElement>(null);
+
 	const isSelected = useAppStore((s) => s.selectedGridCell === index);
 	const setSelectedGridCell = useAppStore((s) => s.setSelectedGridCell);
 
@@ -28,7 +30,6 @@ function GridImageComponent({
 		image.highResUrl,
 		image.format,
 	);
-	const gridImageCellRef = useRef<HTMLDivElement>(null);
 
 	const {
 		displayImageSrc,
