@@ -9,6 +9,7 @@ Enforce Tailwind CSS utility-first styling, class conventions, and responsive de
 ## MUST
 
 - Use Tailwind utility classes in JSX for layout, spacing, typography, colors.
+- Strictly use Tailwind classes unless a style value is computed at runtime; use the `style` attribute for runtime-computed styles.
 - Encode design tokens (NARTO palette, radii, font sizes) in `tailwind.config` theme `extend`—not scattered magic numbers in JSX when repeated.
 - Use `cn()` (e.g. `clsx` + `tailwind-merge`) for conditional class strings on interactive states (focus, selected, hover).
 - Respect popup dimensions: avoid `100vw`/`100vh` assumptions; use max-width/height suitable for extension popup.
