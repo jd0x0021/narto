@@ -5,6 +5,7 @@
 * Write concise, meaningful TSDoc for public/exported APIs and non-obvious behavior.
 * Explain **why** something exists when the reason is not obvious from the code; don't merely restate the implementation.
 * Use tags such as `@param`, `@returns`, and `@throws` only when they provide useful information.
+* For functions/components with multiple props or parameters, document each prop/parameter with its own `@param` tag. Do not use a single `@param props` tag to encompass multiple props.
 * Never invent behavior, constraints, or guarantees not supported by the code.
 
 ## 2. Inline Comments
