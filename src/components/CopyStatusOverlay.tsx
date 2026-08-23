@@ -8,7 +8,7 @@ type CopyStatusOverlayProps = {
 };
 
 /**
- * Displays the current status of an image copy operation over the image.
+ * Displays the current status of an image copy operation over the grid image.
  *
  * @param copyState The current state of the copy operation.
  * @param format The file format for the copied content.

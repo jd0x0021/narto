@@ -61,7 +61,7 @@ export async function copyImageFromUrl(url: string, mimeType: string): Promise<b
 			await navigator.clipboard.writeText(url);
 			return false;
 		} catch (e: unknown) {
-			console.error('Failed to copy the fallback URL to clipboard :(', e);
+			console.error("Failed to copy the image's URL to clipboard :(", e);
 			throw e;
 		}
 	}
