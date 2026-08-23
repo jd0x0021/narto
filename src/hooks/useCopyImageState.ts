@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from 'react';
 import type { FileFormatType } from '@/services/providers/searchProvider.types';
 import { copyImageFromUrl } from '@/utils/clipboard';
 
+export type CopyImageState = 'idle' | 'copying' | 'copied' | 'error';
+
 /**
  * Manages copy-to-clipboard state and behavior for a grid image.
  *
@@ -14,10 +16,8 @@ import { copyImageFromUrl } from '@/utils/clipboard';
  * @returns Copy state and an event handler for starting a copy operation.
  */
 export function useCopyImageState(highResUrl: string, format: FileFormatType) {
-	const [copying, setCopying] = useState(false);
-	const [isCopied, setIsCopied] = useState(false);
+	const [copyState, setCopyState] = useState<CopyImageState>('idle');
 	const [copiedAsFile, setCopiedAsFile] = useState(false);
-	const [copyErrored, setCopyErrored] = useState(false);
 
 	const copiedTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 	const errorTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -42,29 +42,25 @@ export function useCopyImageState(highResUrl: string, format: FileFormatType) {
 
 		const handleCopy = async (): Promise<void> => {
 			try {
-				setCopying(true);
-				setCopyErrored(false);
-				setIsCopied(false);
+				setCopyState('copying');
 				setCopiedAsFile(false);
 				const copiedFile = await copyImageFromUrl(highResUrl, format);
-				setCopying(false);
-				setIsCopied(true);
+				setCopyState('copied');
 				setCopiedAsFile(copiedFile);
 
 				if (copiedTimeoutRef.current) clearTimeout(copiedTimeoutRef.current);
 
 				copiedTimeoutRef.current = setTimeout(() => {
-					setIsCopied(false);
+					setCopyState('idle');
 				}, 2000);
 			} catch {
-				setIsCopied(false);
+				setCopyState('error');
 				setCopiedAsFile(false);
-				setCopyErrored(true);
-				setCopying(false);
 
 				if (errorTimeoutRef.current) clearTimeout(errorTimeoutRef.current);
+
 				errorTimeoutRef.current = setTimeout(() => {
-					setCopyErrored(false);
+					setCopyState('idle');
 				}, 2000);
 			}
 		};
@@ -72,5 +68,5 @@ export function useCopyImageState(highResUrl: string, format: FileFormatType) {
 		void handleCopy();
 	};
 
-	return { copying, isCopied, copiedAsFile, copyErrored, handleCopyOnEvent };
+	return { copyState, copiedAsFile, handleCopyOnEvent };
 }

@@ -1,17 +1,19 @@
 import type { MouseEvent } from 'react';
 
+import type { CopyImageState } from '@/hooks/useCopyImageState';
+
 type CopyImageButtonProps = {
-	copying: boolean;
+	copyState: CopyImageState;
 	onCopy: (e: MouseEvent<HTMLButtonElement>) => void;
 };
 
 /**
  * Provides the hover-revealed button that copies the image to clipboard.
  *
- * @param copying Whether a copy operation is currently in progress.
+ * @param copyState The current state of the copy operation.
  * @param onCopy Event handler for starting the copy operation.
  */
-export function CopyImageButton({ copying, onCopy }: CopyImageButtonProps) {
+export function CopyImageButton({ copyState, onCopy }: CopyImageButtonProps) {
 	return (
 		<button
 			type='button'
@@ -19,7 +21,7 @@ export function CopyImageButton({ copying, onCopy }: CopyImageButtonProps) {
 			aria-label='Copy image'
 			className={`flex items-center gap-1 pointer-events-auto absolute right-2 bottom-2 rounded-md  
 				bg-narto-accent/90 px-2 py-1 text-xs text-narto-text transition-opacity duration-200 ease-out
-				${copying ? 'opacity-0 pointer-events-none' : 'opacity-0 group-hover:opacity-100 hover:bg-narto-accent'}`}
+				${copyState === 'copying' ? 'opacity-0 pointer-events-none' : 'opacity-0 group-hover:opacity-100 hover:bg-narto-accent'}`}
 			onClick={onCopy}
 		>
 			<svg
