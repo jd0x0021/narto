@@ -5,6 +5,12 @@ type CopyImageButtonProps = {
 	onCopy: (e: MouseEvent<HTMLButtonElement>) => void;
 };
 
+/**
+ * Provides the hover-revealed button that copies the image to clipboard.
+ *
+ * @param copying Whether a copy operation is currently in progress.
+ * @param onCopy Event handler for starting the copy operation.
+ */
 export function CopyImageButton({ copying, onCopy }: CopyImageButtonProps) {
 	return (
 		<button

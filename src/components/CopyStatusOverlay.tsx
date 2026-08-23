@@ -7,6 +7,14 @@ type CopyStatusOverlayProps = {
 	format: FileFormatType;
 };
 
+/**
+ * Displays the current status of an image copy operation over the image.
+ *
+ * @param copying Whether a copy operation is currently in progress.
+ * @param isCopied Whether the image was copied successfully.
+ * @param copyErrored Whether the copy operation failed.
+ * @param format The file format for the copied content.
+ */
 export function CopyStatusOverlay({
 	copying,
 	isCopied,

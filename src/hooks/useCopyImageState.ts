@@ -5,8 +5,13 @@ import type { FileFormatType } from '@/services/providers/searchProvider.types';
 import { copyImageFromUrl } from '@/utils/clipboard';
 
 /**
- * Manages copy-to-clipboard state and behavior for images.
+ * Manages copy-to-clipboard state and behavior for a grid image.
+ *
  * Handles async copy operations with timeout-based state resets and cleanup.
+ *
+ * @param highResUrl The image URL passed to the clipboard utility.
+ * @param format The file format for the copied content.
+ * @returns Copy state and an event handler for starting a copy operation.
  */
 export function useCopyImageState(highResUrl: string, format: FileFormatType) {
 	const [copying, setCopying] = useState(false);
@@ -24,6 +29,11 @@ export function useCopyImageState(highResUrl: string, format: FileFormatType) {
 		};
 	}, []);
 
+	/**
+	 * Starts copying the image while preserving the parent gallery item's event behavior.
+	 *
+	 * @param e The keyboard or pointer event that initiated the copy action.
+	 */
 	const handleCopyOnEvent = (
 		e: KeyboardEvent<HTMLDivElement> | MouseEvent<HTMLButtonElement>,
 	): void => {
