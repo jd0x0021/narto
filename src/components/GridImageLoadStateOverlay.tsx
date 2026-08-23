@@ -2,11 +2,13 @@ import { memo } from 'react';
 
 import type { DisplayImageLoadState } from '@/hooks/useImageRetry';
 
-export type GridImageOverlayProps = {
+export type GridImageLoadStateOverlayProps = {
 	displayImageLoadState: DisplayImageLoadState;
 };
 
-function GridImageOverlayComponent({ displayImageLoadState }: GridImageOverlayProps) {
+function GridImageLoadStateOverlayComponent({
+	displayImageLoadState,
+}: GridImageLoadStateOverlayProps) {
 	return (
 		<>
 			{/* Loading overlay */}
@@ -58,4 +60,4 @@ function GridImageOverlayComponent({ displayImageLoadState }: GridImageOverlayPr
  *
  * @param displayImageLoadState - The current lifecycle state of the image.
  */
-export const GridImageOverlay = memo(GridImageOverlayComponent);
+export const GridImageLoadStateOverlay = memo(GridImageLoadStateOverlayComponent);

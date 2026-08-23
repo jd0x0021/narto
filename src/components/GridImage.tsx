@@ -2,7 +2,7 @@ import { memo, useEffect, useRef } from 'react';
 
 import { CopyImageButton } from '@/components/CopyImageButton';
 import { CopyStatusOverlay } from '@/components/CopyStatusOverlay';
-import { GridImageOverlay } from '@/components/GridImageOverlay';
+import { GridImageLoadStateOverlay } from '@/components/GridImageLoadStateOverlay';
 import { useCopyImageState } from '@/hooks/useCopyImageState';
 import { useImageRetry } from '@/hooks/useImageRetry';
 import type { NormalizedImageData } from '@/services/providers/searchProvider.types';
@@ -100,13 +100,10 @@ function GridImageComponent({
 					draggable
 				/>
 
-				{/* Image Overlay */}
-				<GridImageOverlay displayImageLoadState={displayImageLoadState} />
+				<GridImageLoadStateOverlay displayImageLoadState={displayImageLoadState} />
 
-				{/* Copy button shown on hover */}
 				<CopyImageButton copyState={copyState} onCopy={handleCopyOnEvent} />
 
-				{/* Status overlay (Copying / Copied / Error) */}
 				<CopyStatusOverlay
 					copyState={copyState}
 					copiedAsFile={copiedAsFile}
