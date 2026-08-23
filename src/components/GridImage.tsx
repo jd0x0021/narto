@@ -26,7 +26,7 @@ function GridImageComponent({
 	const isSelected = useAppStore((s) => s.selectedGridCell === index);
 	const setSelectedGridCell = useAppStore((s) => s.setSelectedGridCell);
 
-	const { copying, isCopied, copyErrored, handleCopyOnEvent } = useCopyImageState(
+	const { copying, isCopied, copiedAsFile, copyErrored, handleCopyOnEvent } = useCopyImageState(
 		image.highResUrl,
 		image.format,
 	);
@@ -110,6 +110,7 @@ function GridImageComponent({
 				<CopyStatusOverlay
 					copying={copying}
 					isCopied={isCopied}
+					copiedAsFile={copiedAsFile}
 					copyErrored={copyErrored}
 					format={image.format}
 				/>

@@ -16,6 +16,7 @@ import { copyImageFromUrl } from '@/utils/clipboard';
 export function useCopyImageState(highResUrl: string, format: FileFormatType) {
 	const [copying, setCopying] = useState(false);
 	const [isCopied, setIsCopied] = useState(false);
+	const [copiedAsFile, setCopiedAsFile] = useState(false);
 	const [copyErrored, setCopyErrored] = useState(false);
 
 	const copiedTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -42,9 +43,13 @@ export function useCopyImageState(highResUrl: string, format: FileFormatType) {
 		const handleCopy = async (): Promise<void> => {
 			try {
 				setCopying(true);
-				await copyImageFromUrl(highResUrl, format);
+				setCopyErrored(false);
+				setIsCopied(false);
+				setCopiedAsFile(false);
+				const copiedFile = await copyImageFromUrl(highResUrl, format);
 				setCopying(false);
 				setIsCopied(true);
+				setCopiedAsFile(copiedFile);
 
 				if (copiedTimeoutRef.current) clearTimeout(copiedTimeoutRef.current);
 
@@ -52,6 +57,8 @@ export function useCopyImageState(highResUrl: string, format: FileFormatType) {
 					setIsCopied(false);
 				}, 2000);
 			} catch {
+				setIsCopied(false);
+				setCopiedAsFile(false);
 				setCopyErrored(true);
 				setCopying(false);
 
@@ -65,5 +72,5 @@ export function useCopyImageState(highResUrl: string, format: FileFormatType) {
 		void handleCopy();
 	};
 
-	return { copying, isCopied, copyErrored, handleCopyOnEvent };
+	return { copying, isCopied, copiedAsFile, copyErrored, handleCopyOnEvent };
 }

@@ -13,7 +13,8 @@
  * @param url - The source URL of the image to copy
  * @param mimeType - The original image format identifier (e.g. "webp", "gif")
  *
- * @returns A promise that resolves once the copy operation completes
+ * @returns A promise resolving to `true` when an image data was copied
+ * and `false` when the URL fallback was copied instead
  *
  * @throws An Error to propagate unexpected failures from fetch, decoding, or clipboard APIs
  *
@@ -24,12 +25,12 @@
  * - Animated images (GIFs) are copied as URLs to avoid losing animation frames
  * - Requires a secure context (HTTPS or extension environment) and user interaction
  */
-export async function copyImageFromUrl(url: string, mimeType: string): Promise<void> {
+export async function copyImageFromUrl(url: string, mimeType: string): Promise<boolean> {
 	try {
 		// Copying GIFs as URLs since clipboard image writes do not reliably support animated formats
 		if (mimeType === 'gif') {
 			await navigator.clipboard.writeText(url);
-			return;
+			return false;
 		}
 
 		const res: Response = await fetch(url);
@@ -46,18 +47,23 @@ export async function copyImageFromUrl(url: string, mimeType: string): Promise<v
 		// The actual copying of the image to clipboard.
 		if (typeof ClipboardItem !== 'undefined') {
 			await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
-			return;
+			return true;
 		}
 
 		// Fallback: copy the image URL if binary clipboard is unavailable
 		await navigator.clipboard.writeText(url);
+		return false;
 	} catch (err) {
-		console.error('Copy failed, falling back to URL copy', err);
+		console.error("Copy failed, attempting to copy the image's URL...", err);
 
 		// Final fallback: attempt to copy URL even after failure
-		await navigator.clipboard.writeText(url).catch((e: unknown) => {
-			console.error('Fallback URL copy failed', e);
-		});
+		try {
+			await navigator.clipboard.writeText(url);
+			return false;
+		} catch (e: unknown) {
+			console.error('Failed to copy the fallback URL to clipboard :(', e);
+			throw e;
+		}
 	}
 }
 
