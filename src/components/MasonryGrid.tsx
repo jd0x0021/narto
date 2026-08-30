@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { memo, useCallback, useEffect, useLayoutEffect, useRef } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef } from 'react';
 
 import { useAppStore } from '@/store/useAppStore';
 
@@ -9,7 +9,7 @@ type MasonryGridProps = {
 	gap: number;
 };
 
-function MasonryGridComponent({ children, columnCount, gap }: MasonryGridProps) {
+export function MasonryGrid({ children, columnCount, gap }: MasonryGridProps) {
 	const masonryGridRef = useRef<HTMLDivElement>(null);
 	const handleGridKeyDown = useAppStore((s) => s.handleGridKeyDown);
 
@@ -89,5 +89,3 @@ function MasonryGridComponent({ children, columnCount, gap }: MasonryGridProps) 
 		</div>
 	);
 }
-
-export const MasonryGrid = memo(MasonryGridComponent);
