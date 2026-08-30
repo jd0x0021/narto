@@ -16,7 +16,7 @@ import type {
 	NormalizedImageData,
 	SearchProvider,
 } from '@/services/providers/searchProvider.types';
-import { APP_COMMAND } from '@/services/providers/searchProvider.types';
+import { APP_COMMAND, APP_COMMAND_FULL_NAME } from '@/services/providers/searchProvider.types';
 
 const KLIPY_BASE_URL = import.meta.env.VITE_KLIPY_BASE_URL;
 const API_KEY = import.meta.env.VITE_KLIPY_API_KEY;
@@ -87,7 +87,7 @@ export const klipyClient: SearchProvider = {
 
 			// native fetch failures (e.g. network issues) will be caught here
 			throw new SearchProviderNetworkError(
-				`Network error while fetching ${resolvedCommand}s from Klipy. Try again shortly.`,
+				`Network error while fetching ${APP_COMMAND_FULL_NAME[resolvedCommand]}s from Klipy. Try again shortly.`,
 			);
 		}
 	},
