@@ -21,11 +21,18 @@ function MasonryGridComponent({ children, columnCount, gap }: MasonryGridProps) 
 		const columnWidth = Math.max(0, (masonryGridWidth - gap * (columnCount - 1)) / columnCount);
 		const gridCells = Array.from(masonryGrid.children) as HTMLElement[];
 
-		// Set widths before measuring heights.
+		// PASS 1: Set widths before measuring heights.
+		// This batches DOM writes without triggering layout recalculation (reflow). Heights depend on widths
+		// (grid cells use aspect-ratio padding: paddingBottom = intrinsicRatio * 100%) - see `GridImage.tsx`.
+		// By writing all widths first, the browser defers reflow until heights are read (using `gridCell.offsetHeight`).
 		for (const gridCell of gridCells) {
 			gridCell.style.width = `${columnWidth}px`;
 		}
 
+		// PASS 2: Measure heights and calculate positions.
+		// Reading `gridCell.offsetHeight` triggers one reflow for all width writes (layout
+		// thrashing prevention). We calculate absolute x/y positions for each grid cell based
+		// on column distribution. Grid Cells are distributed row-major across 'columnCount' columns.
 		const columnHeights = new Array<number>(columnCount).fill(0);
 		const positions = gridCells.map((gridCell, index) => {
 			const column = index % columnCount;
@@ -37,11 +44,18 @@ function MasonryGridComponent({ children, columnCount, gap }: MasonryGridProps) 
 			return { gridCell, x, y };
 		});
 
-		// Apply transforms after all measurements.
+		// PASS 3: Apply transforms after all measurements complete.
+		// Transforms do not affect layout (do not trigger reflow). Separating from measurements
+		// keeps DOM writes batched separately from DOM reads. `translate()` moves tiles to their
+		// calculated x/y positions while preserving DOM order for keyboard navigation.
 		for (const { gridCell, x, y } of positions) {
 			gridCell.style.transform = `translate(${x}px, ${y}px)`;
 		}
 
+		// PASS 4: Set parent container height.
+		// Container height must fit all tiles across all columns.
+		// Calculate max height from the tallest column, subtract one trailing gap.
+		// This prevents extra empty space below the grid.
 		const maxColumnHeight = Math.max(...columnHeights, 0);
 		masonryGrid.style.height = `${Math.max(0, maxColumnHeight - gap)}px`;
 	}, [columnCount, gap]);
