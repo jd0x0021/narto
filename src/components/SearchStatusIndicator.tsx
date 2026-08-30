@@ -1,6 +1,7 @@
 import { cva } from 'class-variance-authority';
 
-import { useAppStore } from '@/store/useAppStore';
+import { useDisplayStatus } from '@/hooks/useDisplayStatus';
+import type { SearchStatus } from '@/store/slices/searchSlice/searchSlice.types';
 
 const statusDotVariants = cva('relative h-2 w-2 rounded-full', {
 	variants: {
@@ -9,7 +10,7 @@ const statusDotVariants = cva('relative h-2 w-2 rounded-full', {
 			loading: 'bg-narto-loading',
 			success: 'bg-narto-success',
 			error: 'bg-narto-error',
-		},
+		} as const satisfies Record<SearchStatus, string>,
 	},
 });
 
@@ -20,7 +21,7 @@ const statusPingVariants = cva('absolute inset-0 rounded-full opacity-50', {
 			loading: 'animate-ping bg-narto-loading',
 			success: 'animate-ping bg-narto-success',
 			error: 'animate-ping bg-narto-error',
-		},
+		} as const satisfies Record<SearchStatus, string>,
 	},
 });
 
@@ -31,7 +32,7 @@ const statusTextVariants = cva('font-mono leading-none text-xs tracking-wide cap
 			loading: 'text-narto-loading',
 			success: 'text-narto-success',
 			error: 'text-narto-error',
-		},
+		} as const satisfies Record<SearchStatus, string>,
 	},
 });
 
@@ -45,12 +46,7 @@ const statusTextVariants = cva('font-mono leading-none text-xs tracking-wide cap
  * @returns A status indicator component with color-coded styling based on the current search status.
  */
 export function SearchStatusIndicator() {
-	const status = useAppStore((s) => s.status);
-	const isGridDisplayReady = useAppStore((s) => s.isGridDisplayReady);
-
-	// the app is still in a loading state while grid images are still loading, even if the
-	// search succeeded, to provide continuous visual feedback during the image loading phase
-	const displayStatus = status === 'success' && !isGridDisplayReady ? 'loading' : status;
+	const displayStatus = useDisplayStatus();
 
 	return (
 		<div
