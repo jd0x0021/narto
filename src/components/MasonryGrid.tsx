@@ -12,6 +12,7 @@ type MasonryGridProps = {
 export function MasonryGrid({ children, columnCount, gap }: MasonryGridProps) {
 	const masonryGridRef = useRef<HTMLDivElement>(null);
 	const handleGridKeyDown = useAppStore((s) => s.handleGridKeyDown);
+	const isGridPreviewReady = useAppStore((s) => s.isGridPreviewReady);
 
 	const calculateLayout = useCallback(() => {
 		const masonryGrid = masonryGridRef.current;
@@ -80,7 +81,11 @@ export function MasonryGrid({ children, columnCount, gap }: MasonryGridProps) {
 	return (
 		<div
 			ref={masonryGridRef}
-			className='relative w-full outline-none'
+			className={`relative w-full outline-none
+				${
+					// Keep the y margin stable and avoid layout shifts when preview images are loading
+					isGridPreviewReady ? 'my-2.5' : ''
+				}`}
 			tabIndex={-1}
 			onKeyDown={handleGridKeyDown}
 			role='grid'

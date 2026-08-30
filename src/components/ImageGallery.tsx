@@ -10,7 +10,6 @@ export function ImageGallery() {
 	const results = useAppStore((s) => s.results);
 	const query = useAppStore((s) => s.query);
 	const status = useAppStore((s) => s.status);
-	const isGridPreviewReady = useAppStore((s) => s.isGridPreviewReady);
 	const searchError = useAppStore((s) => (s.status === 'error' && s.error ? s.error : undefined));
 	const allImagesFailedToLoad = useAppStore(
 		(s) => s.failedDisplayImageIds.length === s.results.length,
@@ -39,14 +38,7 @@ export function ImageGallery() {
 	// Render the MasonryGrid as long as one or more display images loaded successfully.
 	// Images that failed to load are still rendered and shows their per-image error state.
 	return (
-		<div
-			className={`flex-1 overflow-x-hidden scrollbar-hidden relative 
-				${
-					// Keep the top margin stable and avoid layout shifts when preview images are loading
-					// (this is the spacing between the SearchInput, and the ImageGallery components)
-					isGridPreviewReady ? 'mt-2.5' : ''
-				}`}
-		>
+		<div className='flex-1 overflow-x-hidden scrollbar-hidden relative'>
 			<MasonryGrid columnCount={MASONRY_GRID_COLUMN_COUNT} gap={MASONRY_GRID_GAP}>
 				{results.map((image, i) => (
 					<GridImage
