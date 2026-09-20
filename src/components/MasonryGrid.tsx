@@ -50,7 +50,8 @@ export function MasonryGrid({ children, columnCount, gap }: MasonryGridProps) {
 		// keeps DOM writes batched separately from DOM reads. `translate()` moves tiles to their
 		// calculated x/y positions while preserving DOM order for keyboard navigation.
 		for (const { gridCell, x, y } of positions) {
-			gridCell.style.transform = `translate(${x}px, ${y}px)`;
+			gridCell.style.left = `${x}px`;
+			gridCell.style.top = `${y}px`;
 		}
 
 		// PASS 4: Set parent container height.
