@@ -112,6 +112,7 @@ function GridImageComponent({
 					copyState={copyState}
 					copiedAsFile={copiedAsFile}
 					format={image.format}
+					imageTitle={image.title}
 				/>
 			</div>
 		</div>
