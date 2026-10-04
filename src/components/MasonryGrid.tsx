@@ -45,17 +45,17 @@ export function MasonryGrid({ children, columnCount, gap }: MasonryGridProps) {
 			return { gridCell, x, y };
 		});
 
-		// PASS 3: Apply transforms after all measurements complete.
-		// Transforms do not affect layout (do not trigger reflow). Separating from measurements
-		// keeps DOM writes batched separately from DOM reads. `translate()` moves tiles to their
-		// calculated x/y positions while preserving DOM order for keyboard navigation.
+		// PASS 3: Position the grid cells after all measurements are complete.
+		// Apply `left` and `top` position for each grid cell. This separates
+		// positioning from measurements, which keeps DOM reads and writes
+		// batched separately and preserves DOM order for keyboard navigation.
 		for (const { gridCell, x, y } of positions) {
 			gridCell.style.left = `${x}px`;
 			gridCell.style.top = `${y}px`;
 		}
 
 		// PASS 4: Set parent container height.
-		// Container height must fit all tiles across all columns.
+		// Container height must fit all grid cells across all columns.
 		// Calculate max height from the tallest column, subtract one trailing gap.
 		// This prevents extra empty space below the grid.
 		const maxColumnHeight = Math.max(...columnHeights, 0);
