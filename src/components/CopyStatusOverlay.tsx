@@ -20,7 +20,7 @@ export function CopyStatusOverlay({ copyState, copiedAsFile, format }: CopyStatu
 		<div
 			className={`absolute inset-0 flex items-center justify-center z-20 backdrop-blur-lg
 				bg-[radial-gradient(circle_at_center,rgba(12,12,11,0.4)_0%,rgba(12,12,11,0.8)_100%)]
-				pointer-events-none transition-all duration-300 ease-out
+				pointer-events-none transition-all duration-300 ease-out rounded-[4px]
 				${copyState !== 'idle' ? 'opacity-100 scale-100' : 'opacity-0'}`}
 		>
 			<div className='flex flex-col items-center justify-center text-center font-mono gap-[0.125rem] h-full w-full'>

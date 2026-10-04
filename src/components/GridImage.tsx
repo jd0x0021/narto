@@ -69,7 +69,7 @@ function GridImageComponent({
 			role='gridcell'
 		>
 			<div
-				className={`w-full relative rounded-narto-sm overflow-hidden border-[0.188rem]
+				className={`w-full relative rounded-narto-sm border-[0.188rem]
 					${
 						isSelected
 							? 'border-narto-accent shadow-[0_4px_15px_rgba(255,107,0,0.3)] z-10'
@@ -91,8 +91,9 @@ function GridImageComponent({
 				{/* Display image */}
 				<img
 					src={displayImageSrc}
-					className={`absolute inset-0 w-full h-full object-cover active:cursor-grabbing transition-opacity
-						duration-300 ${displayImageLoadState === 'loaded' ? 'opacity-100' : 'opacity-0 cursor-wait'}`}
+					className={`absolute inset-0 w-full h-full object-cover active:cursor-grabbing
+						transition-opacity duration-300 [clip-path:inset(0_round_6px)]
+						${displayImageLoadState === 'loaded' ? 'opacity-100' : 'opacity-0 cursor-wait'}`}
 					onLoad={() => {
 						setDisplayImageLoadState('loaded');
 						handleDisplayImageLoad(image.id);
