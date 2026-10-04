@@ -19,7 +19,7 @@ export function CopyImageButton({ copyState, onCopy }: CopyImageButtonProps) {
 			type='button'
 			tabIndex={-1}
 			aria-label='Copy image'
-			className={`flex items-center gap-1 pointer-events-auto absolute right-2 bottom-2 rounded-md  
+			className={`flex items-center gap-1 pointer-events-auto absolute right-2 bottom-2 rounded-md z-30
 				bg-narto-accent/90 px-2 py-1 text-xs text-narto-text transition-opacity duration-200 ease-out
 				${copyState === 'copying' ? 'opacity-0 pointer-events-none' : 'opacity-0 group-hover:opacity-100 hover:bg-narto-accent'}`}
 			onClick={onCopy}
