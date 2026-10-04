@@ -53,13 +53,8 @@ function GridImageComponent({
 		<div
 			ref={gridImageCellRef}
 			tabIndex={0}
-			className={`group absolute top-0 left-0 transition-shadow outline-none cursor-pointer
-				overflow-hidden leading-none select-none rounded-narto-sm border-[0.188rem]
-				${
-					isSelected
-						? 'border-narto-accent shadow-[0_4px_15px_rgba(255,107,0,0.3)] z-10'
-						: 'border-transparent hover:border-narto-accent/40 opacity-90 hover:opacity-100 z-0'
-				}`}
+			className='group absolute top-0 left-0 transition-shadow outline-none
+				cursor-pointer overflow-hidden leading-none select-none'
 			onClick={() => {
 				setSelectedGridCell(index);
 			}}
@@ -73,7 +68,15 @@ function GridImageComponent({
 			}}
 			role='gridcell'
 		>
-			<div className='w-full relative' style={{ paddingBottom: `${intrinsicRatio * 100}%` }}>
+			<div
+				className={`w-full relative rounded-narto-sm overflow-hidden border-[0.188rem]
+					${
+						isSelected
+							? 'border-narto-accent shadow-[0_4px_15px_rgba(255,107,0,0.3)] z-10'
+							: 'border-transparent hover:border-narto-accent/40 opacity-90 hover:opacity-100 z-0'
+					}`}
+				style={{ paddingBottom: `${intrinsicRatio * 100}%` }}
+			>
 				{/* Blur preview */}
 				<img
 					src={image.previewUrl}

@@ -18,22 +18,17 @@ export function CopyStatusOverlay({ copyState, copiedAsFile, format }: CopyStatu
 
 	return (
 		<div
-			className={`absolute inset-0 flex items-center justify-center 
-				bg-black/40 z-20 pointer-events-none transition-all duration-300 ease-out 
+			className={`absolute inset-0 flex items-center justify-center z-20 backdrop-blur-lg
+				bg-[radial-gradient(circle_at_center,rgba(12,12,11,0.4)_0%,rgba(12,12,11,0.8)_100%)]
+				pointer-events-none transition-all duration-300 ease-out
 				${copyState !== 'idle' ? 'opacity-100 scale-100' : 'opacity-0'}`}
 		>
-			{copyState === 'copying' ? (
-				<div className='size-8 border-4 border-gray-300 border-t-narto-accent/80 rounded-full animate-spin'></div>
-			) : copyState === 'copied' ? (
-				<span className='bg-green-500 text-narto-text rounded-md px-2 py-1 text-xs mx-2 text-center max-w-[90%] shadow-sm'>
-					{/* see PROJECT_CONTEXT.md for more information */}
-					Copied {copiedAsFile ? 'PNG File' : `${copiedFormat} URL`} 😼
+			<div className='flex flex-col items-center justify-center text-center font-mono gap-[0.125rem] h-full w-full'>
+				<span className='text-xs font-bold text-emerald-500'>
+					COPIED {copiedAsFile ? 'PNG FILE' : `${copiedFormat} URL`}
 				</span>
-			) : copyState === 'error' ? (
-				<span className='bg-red-600 text-narto-text rounded-md px-2 py-1 text-xs mx-2 text-center max-w-[90%] shadow-sm'>
-					Copy failed 💀
-				</span>
-			) : null}
+				<span className='text-[0.563rem] text-narto-text/40'>{'aaaaaaaaaaa'}</span>
+			</div>
 		</div>
 	);
 }
